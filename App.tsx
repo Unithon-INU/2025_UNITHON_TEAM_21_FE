@@ -1,9 +1,11 @@
+import {NavigationContainer} from '@react-navigation/native';
 import './global.css';
-import React from 'react';
-import {Text} from 'react-native';
+import NavBar from '@/pages/NavBar';
 
-function App(): React.JSX.Element {
-  return <Text className="text-xl font-bold text-black"></Text>;
+export default function App() {
+  return (
+    <NavigationContainer>
+      <NavBar />
+    </NavigationContainer>
+  );
 }
-
-export default App;
