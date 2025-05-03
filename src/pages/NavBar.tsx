@@ -39,10 +39,10 @@ export default function NavBar() {
                 tabBarStyle: {
                     paddingTop: 6,
                     paddingBottom: 10,
-                    height: 70,
+                    height: 80,
                     backgroundColor: 'white',
                     borderTopWidth: 1,
-                    borderTopColor: '#e0e0e0',
+                    borderTopColor: '#D5D5D5',
                 },
                 tabBarLabelStyle: {
                     fontSize: 14,

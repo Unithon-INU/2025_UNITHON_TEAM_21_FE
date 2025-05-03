@@ -1,19 +1,30 @@
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
-import './global.css';
+import {SafeAreaView, StatusBar, StyleSheet, Platform} from 'react-native';
 import NavBar from '@/pages/NavBar';
 
 const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'white',
-  },
+    ...DefaultTheme,
+    colors: {
+        ...DefaultTheme.colors,
+        background: 'white',
+    },
 };
 
 export default function App() {
-  return (
-    <NavigationContainer theme={MyTheme}>
-      <NavBar />
-    </NavigationContainer>
-  );
+    return (
+        <SafeAreaView style={styles.safeArea}>
+            <StatusBar barStyle="dark-content" backgroundColor="white" animated />
+            <NavigationContainer theme={MyTheme}>
+                <NavBar />
+            </NavigationContainer>
+        </SafeAreaView>
+    );
 }
+
+const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: 'white',
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
+});
