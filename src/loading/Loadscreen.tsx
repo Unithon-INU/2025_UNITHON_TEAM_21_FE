@@ -12,7 +12,7 @@ export default function LoadingScreen() {
                 source={require('@/assets/roading.png')}
                 style={{
                     width: 36,
-                    height: 36, 
+                    height: 36,
                     transform: [{rotate: '30deg'}],
                 }}
                 resizeMode="contain"
