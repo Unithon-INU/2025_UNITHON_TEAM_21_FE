@@ -9,10 +9,10 @@ export default function Home() {
                     <Text className="text-base font-bold text-white">회원가입</Text>
                 </TouchableOpacity>
             </View>
-            <View className="flex flex-col gap-3">
-                <Text className="text-base font-semibold text-font-black">인천지역아동센터</Text>
+            <View className="flex flex-col gap-3 py-3">
+                <Text className="text-xl font-semibold text-font-black">인천지역아동센터</Text>
                 <View className="flex flex-row">
-                    <View className="flex flex-col gap-1 px-1 py-3 bg-main-color rounded-2xl">
+                    <View className="flex flex-col gap-1 px-2 py-3 bg-main-color rounded-2xl">
                         <Text className="text-base font-semibold text-white">검단지역아동센터</Text>
                         <Text className="text-xs font-semibold text-white">인천 서구 검단로501번길 69</Text>
                         <Text className="text-xs font-semibold text-white">#꿈나무 #쉼터</Text>
@@ -20,12 +20,12 @@ export default function Home() {
                     </View>
                 </View>
             </View>
-            <View className="flex flex-col gap-3">
-                <Text className="text-base font-semibold text-font-black">{'실시간 기부현황'}</Text>
+            <View className="flex flex-col gap-3 py-3">
+                <Text className="text-xl font-semibold text-font-black">{'실시간 기부현황'}</Text>
                 <View className="flex flex-row gap-2">
                     <View className="w-[120px] h-[120px] bg-bg-gray rounded-xl" />
                     <View className="flex gap-1 py-2">
-                        <Text className="font-semibold text-font-black">검단지역아동센터</Text>
+                        <Text className="text-xl font-semibold text-font-black">검단지역아동센터</Text>
                         <Text className="text-xs font-semibold text-font-gray">인천 서구 검단로501번길 69</Text>
                     </View>
                 </View>
