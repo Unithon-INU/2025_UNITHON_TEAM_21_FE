@@ -1,19 +1,17 @@
 import React from 'react';
-import {View, Text, TextInput, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity, Image} from 'react-native';
+import {View, Text, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity, Image} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Layout from '../Layout';
 import useChattingNavigation from '@/hook/useChattingNavigation';
-import ChatInputBar from '@/components/ChatInputBar'; // 채팅 입력 바 컴포넌트
 
 
 export default function ChatRoomScreen() {
     const scnavigation = useChattingNavigation(); // 채팅탭 내비게이션 훅
 
     const messages = [
-        {id: '1', text: 'ㅎㅇㅎㅇ', time: '오후 4:49', isMe: false},
-        {id: '2', text: 'ㅇㅇ', time: '오후 4:49', isMe: true},
+        {id: '1', text: '안녕하세요!', time: '13:53', isMe: false},
     ];
-    
+
     const renderItem = ({item}: any) => (
         <View className={`flex-row items-end mb-2 ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-6 h-6 bg-[#eee] rounded-full mr-2" />}
@@ -34,7 +32,6 @@ export default function ChatRoomScreen() {
                         <TouchableOpacity onPress={() => scnavigation.navigate('ChatList')}>
                             <Image source={require('@/assets/navi.png')} className="w-7 h-7" />
                         </TouchableOpacity>
-                        <Text className="text-[18px] font-bold">하이지역아동센터</Text>
                     </View>
 
                     {/* 오른쪽: 메뉴 버튼 */}

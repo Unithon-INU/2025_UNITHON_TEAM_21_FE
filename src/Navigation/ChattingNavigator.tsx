@@ -2,7 +2,7 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ChatListScreen from '@/pages/Chatting/ChatList';
 import ChatRoomScreen from '@/pages/Chatting/ChatRoom';
-import NotificationScreen from '@/pages/Notification';
+import NotificationScreen from '@/pages/Notification'; // 알림 화면
 
 export type ChattingStackParamList = {
     // 채팅탭 내비게이션 스택 파라미터 리스트
@@ -22,6 +22,7 @@ export default function ChattingNavigator() {
             <Stack.Screen name="ChatList" component={ChatListScreen} />
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
+
         </Stack.Navigator>
     );
 }

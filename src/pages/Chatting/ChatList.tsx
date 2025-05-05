@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Layout from '../Layout';
-import useChattingNavigation from '@/hook/useChattingNavigation'; // 채팅탭 내비게이션 훅
+import useChattingNavigation from '@/hook/useChattingNavigation';
+// import useNotificationNavigation from '@/hook/useNotificationNavigation'; // 알림 내비게이션 훅
 
 
 export default function ChatListScreen() {
-    const navigation = useChattingNavigation(); // 채팅탭 내비게이션 훅
+  // 채팅탭 내비게이션 훅을 사용하여 내비게이션 객체를 가져옵니다.
+  // 이 훅은 채팅탭 내비게이션 스택 파라미터 리스트를 사용하여 타입을 지정합니다.
+  const navigation = useChattingNavigation();
+  // const nonavigation = useNotificationNavigation();
   const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
 
   const chatRooms = [
@@ -45,8 +49,7 @@ export default function ChatListScreen() {
   );
 
   return (
-    <Layout>
-      {/* 상단 헤더 */}
+    <Layout>  {/* 상단 헤더 */}
       <View className="flex-row justify-between h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
         <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
@@ -60,11 +63,8 @@ export default function ChatListScreen() {
           onPress={() => setActiveTab('all')}
           className={`px-3 py-1 rounded-full ${
             activeTab === 'all' ? 'bg-main-color' : 'border border-[#D5D5D5]'
-          }`}
-        >
-          <Text className={`${activeTab === 'all' ? 'text-white' : 'text-black'} font-bold`}>
-            전체
-          </Text>
+          }`}>
+          <Text className={`${activeTab === 'all' ? 'text-white' : 'text-black'} font-bold`}>전체</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
