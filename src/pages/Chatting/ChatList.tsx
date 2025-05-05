@@ -47,15 +47,15 @@ export default function ChatListScreen() {
   return (
     <Layout>
       {/* 상단 헤더 */}
-      <View className="flex-row justify-between h-[60px] pt-[20px] pb-[15px] px-[20px] border-b border-[#eee]">
+      <View className="flex-row justify-between h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
         <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-          <Ionicons name="notifications-outline" size={24} color="black" />
+          <Ionicons name="notifications-outline" size={30} color="black" />
         </TouchableOpacity>
       </View>
 
       {/* 탭 필터 */}
-      <View className="flex-row gap-[8px] px-[20px] py-[12px]">
+      <View className="flex-row gap-[8px] px-[5px] py-[12px] pl-[2px]"> {/*px py */}
         <TouchableOpacity
           onPress={() => setActiveTab('all')}
           className={`px-3 py-1 rounded-full ${
@@ -86,13 +86,13 @@ export default function ChatListScreen() {
         contentContainerStyle={{ paddingBottom: 80 }}
         renderItem={({ item }) => (
           <TouchableOpacity
-            className="flex-row pt-2 pb-4 px-[20px]"
+            className="flex-row pt-2 pb-4 px-[6px] "
             onPress={() => navigation.navigate('ChatRoom', { id: item.id })}
           >
-            <View className="w-12 h-12 rounded-full bg-[#ccc] mr-3" />
-            <View className="flex-1 justify-center">
+            <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
+            <View className="flex-1 justify-center mb-1">
               <View className="flex-row justify-between">
-                <Text className="text-black font-bold text-[15px]">{item.name}</Text>
+                <Text className="text-black font-bold text-[16px]">{item.name}</Text>
                 <Text className="text-[12px] text-[#999]">{item.time}</Text>
               </View>
               <View className="flex-row justify-between mt-1">

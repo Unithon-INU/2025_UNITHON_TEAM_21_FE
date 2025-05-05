@@ -11,7 +11,7 @@ interface NotificationItemProps {
 
 export default function NotificationItem({icon, title, timeAgo, boldText}: NotificationItemProps) {
   return (
-    <View className="flex-row items-center justify-between mb-3">
+    <View className="flex-row items-center justify-between mb-2">
       <View className="flex-row items-center">
         <Image source={icon} className="w-6 h-6 mr-2" />
         <View>

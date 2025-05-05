@@ -5,7 +5,6 @@
     import Ionicons from 'react-native-vector-icons/Ionicons';
     import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
     import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-
     import Home from './Home/Home';
     import ChattingNavigator from '@/Navigation/ChattingNavigator'; // 채팅탭
 
