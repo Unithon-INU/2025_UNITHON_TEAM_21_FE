@@ -7,8 +7,8 @@
     import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
     import Home from './Home/Home';
-    import ChatListScreen from './Chatting/ChatList';
-    
+    import ChattingNavigator from '@/Navigation/ChattingNavigator'; // 채팅탭
+
     
     const Tab = createBottomTabNavigator();
 
@@ -54,7 +54,7 @@
                 })}>
                 <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={() => <Home />} />
                 <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
-                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={() => <ChatListScreen/>} />
+                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={() => <ChattingNavigator/>} />
                 <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={() => <SimpleScreen label="지역봉사" />} />
                 <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={() => <SimpleScreen label="내정보" />} />
             </Tab.Navigator>
