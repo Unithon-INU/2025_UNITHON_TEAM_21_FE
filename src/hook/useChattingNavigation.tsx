@@ -6,5 +6,5 @@ type Navigation = NativeStackNavigationProp<ChattingStackParamList>; // 채팅�
 
 export default function useChattingNavigation() { // 채팅탭 내비게이션 훅
   // useNavigation 훅을 사용하여 내비게이션 객체를 가져옵니다.
-    return useNavigation<Navigation>();
+  return useNavigation<Navigation>();
 }

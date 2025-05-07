@@ -22,7 +22,6 @@ export default function ChattingNavigator() {
             <Stack.Screen name="ChatList" component={ChatListScreen} />
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
-
         </Stack.Navigator>
     );
 }

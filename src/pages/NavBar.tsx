@@ -8,7 +8,6 @@
     import Home from './Home/Home';
     import ChattingNavigator from '@/Navigation/ChattingNavigator'; // 채팅탭
 
-    
     const Tab = createBottomTabNavigator();
 
     const TAB_ICONS = {

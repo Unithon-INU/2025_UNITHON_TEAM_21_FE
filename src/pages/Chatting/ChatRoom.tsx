@@ -27,25 +27,24 @@ export default function ChatRoomScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} className="flex-1 bg-white">
             <Layout>
                 <View className="flex-row items-center justify-between pb-5">
-                    {/* 왼쪽: 뒤로가기 + 타이틀 */}
                     <View className="flex-row items-center space-x-2">
                         <TouchableOpacity onPress={() => scnavigation.navigate('ChatList')}>
                             <Image source={require('@/assets/navi.png')} className="w-7 h-7" />
                         </TouchableOpacity>
                     </View>
 
-                    {/* 오른쪽: 메뉴 버튼 */}
                     <TouchableOpacity>
                         <Ionicons name="ellipsis-vertical" size={24} color="#000" />
                     </TouchableOpacity>
+
                 </View>
 
-                {/* 메시지 목록 */}
+
                 <FlatList
                     data={messages}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
-                    contentContainerStyle={{paddingBottom: 16}}
+                    contentContainerStyle={{}}
                     showsVerticalScrollIndicator={false}
                 />
             </Layout>
