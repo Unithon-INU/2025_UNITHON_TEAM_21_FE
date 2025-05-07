@@ -5,19 +5,19 @@ interface NotificationItemProps {
   type: string;
   message: string;
   time: string;
-  icon: string; // 예: 'gift', 'calendar', 'note'
   subtext?: string;
 }
 
 const ICON_MAP: Record<string, any> = {
   추천봉사: require('@/assets/recommend.png'),
   봉사일정: require('@/assets/calender.png'),
-  기부: require('@/assets/thanksdonate.png'),
+  기부전달: require('@/assets/thanksdonate.png'),
+  기부등록: require('@/assets/confirmdonate.png'),
 };
 
 export default function NotificationItem({ type, message, time, subtext }: NotificationItemProps) {
   return (
-    <View className="flex-row items-start mb-4">
+    <View className="flex-row items-start mb-6">
       {/* 아이콘 */}
       <Image source={ICON_MAP[type]} className="w-8 h-8 mr-3" />
 

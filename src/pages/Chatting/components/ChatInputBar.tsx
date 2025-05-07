@@ -13,7 +13,7 @@ export default function ChatInputBar({ onSend }: { onSend: (message: string) => 
   };
 
   return (
-    <View className="flex-row items-center px-4 py-2 border-t border-gray-300 bg-white">
+    <View className="flex-row items-center bottom px-4 py-2 border-t border-gray-300 bg-white">
       <TouchableOpacity>
         <Image source={require('@/assets/add.png')} className="w-8 h-8" resizeMode="contain" />
       </TouchableOpacity>
