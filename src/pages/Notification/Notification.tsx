@@ -1,9 +1,10 @@
 import React from 'react';
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Layout from './Layout';
+import Layout from '../Layout';
 
-export default function NotificationScreen() {  
+export default function NotificationScreen() {
+
     const navigation = useNavigation();
 
     return (

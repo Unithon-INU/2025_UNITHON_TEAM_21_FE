@@ -9,7 +9,8 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './Home';
-import ChatListScreen from './Chatting/ChatList';
+import ChatListScreen from './Chatting/Chat';
+
 import Signup from './Signup';
 
 const TAB_ICONS = {
@@ -69,6 +70,7 @@ const MyTheme = {
         background: 'white',
     },
 };
+
 export default function Pages() {
     const Stack = createStackNavigator();
     return (
@@ -80,3 +82,4 @@ export default function Pages() {
         </NavigationContainer>
     );
 }
+
