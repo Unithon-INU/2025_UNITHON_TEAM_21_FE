@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Image, View, TextInput, TouchableOpacity } from 'react-native';
 
 export default function ChatInputBar({ onSend }: { onSend: (message: string) => void }) {
   const [text, setText] = useState('');
@@ -16,7 +15,7 @@ export default function ChatInputBar({ onSend }: { onSend: (message: string) => 
   return (
     <View className="flex-row items-center px-4 py-2 border-t border-gray-300 bg-white">
       <TouchableOpacity>
-        <Ionicons name="add" size={24} color="#ccc" />
+        <Image source={require('@/assets/add.png')} className="w-8 h-8" resizeMode="contain" />
       </TouchableOpacity>
       <TextInput
         className="flex-1 ml-2 text-[14px]"
@@ -25,7 +24,7 @@ export default function ChatInputBar({ onSend }: { onSend: (message: string) => 
         onChangeText={setText}
       />
       <TouchableOpacity onPress={handleSend}>
-        <Ionicons name="send" size={22} color="#FFB257" />
+        <Image source={require('@/assets/send.png')} className="w-8 h-8" resizeMode="contain" />
       </TouchableOpacity>
     </View>
   );

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Platform, Image} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Layout from '../Layout';
 import {createStackNavigator} from '@react-navigation/stack';
 import {KeyboardAvoidingView} from 'react-native';
@@ -61,7 +60,7 @@ function ChatListScreen() {
             <View className="flex-row justify-between h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
                 <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
                 <TouchableOpacity onPress={() => 'Notification'}>
-                    <Ionicons name="notifications-outline" size={30} />
+                    <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
 
@@ -132,7 +131,7 @@ function ChatRoomScreen() {
                     </View>
 
                     <TouchableOpacity>
-                        <Ionicons name="ellipsis-vertical" size={24} color="#000" />
+                        <Image source={require('@/assets/chatmenu.png')} className="w-7 h-7" resizeMode="contain" />
                     </TouchableOpacity>
                 </View>
 
