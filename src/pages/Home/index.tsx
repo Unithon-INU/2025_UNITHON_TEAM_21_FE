@@ -1,13 +1,13 @@
-import {TouchableOpacity, Image, Text, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
+import SignupButton from './components/SignupButton';
 import Layout from '../Layout';
+
 export default function Home() {
     return (
         <Layout>
             <View className="flex flex-row items-center justify-between">
-                <Image source={require('@/assets/logo.png')} style={{width: 120, height: 46}} />
-                <TouchableOpacity className="px-3 py-1 rounded-xl bg-main-color ">
-                    <Text className="text-base font-bold text-white">회원가입</Text>
-                </TouchableOpacity>
+                <Image className="w-[120px] h-[46px]" source={require('@/assets/logo.png')} />
+                <SignupButton />
             </View>
             <View className="flex flex-col gap-3 py-3">
                 <Text className="text-xl font-semibold text-font-black">인천지역아동센터</Text>
