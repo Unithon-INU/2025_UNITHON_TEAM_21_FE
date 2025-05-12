@@ -9,7 +9,7 @@ export default function LoadingScreen() {
 
             {/* 로딩 아이콘 */}
             <Image
-                source={require('@/assets/loading.png')}
+                source={require('@/assets/roading.png')}
                 style={{
                     width: 36,
                     height: 36,

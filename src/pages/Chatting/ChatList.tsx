@@ -1,17 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, FlatList, TouchableOpacity} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Layout from '../Layout';
-import useChattingNavigation from '@/hook/useChattingNavigation';
-// import useNotificationNavigation from '@/hook/useNotificationNavigation'; // 알림 내비게이션 훅
 
 export default function ChatListScreen() {
-    // 채팅탭 내비게이션 훅을 사용하여 내비게이션 객체를 가져옵니다.
-    // 이 훅은 채팅탭 내비게이션 스택 파라미터 리스트를 사용하여 타입을 지정합니다.
-    const navigation = useChattingNavigation();
-    // const nonavigation = useNotificationNavigation();
-    const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
-
     const chatRooms = [
         {
             id: '0',
@@ -20,6 +12,7 @@ export default function ChatListScreen() {
             time: '13:53',
             unread: 0,
         },
+
         {
             id: '1',
             name: '하이지역아동센터',
@@ -43,40 +36,39 @@ export default function ChatListScreen() {
         },
     ];
 
-    const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
-
     return (
         <Layout>
-            <View className="flex-row justify-between h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                    <Ionicons name="notifications-outline"size={30}/>
+            {/* 휴대폰헤더 */}
+            {/* 상단 헤더 */}
+            <View className="flex-row justify-between h-[60px] pt-[20px] pr-[1px] pb-[10px] pl-[1px]">
+                <Text className="font-black text-[24px] leading-[24px] font-inter font-bold">채팅</Text>
+                <Ionicons name="notifications-outline" size={29} color="black" />
+            </View>
+
+            <View className="flex-row space-x-2 mb-3 pt-[20px] pb-[px] pl-[1px] gap-[8px]">
+                {/* 전체 탭 */}
+                <TouchableOpacity className="px-2 py-1 rounded-full bg-main-color">
+                    <Text className="font-bold text-white font-inter">전체</Text>
+                </TouchableOpacity>
+
+                {/* 안 읽은 채팅방 탭 */}
+                <TouchableOpacity className="border border-[#D5D5D5] px-2 py-1 rounded-full">
+                    <Text className="font-bold text-black font-inter">안 읽은 채팅방</Text>
                 </TouchableOpacity>
             </View>
 
-            <View className="flex-row gap-[8px] px-[5px] py-[12px] pl-[2px]">x  x``
-                <TouchableOpacity
-                    onPress={() => setActiveTab('all')}
-                    className={`px-3 py-1 rounded-full ${activeTab === 'all' ? 'bg-main-color' : 'border border-[#D5D5D5]'}`}>
-                    <Text className={`${activeTab === 'all' ? 'text-white' : 'text-black'} font-bold`}>전체</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => setActiveTab('unread')}
-                    className={`px-3 py-1 rounded-full ${activeTab === 'unread' ? 'bg-main-color' : 'border border-[#D5D5D5]'}`}>
-                    <Text className={`${activeTab === 'unread' ? 'text-white' : 'text-black'} font-bold`}>안 읽은 채팅방</Text>
-                </TouchableOpacity>
-            </View>
+            {/* 채팅 리스트 */}
             <FlatList
-                data={filteredRooms}
+                data={chatRooms}
                 keyExtractor={item => item.id}
-                contentContainerStyle={{}}
+                contentContainerStyle={{paddingBottom: 80}}
                 renderItem={({item}) => (
-                    <TouchableOpacity className="flex-row pt-2 pb-4 px-[6px] " onPress={() => navigation.navigate('ChatRoom', {id: item.id})}>
-                        <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
-                        <View className="flex-1 justify-center mb-1">
+                    <TouchableOpacity className="flex-row pt-2 pb-4">
+                        <View className="w-12 h-12 rounded-full bg-[#ccc] mr-3" /> {/* 프로필 사진 */}
+                        <View className="justify-center flex-1">
                             <View className="flex-row justify-between">
-                                <Text className="text-black font-bold text-[16px]">{item.name}</Text>
-                                <Text className="text-[12px] text-[#999]">{item.time}</Text>
+                                <Text className="text-black font-bold text-[15px]">{item.name}</Text>
+                                <Text className="text-[12px] font-grey">{item.time}</Text>
                             </View>
                             <View className="flex-row justify-between mt-1">
                                 <Text className="text-[12px] text-[#666]" numberOfLines={1}>
