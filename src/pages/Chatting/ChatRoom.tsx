@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import React, { useState } from 'react'; import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -21,31 +20,60 @@ const initialMessages: Record<string, {id: string; text: string; isMe: boolean; 
         {id: '2', text: '네 확인했습니다', isMe: true, time: '14:01'},
     ],
 };
+function getCurrentTime(): string {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    return `${hours >= 12 ? '오전' : '오후'} ${(hours % 12) + 9 - 12 || 12}:${minutes}`;
+}
 
+function getCurrentDate(): string {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    return `${year}년 ${month}월 ${day}일 `; // 예: 2025.04.26
+}
+function getCurrentDay(): string {
+    const now = new Date();
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    const day = days[now.getDay()];
+    return day; // 예: 토
+}
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
 
-    const {id, name} = route.params;
+    const { id, name } = route.params;
 
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList, 'ChatRoom'>>();
     const [allMessages, setAllMessages] = useState(initialMessages);
 
     const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
-    const roomname = name; // 방 이름이 없을 경우 기본값 설정
+
+    const [currentDate, setCurrentDate] = useState(getCurrentDate());
+    const [currentDay, setCurrentDay] = useState(getCurrentDay());
+    const [currentTime, setCurrentTime] = useState(getCurrentTime());
+
     const handleSend = (message: string) => {
         const newMessage = {
             id: Date.now().toString(),
             text: message,
             isMe: true,
-            time: '지금',
+            time: currentTime, // 시간 자동 추가
+            date: currentDate,
+            day: currentDay,
         };
-        setAllMessages(prev => ({
-            ...prev,
-            [id]: [...(prev[id] || []), newMessage],
+        setAllMessages(prevMessages => ({
+            ...prevMessages,
+            [id]: [...(prevMessages[id] || []), newMessage], // 해당 방의 메시지에 추가
         }));
-    };
 
-    const renderItem = ({item}: any) => (
+        setCurrentTime(getCurrentTime()); // 현재 시간 업데이트
+        setCurrentDate(getCurrentDate()); // 현재 날짜 업데이트
+        setCurrentDay(getCurrentDay()); // 현재 요일 업데이트
+        Alert.alert('메시지 전송', `메시지: ${message}`, [{ text: '확인' }]); // 메시지 전송 알림
+    };
+    const renderItem = ({ item }: any) => (
         <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full mr-2" />}
             {item.isMe && (
@@ -68,14 +96,17 @@ export default function ChatRoomScreen() {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
-                    <Text className="text-black font-bold text-[16px]">{roomname}</Text>
+                    <Text className="text-black font-bold text-[16px]">{name}</Text>
                 </View>
                 <TouchableOpacity>
                     <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
             <View className="items-center my-2">
-                <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">2025년 4월 26일 토요일</Text>
+                <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">
+                    {' '}
+                    {currentDate} {currentDay}요일{' '}
+                </Text>
             </View>
             <FlatList data={messages} renderItem={renderItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />
             <ChatInputBar onSend={handleSend} />
