@@ -9,7 +9,9 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './Home';
-import ChatListScreen from './Chatting/ChatList';
+import  ChatListScreen  from './Chatting/ChatList';
+import  ChatRoomScreen  from './Chatting/ChatRoom';
+import NotificationScreen from './Notification';
 import Signup from './Signup';
 
 const TAB_ICONS = {
@@ -55,9 +57,9 @@ function NavBar() {
             })}>
             <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
             <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
-            <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
+            <Tab.Screen name="chatting" options={{ tabBarLabel: '채팅'} } children={ChatListScreen} />
             <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={() => <SimpleScreen label="지역봉사" />} />
-            <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={() => <SimpleScreen label="내정보" />} />
+            <Tab.Screen name="account" options={{ tabBarLabel: '내정보' }} children={() => <SimpleScreen label="내정보" />} />
         </Tab.Navigator>
     );
 }
@@ -69,14 +71,18 @@ const MyTheme = {
         background: 'white',
     },
 };
+
 export default function Pages() {
     const Stack = createStackNavigator();
     return (
         <NavigationContainer theme={MyTheme}>
-            <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
+            <Stack.Navigator initialRouteName={'main'} screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
+                <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+                <Stack.Screen name="Notification" component={NotificationScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
 }
+
