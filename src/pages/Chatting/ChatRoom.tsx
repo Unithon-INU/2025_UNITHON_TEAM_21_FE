@@ -1,19 +1,20 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-import Layout from '../Layout';
 import {KeyboardAvoidingView} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ChatInputBar from './components/ChatInputBar';
+
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {id: string};
+    ChatRoom: {id: string; name: string};
     Notification: undefined;
 };
+
 const initialMessages: Record<string, {id: string; text: string; isMe: boolean; time: string}[]> = {
     '0': [
-        {id: '1', text: '개인정보 이용내역 안내임', isMe: false, time: '13:00'},
-        {id: '2', text: '오케 내정보확인', isMe: true, time: '13:01'},
+        {id: '1', text: '개인정보 이용내역 안내임', isMe: false, time: '오후 1:53'},
+        {id: '2', text: '오케 내정보확인', isMe: true, time: '오후 2:10'},
     ],
     '1': [
         {id: '1', text: '내일 봉사일정 확인 부탁드립니다', isMe: false, time: '14:00'},
@@ -23,12 +24,14 @@ const initialMessages: Record<string, {id: string; text: string; isMe: boolean; 
 
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
-    const {id} = route.params;
+
+    const {id, name} = route.params;
+
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList, 'ChatRoom'>>();
     const [allMessages, setAllMessages] = useState(initialMessages);
 
-    const messages = allMessages[id] || [];
-
+    const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
+    const roomname = name; // 방 이름이 없을 경우 기본값 설정
     const handleSend = (message: string) => {
         const newMessage = {
             id: Date.now().toString(),
@@ -43,7 +46,7 @@ export default function ChatRoomScreen() {
     };
 
     const renderItem = ({item}: any) => (
-        <View className={`flex-row items-end mb-2 ${item.isMe ? 'justify-end' : ''}`}>
+        <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full mr-2" />}
             {item.isMe && (
                 <Text className="text-[10px] text-gray-500 mr-1">{item.time}</Text> //시간 먼저 내메시지
@@ -59,21 +62,22 @@ export default function ChatRoomScreen() {
     );
 
     return (
-        <KeyboardAvoidingView style={{flex: 1}} behavior="padding" keyboardVerticalOffset={100} className="flex-1 bg-white">
-            <Layout>
-                <View className="flex-row items-center justify-between pb-5">
-                    <View className="flex-row items-center space-x-2">
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity>
-                        <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} className="flex-1 bg-white">
+            <View className="flex-row items-center justify-between px-4 pb-7">
+                <View className="flex-row items-center space-x-2">
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
+                    <Text className="text-black font-bold text-[16px]">{roomname}</Text>
                 </View>
-
-                <FlatList data={messages} renderItem={renderItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />
-            </Layout>
+                <TouchableOpacity>
+                    <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />
+                </TouchableOpacity>
+            </View>
+            <View className="items-center my-2">
+                <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">2025년 4월 26일 토요일</Text>
+            </View>
+            <FlatList data={messages} renderItem={renderItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />
             <ChatInputBar onSend={handleSend} />
         </KeyboardAvoidingView>
     );

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import Layout from '../Layout';
-import { useNavigation} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 const chatRooms = [
@@ -34,15 +34,16 @@ const chatRooms = [
         unread: 0,
     },
 ];
+
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {id: string};
+    ChatRoom: {id: string, name: string};
     Notification: undefined;
 };
 
 export default function ChatListScreen() {
     const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
-    const [activeTab, setActiveTab] = useState('all'); // 전체와 안 읽은 채팅방을 구분하는 상태 변수
+    const [activeTab, setActiveTab] = useState('all');
     type ChatStackNavigationProp = StackNavigationProp<ChatStackParamList, 'ChatList' | 'ChatRoom' | 'Notification'>; // 채팅탭 내비게이션 스택 파라미터 리스트
     const navigation = useNavigation<ChatStackNavigationProp>(); // 채팅탭 내비게이션 훅
     return (
@@ -71,11 +72,11 @@ export default function ChatListScreen() {
                 keyExtractor={item => item.id}
                 contentContainerStyle={{}}
                 renderItem={({item}) => (
-                    <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px] " onPress={() => navigation.navigate('ChatRoom', {id: item.id})}>
+                    <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px] " onPress={() => navigation.navigate('ChatRoom', {id: item.id ,name:item.name})}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
                         <View className="flex-1 justify-center mb-4">
                             <View className="flex-row justify-between">
-                                <Text className="text-black font-bold text-[16px]">{item.name}</Text>/
+                                <Text className="text-black font-bold text-[16px]">{item.name}</Text>
                                 <Text className="text-[12px] text-[#999]">{item.time}</Text>
                             </View>
                             <View className="flex-row justify-between mt-1">
