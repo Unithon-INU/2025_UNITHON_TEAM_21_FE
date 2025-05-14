@@ -72,7 +72,7 @@ export default function ChatListScreen() {
                 renderItem={({item}) => (
                     <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px]" onPress={() => handleEnterRoom(item.id, item.name)}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
-                        <View className="flex-1 justify-center mb-4">
+                        <View className="justify-center flex-1 mb-4">
                             <View className="flex-row justify-between">
                                 <Text className="text-black font-bold text-[16px]">{item.name}</Text>
                                 <Text className="text-[12px] text-[#999]">{item.time}</Text>
