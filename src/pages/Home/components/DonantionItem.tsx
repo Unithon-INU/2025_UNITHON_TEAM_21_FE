@@ -1,9 +1,10 @@
+import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {useState} from 'react';
 import {Text, View} from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function DonationItem() {
+function Item() {
     const percentage = 210;
     const [like, setLike] = useState(false);
     return (
@@ -36,5 +37,13 @@ export default function DonationItem() {
                 </View>
             </View>
         </View>
+    );
+}
+export default function DonationItem() {
+    return (
+        <ColWrapper title="실시간 기부현황">
+            <Item />
+            <Item />
+        </ColWrapper>
     );
 }

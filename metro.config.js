@@ -14,15 +14,13 @@ const {assetExts, sourceExts} = defaultConfig.resolver;
 
 // Custom metro settings for SVGs
 const customConfig = {
-  transformer: {
-    babelTransformerPath: require.resolve(
-      'react-native-svg-transformer/react-native',
-    ),
-  },
-  resolver: {
-    assetExts: assetExts.filter(ext => ext !== 'svg'),
-    sourceExts: [...sourceExts, 'svg'],
-  },
+    transformer: {
+        babelTransformerPath: require.resolve('react-native-svg-transformer/react-native'),
+    },
+    resolver: {
+        assetExts: assetExts.filter(ext => ext !== 'svg'),
+        sourceExts: [...sourceExts, 'svg'],
+    },
 };
 
 // Merge default config with custom settings
@@ -30,5 +28,6 @@ const mergedConfig = mergeConfig(defaultConfig, customConfig);
 
 // Export wrapped with NativeWind (global.css)
 module.exports = withNativeWind(mergedConfig, {
-  input: './global.css',
+    input: './global.css',
+    inlineRem: 16,
 });

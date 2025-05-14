@@ -9,8 +9,13 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './Home';
-import ChatListScreen from './Chatting/ChatList';
 import Signup from './Signup';
+import ChatListScreen from './Chatting/ChatList';
+
+import Volunteer from './Volunteer';
+import VolunteerCategory from './Volunteer/VolunteerCategory';
+import VolunterrDetail from './Volunteer/VolunterrDetail';
+
 import UserInformation from './UserInformation';
 
 const TAB_ICONS = {
@@ -57,7 +62,7 @@ function NavBar() {
             <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
             <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
             <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
-            <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={() => <SimpleScreen label="지역봉사" />} />
+            <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
             <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInformation} />
         </Tab.Navigator>
     );
@@ -77,6 +82,8 @@ export default function Pages() {
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
+                <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
+                <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
             </Stack.Navigator>
         </NavigationContainer>
     );
