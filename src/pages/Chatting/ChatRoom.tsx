@@ -1,4 +1,5 @@
-import React, { useState } from 'react'; import { View, Text, FlatList, TouchableOpacity, Image, Alert } from 'react-native';
+import React, {useState} from 'react';
+import {View, Text, FlatList, TouchableOpacity, Image, Alert} from 'react-native';
 import {KeyboardAvoidingView} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -43,9 +44,10 @@ function getCurrentDay(): string {
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
 
-    const { id, name } = route.params;
+    const {id, name} = route.params;
 
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList, 'ChatRoom'>>();
+
     const [allMessages, setAllMessages] = useState(initialMessages);
 
     const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
@@ -71,9 +73,9 @@ export default function ChatRoomScreen() {
         setCurrentTime(getCurrentTime()); // 현재 시간 업데이트
         setCurrentDate(getCurrentDate()); // 현재 날짜 업데이트
         setCurrentDay(getCurrentDay()); // 현재 요일 업데이트
-        Alert.alert('메시지 전송', `메시지: ${message}`, [{ text: '확인' }]); // 메시지 전송 알림
+        Alert.alert('메시지 전송', `메시지: ${message}`, [{text: '확인'}]); // 메시지 전송 알림
     };
-    const renderItem = ({ item }: any) => (
+    const renderItem = ({item}: any) => (
         <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full mr-2" />}
             {item.isMe && (
@@ -103,7 +105,7 @@ export default function ChatRoomScreen() {
                 </TouchableOpacity>
             </View>
             <View className="items-center my-2">
-                <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">
+                <Text className="text-[12px] font-text-gray-500 bg-gray-100 px-3 py-1 mb-5 rounded-full">
                     {' '}
                     {currentDate} {currentDay}요일{' '}
                 </Text>
