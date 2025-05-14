@@ -47,6 +47,7 @@ export default function ChatRoomScreen() {
     const {id, name} = route.params;
 
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList, 'ChatRoom'>>();
+
     const [allMessages, setAllMessages] = useState(initialMessages);
 
     const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
@@ -104,7 +105,7 @@ export default function ChatRoomScreen() {
                 </TouchableOpacity>
             </View>
             <View className="items-center my-2">
-                <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">
+                <Text className="text-[12px] font-text-gray-500 bg-gray-100 px-3 py-1 mb-5 rounded-full">
                     {' '}
                     {currentDate} {currentDay}요일{' '}
                 </Text>

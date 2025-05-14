@@ -2,7 +2,6 @@ import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -13,11 +12,10 @@ import ChatListScreen from './Chatting/ChatList';
 import ChatRoomScreen from './Chatting/ChatRoom';
 import NotificationScreen from './Notification';
 import Signup from './Signup';
-import Volunteer from './Volunteer';
-import VolunteerCategory from './Volunteer/VolunteerCategory';
-import VolunterrDetail from './Volunteer/VolunterrDetail';
-
-import UserInformation from './UserInformation';
+import UserInfo from './User/Info';
+import UserLikedcenter from './User/Likedcenter';
+import UserLikedvol from './User/Likedvol';
+import UserDonate from './User/Donate';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -37,13 +35,12 @@ function SimpleScreen({label}: {label: string}) {
 function NavBar() {
     const Tab = createBottomTabNavigator();
     return (
-        <Tab.Navigator
+        <><Tab.Navigator
             initialRouteName="home"
-            screenOptions={({route}) => ({
+            screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarShowLabel: true,
-                tabBarIcon: ({color, size}) =>
-                    TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
+                tabBarIcon: ({ color, size }) => TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
                 tabBarActiveTintColor: '#FFB257',
                 tabBarInactiveTintColor: '#999999',
                 tabBarStyle: {
@@ -64,8 +61,9 @@ function NavBar() {
             <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
             <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
             <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
-            <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInformation} />
+            <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInfo} />
         </Tab.Navigator>
+        </>
     );
 }
 
@@ -84,7 +82,7 @@ export default function Pages() {
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
-                <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+                <Stack.Screen name="ChatRoom" component={ChatRoomScreen}/>
                 <Stack.Screen name="Notification" component={NotificationScreen} />
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
