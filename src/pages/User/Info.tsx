@@ -28,7 +28,7 @@ export default function UserInfo() {
                         <Image source={require('@/assets/likedcenter.png')} className="w-6 h-6 mr-2" resizeMode="contain" />
                         <Text className="font-inter text-[16px]">관심 지역아동센터</Text>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('Likedcenter')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Userlikedcenter')}>
                         <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                     </TouchableOpacity>
                 </View>
@@ -39,7 +39,7 @@ export default function UserInfo() {
                         <Image source={require('@/assets/likedvol.png')} className="w-6 h-6 mr-2" resizeMode="contain" />
                         <Text className="font-inter  text-[16px]">관심 봉사활동</Text>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('Likedvol')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Userlikedvol')}>
                         <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                     </TouchableOpacity>
                 </View>
@@ -50,7 +50,7 @@ export default function UserInfo() {
                         <Image source={require('@/assets/likedcenter.png')} className="w-6 h-6 mr-2" resizeMode="contain" />
                         <Text className="font-inter  text-[16px]">기부내역</Text>
                     </View>
-                    <TouchableOpacity onPress={() => navigation.navigate('Donate')}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Userdonate')}>
                         <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                     </TouchableOpacity>
                 </View>
