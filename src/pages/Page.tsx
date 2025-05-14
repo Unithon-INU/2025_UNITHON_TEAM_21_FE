@@ -9,9 +9,10 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './Home';
-import Signup from './Signup';
 import ChatListScreen from './Chatting/ChatList';
-
+import ChatRoomScreen from './Chatting/ChatRoom';
+import NotificationScreen from './Notification';
+import Signup from './Signup';
 import Volunteer from './Volunteer';
 import VolunteerCategory from './Volunteer/VolunteerCategory';
 import VolunterrDetail from './Volunteer/VolunterrDetail';
@@ -75,6 +76,7 @@ const MyTheme = {
         background: 'white',
     },
 };
+
 export default function Pages() {
     const Stack = createStackNavigator();
     return (
@@ -82,6 +84,8 @@ export default function Pages() {
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
+                <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+                <Stack.Screen name="Notification" component={NotificationScreen} />
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
             </Stack.Navigator>
