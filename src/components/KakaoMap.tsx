@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 import {WebView} from 'react-native-webview';
+import {ANDROID_KAKAO_API_KEY} from '@env';
 
 export default function KakaoMap({location, className = ''}: {location: string; className?: string}) {
     if (!location || !location.includes(',')) {
@@ -13,7 +14,7 @@ export default function KakaoMap({location, className = ''}: {location: string; 
     <html>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=a1cb870c2f1afcffd6d127610ecc529a&libraries=services"></script>
+      <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${ANDROID_KAKAO_API_KEY}&libraries=services"></script>
       <style>
         html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }
       </style>

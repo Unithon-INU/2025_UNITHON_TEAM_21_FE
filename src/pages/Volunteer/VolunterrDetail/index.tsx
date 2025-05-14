@@ -98,7 +98,7 @@ export default function VolunteerDetail() {
                     </>
                 )}
             </Layout>
-            <View className="flex flex-row justify-between gap-3 px-10 py-6 border-t border-bg-gray">
+            <View className="flex flex-row justify-between px-10 py-6 border-t border-bg-gray">
                 <TouchableOpacity
                     className="w-[150px] bg-main-color py-3 rounded-xl"
                     onPress={() =>
