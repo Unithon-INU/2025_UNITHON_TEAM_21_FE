@@ -8,10 +8,11 @@ import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 import Home from './Home';
+import Signup from './Home/Signup';
+
 import ChatListScreen from './Chatting/ChatList';
 import ChatRoomScreen from './Chatting/ChatRoom';
 import NotificationScreen from './Notification';
-import Signup from './Signup';
 import UserInfo from './User/Info';
 import UserLikedcenter from './User/Likedcenter';
 import UserLikedvol from './User/Likedvol';
@@ -19,6 +20,9 @@ import UserDonate from './User/Donate';
 import VolunteerCategory from './Volunteer/VolunteerCategory';
 import VolunterrDetail from './Volunteer/VolunterrDetail';
 import Volunteer from './Volunteer';
+import Chatbot from './Volunteer/Chatbot';
+import CenterDetail from './CenterDetail';
+import React from 'react';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -91,6 +95,8 @@ export default function Pages() {
                 <Stack.Screen name="Notification" component={NotificationScreen} />
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
+                <Stack.Screen name="chatbot" component={Chatbot} />
+                <Stack.Screen name="centerDetail" component={CenterDetail} />
                 <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
                 <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
                 <Stack.Screen name="Userdonate" component={UserDonate} />

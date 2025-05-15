@@ -39,7 +39,7 @@ const buttonData = [
 ];
 
 function Button({title, iconKey}: {title: string; iconKey: string}) {
-    const navigation = useNavigation();
+    const navigation = useNavigation() as any;
     const handlePress = () => {
         navigation.navigate('volunteerCategory', {category: title, iconKey});
     };
