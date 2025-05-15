@@ -12,8 +12,7 @@ import Signup from './Home/Signup';
 
 import ChatListScreen from './Chatting/ChatList';
 import ChatRoomScreen from './Chatting/ChatRoom';
-import NotificationScreen from './Notification/';
-import Signup from './Signup';
+import NotificationScreen from './Notification';
 import UserInfo from './User/Info';
 import UserLikedcenter from './User/Likedcenter';
 import UserLikedvol from './User/Likedvol';
