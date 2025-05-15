@@ -22,7 +22,7 @@ export default function ChatInputBar({onSend}: {onSend: (message: string) => voi
                 placeholderTextColor={'#9A9A9A'}
             />
             <TouchableOpacity onPress={handleSend}>
-                <Image source={require('@/assets/send.png')} className="w-8 h-8 " resizeMode="contain" />
+                <Image source={require('@/assets/send.png')} className="w-8 h-8" resizeMode="contain" />
             </TouchableOpacity>
         </View>
     );

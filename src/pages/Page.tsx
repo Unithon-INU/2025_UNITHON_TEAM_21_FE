@@ -2,7 +2,6 @@ import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -14,14 +13,16 @@ import Signup from './Home/Signup';
 import ChatListScreen from './Chatting/ChatList';
 import ChatRoomScreen from './Chatting/ChatRoom';
 import NotificationScreen from './Notification';
-
-import Volunteer from './Volunteer';
+import UserInfo from './User/Info';
+import UserLikedcenter from './User/Likedcenter';
+import UserLikedvol from './User/Likedvol';
+import UserDonate from './User/Donate';
 import VolunteerCategory from './Volunteer/VolunteerCategory';
 import VolunterrDetail from './Volunteer/VolunterrDetail';
+import Volunteer from './Volunteer';
 import Chatbot from './Volunteer/Chatbot';
-
-import UserInformation from './UserInformation';
 import CenterDetail from './CenterDetail';
+import React from 'react';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -41,35 +42,37 @@ function SimpleScreen({label}: {label: string}) {
 function NavBar() {
     const Tab = createBottomTabNavigator();
     return (
-        <Tab.Navigator
-            initialRouteName="home"
-            screenOptions={({route}) => ({
-                headerShown: false,
-                tabBarShowLabel: true,
-                tabBarIcon: ({color, size}) =>
-                    TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
-                tabBarActiveTintColor: '#FFB257',
-                tabBarInactiveTintColor: '#999999',
-                tabBarStyle: {
-                    paddingTop: 6,
-                    paddingBottom: 10,
-                    height: 75,
-                    backgroundColor: 'white',
-                    borderTopWidth: 0.5,
-                    borderTopColor: '#D5D5D5',
-                },
-                tabBarLabelStyle: {
-                    fontSize: 12,
-                    fontWeight: 'semibold',
-                    fontFamily: 'System',
-                },
-            })}>
-            <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
-            <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
-            <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
-            <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
-            <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInformation} />
-        </Tab.Navigator>
+        <>
+            <Tab.Navigator
+                initialRouteName="home"
+                screenOptions={({route}) => ({
+                    headerShown: false,
+                    tabBarShowLabel: true,
+                    tabBarIcon: ({color, size}) =>
+                        TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
+                    tabBarActiveTintColor: '#FFB257',
+                    tabBarInactiveTintColor: '#999999',
+                    tabBarStyle: {
+                        paddingTop: 6,
+                        paddingBottom: 10,
+                        height: 75,
+                        backgroundColor: 'white',
+                        borderTopWidth: 0.5,
+                        borderTopColor: '#D5D5D5',
+                    },
+                    tabBarLabelStyle: {
+                        fontSize: 12,
+                        fontWeight: 'semibold',
+                        fontFamily: 'System',
+                    },
+                })}>
+                <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
+                <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
+                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
+                <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
+                <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInfo} />
+            </Tab.Navigator>
+        </>
     );
 }
 
@@ -94,6 +97,9 @@ export default function Pages() {
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
                 <Stack.Screen name="chatbot" component={Chatbot} />
                 <Stack.Screen name="centerDetail" component={CenterDetail} />
+                <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
+                <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
+                <Stack.Screen name="Userdonate" component={UserDonate} />
             </Stack.Navigator>
         </NavigationContainer>
     );

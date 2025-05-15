@@ -47,6 +47,7 @@ export default function ChatRoomScreen() {
     const {id, name} = route.params;
 
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList, 'ChatRoom'>>();
+
     const [allMessages, setAllMessages] = useState(initialMessages);
 
     const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
