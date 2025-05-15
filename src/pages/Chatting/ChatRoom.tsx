@@ -13,7 +13,7 @@ type ChatStackParamList = {
 
 const initialMessages: Record<string, {id: string; text: string; isMe: boolean; time: string}[]> = {
     '0': [
-        {id: '1', text: '개인정보 이용내역 안내임', isMe: false, time: '오후 1:53'},
+        {id: '1', text: '개인정보 이용내역 안내', isMe: false, time: '오후 1:53'},
         {id: '2', text: '오케 내정보확인', isMe: true, time: '오후 2:10'},
     ],
     '1': [
@@ -92,8 +92,8 @@ export default function ChatRoomScreen() {
     );
 
     return (
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={30} className="flex-1 bg-white">
-            <View className="flex-row items-center justify-between px-4 pb-7">
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} className="flex-1 bg-white">
+            <View className="flex-row items-center justify-between px-4 py-5 pb-7">
                 <View className="flex-row items-center space-x-2">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
