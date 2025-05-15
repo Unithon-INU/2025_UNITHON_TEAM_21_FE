@@ -1,24 +1,44 @@
-import {RowWrapper} from '@/components/layout/ContentWrapper';
-import {Text, View} from 'react-native';
+import {useEffect, useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import Papa from 'papaparse';
+import RNFS from 'react-native-fs';
 
-function Item() {
+import {RowWrapper} from '@/components/layout/ContentWrapper';
+import {ChildrenCenterList} from '@/types/ChildrenCenter';
+
+function Item({data}: {data: ChildrenCenterList}) {
+    const navigation = useNavigation() as any;
     return (
-        <View className="flex flex-row">
+        <TouchableOpacity className="flex flex-row" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>
             <View className="flex flex-col gap-1 px-2 py-3 bg-main-color rounded-2xl">
-                <Text className="text-base font-semibold text-white">검단지역아동센터</Text>
-                <Text className="text-xs font-semibold text-white">인천 서구 검단로501번길 69</Text>
-                <Text className="text-xs font-semibold text-white">#꿈나무 #쉼터</Text>
-                <Text className="text-xs font-semibold text-white">083)722-1234-5679</Text>
+                <Text className="text-base font-semibold text-white">{data.centerName}</Text>
+                <Text className="text-xs font-semibold text-white">{data.address}</Text>
+                <Text className="text-xs font-semibold text-white">{data.phoneNumber}</Text>
+                <Text className="text-xs font-semibold text-white">아동수 : {data.chidrenNumber}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 export default function CenterItem() {
+    const [data, setData] = useState<ChildrenCenterList[]>();
+    useEffect(() => {
+        const loadCSV = async () => {
+            try {
+                const content = await RNFS.readFileAssets('ChildrenCenterList.csv', 'utf8');
+                const results = Papa.parse(content, {header: true});
+                setData(results.data as ChildrenCenterList[]);
+            } catch (err) {
+                console.error('CSV 읽기 실패:', err);
+            }
+        };
+        loadCSV();
+    }, []);
     return (
         <RowWrapper title="인천지역아동센터">
-            <Item />
-            <Item />
-            <Item />
+            {data?.map((item, index) => (
+                <Item key={index} data={item} />
+            ))}
         </RowWrapper>
     );
 }

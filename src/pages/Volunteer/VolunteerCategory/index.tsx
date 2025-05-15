@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
 import {xml2Json} from '@/utils/xml2json';
 
 import {getVltrSearchWordList} from '@/types/volunteerTyps';
-
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 
 import VolunteerItem from './components/VolunteerItem';
 import Layout from '@/pages/Layout';
@@ -37,7 +35,9 @@ export default function VolunterrCategory() {
                 const response = await fetch(
                     `http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?upperClCode=${iconKey}&schSido=6280000`,
                 );
-                if (!response.ok) throw new Error('API 호출 실패');
+                if (!response.ok) {
+                    throw new Error('API 호출 실패');
+                }
                 const xml = await response.text();
                 const json = xml2Json(xml);
                 setVolunteerData(json);
@@ -52,11 +52,11 @@ export default function VolunterrCategory() {
 
     return (
         <Layout>
-            <View className="flex flex-row items-center gap-1 py-4">
+            <View className="flex flex-row items-center py-4">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <SimpleLineIcons size={24} name="arrow-left" color="#484848" />
+                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="text-2xl font-bold text-font-black">{category}</Text>
+                <Text className="text-xl font-bold text-font-black">{category}</Text>
             </View>
             <ScrollView className="flex flex-col flex-1 gap-3">
                 {loading && (
