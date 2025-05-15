@@ -19,9 +19,9 @@ type ChatRoomData = {
 };
 
 const initialChatRooms: ChatRoomData[] = [
-    {id: '0', name: '기봉사', message: '개인정보 이용내역 안내', time: '13:53', unread: 0},
+    {id: '0', name: '기봉사', message: '개인정보 이용내역 안내', time: '13:53', unread: 1},
     {id: '1', name: '하이지역아동센터', message: '내일 봉사 일정 확인 부탁드립니다.', time: '어제', unread: 0},
-    {id: '2', name: '우리동네 봉사킹', message: '같이 봉사하러 가실래요?', time: '4월 20일(화)', unread: 1},
+    {id: '2', name: '우리동네 봉사킹', message: '같이 봉사하러 가실래요?', time: '4월 20일(화)', unread: 0},
     {id: '3', name: '이름을 뭐로할까', message: '네 감사합니다~', time: '2024.08.27', unread: 0},
 ];
 
@@ -44,7 +44,7 @@ export default function ChatListScreen() {
     return (
         <Layout>
             {/* 상단 */}
-            <View className="flex-row justify-between h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
+            <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
                 <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                     <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />

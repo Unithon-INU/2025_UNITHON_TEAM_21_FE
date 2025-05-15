@@ -13,7 +13,7 @@ export default function UserEdit() {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
         </TouchableOpacity>
-        <Text className="font-inter font-Inter font-bold text-[20px]">   프로필 수정</Text>
+        <Text className="font-inter font-Inter font-bold text-[20px]">  프로필 수정</Text>
       </View>
     </Layout>
   );
