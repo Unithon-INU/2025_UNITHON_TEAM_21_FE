@@ -3,7 +3,7 @@ import {View, Text, FlatList, TouchableOpacity, Image, Alert} from 'react-native
 import {KeyboardAvoidingView} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import ChatInputBar from './components/ChatInputBar';
+import ChatInputBar from '@/components/input/ChatInputBar';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -91,7 +91,7 @@ export default function ChatRoomScreen() {
     );
 
     return (
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} className="flex-1 bg-white">
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={30} className="flex-1 bg-white">
             <View className="flex-row items-center justify-between px-4 pb-7">
                 <View className="flex-row items-center space-x-2">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -105,8 +105,8 @@ export default function ChatRoomScreen() {
             </View>
             <View className="items-center my-2">
                 <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">
-                    {' '}
-                    {currentDate} {currentDay}요일{' '}
+                    {currentDate}
+                    {currentDay}요일
                 </Text>
             </View>
             <FlatList data={messages} renderItem={renderItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />

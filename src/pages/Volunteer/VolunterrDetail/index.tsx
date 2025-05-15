@@ -1,6 +1,6 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
-import {ActivityIndicator, Linking, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, Linking, Text, TouchableOpacity, View} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
 import {xml2Json} from '@/utils/xml2json';
@@ -8,12 +8,10 @@ import {decode} from 'he';
 
 import {getVltrPartcptnItemListItem} from '@/types/volunteerTyps';
 
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import Layout from '@/pages/Layout';
 import Detail from './components/Detail';
-import KakaoMap from '../../../components/KakaoMap';
+import {KakaoMap} from '../../../components/KakaoMap';
 
 type VolunteerDetailParamList = {
     VolunteerDetail: {
@@ -36,7 +34,7 @@ export default function VolunteerDetail() {
     const route = useRoute<RouteProp<VolunteerDetailParamList, 'VolunteerDetail'>>();
 
     const {progrmRegistNo} = route.params;
-
+    const url = `https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?titleNm=%EC%83%81%EC%84%B8%EB%B3%B4%EA%B8%B0&type=show&progrmRegistNo=${item.progrmRegistNo}`;
     useEffect(() => {
         const fetchitem = async () => {
             setLoading(true);
@@ -64,7 +62,7 @@ export default function VolunteerDetail() {
             <Layout>
                 <View className="flex flex-row items-center py-4">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <SimpleLineIcons size={24} name="arrow-left" color="#484848" />
+                        <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
                 </View>
                 {loading ? (
@@ -79,7 +77,7 @@ export default function VolunteerDetail() {
                         </ColWrapper>
                         <ColWrapper title="봉사장소">
                             <Text>{item.actPlace}</Text>
-                            <KakaoMap location={item.areaLalo1} />
+                            <KakaoMap className="w-full h-[240px]" location={item.areaLalo1} name={item.actPlace} />
                         </ColWrapper>
                         <ColWrapper title="참여 가능 여부">
                             <Text>
@@ -99,17 +97,11 @@ export default function VolunteerDetail() {
                 )}
             </Layout>
             <View className="flex flex-row justify-between px-10 py-6 border-t border-bg-gray">
-                <TouchableOpacity
-                    className="w-[150px] bg-main-color py-3 rounded-xl"
-                    onPress={() =>
-                        Linking.openURL(
-                            `https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?titleNm=%EC%83%81%EC%84%B8%EB%B3%B4%EA%B8%B0&type=show&progrmRegistNo=${item.progrmRegistNo}`,
-                        )
-                    }>
-                    <Text className="font-bold text-center text-white">1365에서 신청하기</Text>
+                <TouchableOpacity className="w-[150px] bg-main-color py-3 rounded-xl" onPress={() => Linking.openURL(url)}>
+                    <Text className="text-base font-bold text-center text-white">1365에서 신청하기</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className="w-[150px] bg-font-gray py-3 rounded-xl" onPress={() => navigation.goBack()}>
-                    <Text className="font-bold text-center text-white ">닫기</Text>
+                    <Text className="text-base font-bold text-center text-white ">닫기</Text>
                 </TouchableOpacity>
             </View>
         </>
