@@ -3,7 +3,7 @@ import {Text, View} from 'react-native';
 import Layout from '../Layout';
 import SearchBar from './components/SearchBar';
 import RecommendButtons from './components/RecommendButtons';
-import RecommendActivity from './components/RecommendActivity';
+import RecommendActivity from '../Home/components/RecommendActivity';
 import ChatbotIcon from './components/ChatbotIcon';
 
 export default function index() {

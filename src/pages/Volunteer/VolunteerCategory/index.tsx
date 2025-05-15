@@ -77,8 +77,8 @@ export default function VolunterrCategory() {
                         <Text className="text-xl font-bold text-font-black">
                             전체 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
                         </Text>
-                        {items.map(item => (
-                            <VolunteerItem item={item} />
+                        {items.map((item, idx) => (
+                            <VolunteerItem item={item} key={idx} />
                         ))}
                     </View>
                 )}
