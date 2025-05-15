@@ -37,9 +37,9 @@ export function KakaoMap({location, name = '', className = ''}: {location: strin
           var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
           var marker = new kakao.maps.Marker({ position: markerPosition });
           var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
-                    });
-                    infowindow.open(map, marker);
+              content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
+          });
+          infowindow.open(map, marker);
           marker.setMap(map);
         }
       </script>
@@ -72,7 +72,6 @@ export function KakaoMapAddress({location, name = '', className = ''}: {location
                 },
             });
             const data = await response.json();
-            console.log(data);
             setLatitude(data.documents[0].y);
             setLongitude(data.documents[0].x);
         };
@@ -81,37 +80,46 @@ export function KakaoMapAddress({location, name = '', className = ''}: {location
     const htmlContent = `
     <!DOCTYPE html>
     <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${ANDROID_KAKAO_API_KEY}&libraries=services"></script>
-      <style>html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }</style>
-    </head>
-    <body>
-      <div id="map"></div>
-      <script>
-        window.onload = function() {
-          var mapContainer = document.getElementById('map');
-          var mapOption = {
-            center: new kakao.maps.LatLng(${latitude}, ${longitude}),
-            level: 3
-          };
-          var map = new kakao.maps.Map(mapContainer, mapOption);
-          var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
-          var marker = new kakao.maps.Marker({ position: markerPosition });
-          var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
-                    });
-                    infowindow.open(map, marker);
-          marker.setMap(map);
-        }
-      </script>
-    </body>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${ANDROID_KAKAO_API_KEY}&libraries=services"></script>
+            <style>
+                html,
+                body,
+                #map {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="map"></div>
+            <script>
+                window.onload = function() {
+                  var mapContainer = document.getElementById('map');
+                  var mapOption = {
+                    center: new kakao.maps.LatLng(${latitude}, ${longitude}),
+                    level: 5
+                  };
+                  var map = new kakao.maps.Map(mapContainer, mapOption);
+                    var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
+                    var marker = new kakao.maps.Marker({ position: markerPosition });
+                    marker.setMap(map);
+                  var infowindow = new kakao.maps.InfoWindow({
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
+                })
+                  infowindow.open(map, marker);
+                }
+            </script>
+        </body>
     </html>
     `;
 
     return (
         <View className={`overflow-hidden rounded-xl ${className}`}>
-            <WebView originWhitelist={['*']} source={{html: htmlContent}} javaScriptEnabled={true} domStorageEnabled={true} />
+            <WebView originWhitelist={['*']} nestedScrollEnabled={true} source={{html: htmlContent}} javaScriptEnabled={true} domStorageEnabled={true} />
         </View>
     );
 }

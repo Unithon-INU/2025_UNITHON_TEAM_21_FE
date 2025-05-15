@@ -9,6 +9,7 @@ import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import Layout from '@/pages/Layout';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {KakaoMapAddress} from '@/components/KakaoMap';
+import DonationStatus from './components/DonationStatus';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -43,16 +44,24 @@ export default function CenterDetail() {
                     <Text className="text-base font-semibold text-font-black">{data?.address}</Text>
                 </ColWrapper>
                 <ColWrapper title="기부 현황">
-                    <Text>주소주소</Text>
+                    <DonationStatus />
                 </ColWrapper>
                 <ColWrapper title="센터소식">
-                    <Text className="text-base font-semibold text-font-black">소식소식소식</Text>
+                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
+                        2025.05.20 김혜성, MLB 데뷔 첫 홈런포 터졌다...
+                    </Text>
+                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
+                        2025.04.25 코스피·코스닥 지수 4거래일 만에 하락 마감
+                    </Text>
+                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
+                        2025.04.19 트럼프의 사우디아라비아 거래에서 가장 큰 수..
+                    </Text>
                 </ColWrapper>
             </Layout>
             <View className="flex flex-row justify-between px-10 py-6 border-t border-bg-gray">
                 <TouchableOpacity
                     className="w-[150px] bg-main-color py-3 rounded-xl flex flex-row items-center justify-center gap-2"
-                    onPress={() => navigation.navigate('donate')}>
+                    onPress={() => navigation.navigate('remittance', {name: data?.centerName})}>
                     <Image className="w-6 h-6" source={require('@/assets/getCash.png')} />
                     <Text className="text-base font-bold text-center text-white">기부하기</Text>
                 </TouchableOpacity>
