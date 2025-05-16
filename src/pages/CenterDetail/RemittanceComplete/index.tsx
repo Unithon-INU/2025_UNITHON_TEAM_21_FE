@@ -25,8 +25,7 @@ export default function Commit() {
             <View className="flex flex-col items-center justify-center flex-1 gap-1">
                 <Text className="text-3xl font-semibold text-main-color">{name}</Text>
                 <Text className="text-3xl font-semibold text-font-black">has received</Text>
-                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()} KRW</Text>
-                <Text className="text-3xl font-semibold text-font-black">in donation.</Text>
+                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()} KRW in donation</Text>
                 <Text className="text-3xl font-semibold text-font-black">Thank you!</Text>
                 <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg bg-bg-gray">
                     <Text className="text-font-black">Get Donation Certificate</Text>
