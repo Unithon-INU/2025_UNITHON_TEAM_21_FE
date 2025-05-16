@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Layout from '../Layout';
 
 const thisMonthData = [
     {id: '1', name: '레인', amount: 10200300},
@@ -82,15 +83,15 @@ const HeroListDetail = () => {
     const navigation = useNavigation();
 
     return (
-        <View className="flex-1 p-4 bg-white">
-            <View className="flex-row items-center mb-2">
+        <Layout>
+            <View className="flex flex-row items-center py-4">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Text className="text-xl text-font-black">{'<'}</Text>
+                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="ml-2 text-xl font-semibold">Donation Hero</Text>
+                <Text className="text-xl font-bold text-font-black">Donation Heros</Text>
             </View>
 
-            <Text className="mb-4 text-xs text-right text-font-gray">{formattedDate} 기준</Text>
+            <Text className="mb-4 text-xs text-right text-font-gray">As of {formattedDate}</Text>
 
             <FlatList
                 data={mergedData}
@@ -115,7 +116,7 @@ const HeroListDetail = () => {
                 )}
                 showsVerticalScrollIndicator={false}
             />
-        </View>
+        </Layout>
     );
 };
 
