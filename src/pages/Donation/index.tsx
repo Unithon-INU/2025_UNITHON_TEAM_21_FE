@@ -1,20 +1,20 @@
-// src/pages/donation/DonatePage.tsx
 import React from 'react';
-import {ScrollView, View} from 'react-native';
+import {Text, View} from 'react-native';
 import TotalDonationAmount from './TotalDonationAmount';
 import MonthlyDonationHeroList from './MonthlyDonationHeroList';
-import DonationStatus from './components/DonationStatus';
-import {donationStatusDummy} from '../../data/donationStatusDummy';
+import DonationItem from '../Home/components/DonantionItem';
+import Layout from '../Layout';
 
 const DonatePage = () => {
     return (
-        <ScrollView>
-            <View className="p-4">
-                <TotalDonationAmount />
-                <DonationStatus data={donationStatusDummy} showHeader={true} />
-                <MonthlyDonationHeroList />
+        <Layout>
+            <View className="flex flex-col justify-between py-4">
+                <Text className="text-xl font-bold text-font-black">Donate</Text>
             </View>
-        </ScrollView>
+            <TotalDonationAmount />
+            <DonationItem />
+            <MonthlyDonationHeroList />
+        </Layout>
     );
 };
 
