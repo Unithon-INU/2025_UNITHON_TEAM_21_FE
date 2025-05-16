@@ -23,7 +23,7 @@ const initialMessages: Record<string, MessageType[]> = {
     '0': [
         {
             id: '1',
-            text: '안녕하세요 챗봇입니다.\n봉사활동에 대해 궁금하신가요?\n무엇이든 편하게 물어보세요!\n당신의 따뜻한 마음을 응원합니다 ',
+            text: "Hi, I'm your chatbot!\nCurious about volunteering?\nFeel free to ask anything!\nWe're cheering for your kind heart 💛",
             isMe: false,
             time: getCurrentTime(),
         },
@@ -36,7 +36,7 @@ function getCurrentTime(): string {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const isPM = hours >= 12;
     const hour12 = hours % 12 || 12;
-    return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
+    return `${isPM ? 'PM' : 'AM'} ${hour12}:${minutes}`;
 }
 
 function getCurrentDate(): string {
@@ -44,9 +44,9 @@ function getCurrentDate(): string {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const weekday = days[now.getDay()];
-    return `${year}년 ${month}월 ${day}일 ${weekday}요일`;
+    return `${year}.${month}.${day} (${weekday})`;
 }
 
 const sendMessageToAPI = async (message: string) => {
@@ -59,8 +59,8 @@ const sendMessageToAPI = async (message: string) => {
         const json = await response.json();
         return json.response;
     } catch (error) {
-        console.error('API 호출 에러:', error);
-        return '챗봇 응답을 불러오는 중 오류가 발생했습니다.\n나중에 다시 시도해주세요.';
+        console.error('API call error:', error);
+        return 'An error occurred while fetching the chatbot response.\nPlease try again later.';
     }
 };
 
@@ -73,9 +73,7 @@ export default function ChatRoomScreen() {
     const messages = allMessages[id] || [];
 
     const handleSend = async (message: string) => {
-        if (!message.trim()) {
-            return;
-        }
+        if (!message.trim()) return;
 
         const userMessage: MessageType = {
             id: Date.now().toString(),
@@ -87,6 +85,7 @@ export default function ChatRoomScreen() {
             ...prev,
             [id]: [...(prev[id] || []), userMessage],
         }));
+
         const botResponse = await sendMessageToAPI(message);
         const botMessage: MessageType = {
             id: (Date.now() + 1).toString(),
@@ -101,13 +100,13 @@ export default function ChatRoomScreen() {
     };
 
     return (
-        <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={30} className="flex-1 bg-white">
+        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={30} className="flex-1 bg-white">
             <View className="flex-row items-center justify-between px-4 py-4">
                 <View className="flex-row items-center">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-black">{'챗봇'}</Text>
+                    <Text className="text-xl font-bold text-black">Chatbot</Text>
                 </View>
                 <TouchableOpacity>
                     <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />

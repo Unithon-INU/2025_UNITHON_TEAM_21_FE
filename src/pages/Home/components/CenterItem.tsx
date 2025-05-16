@@ -15,11 +15,12 @@ function Item({data}: {data: ChildrenCenterList}) {
                 <Text className="text-base font-semibold text-white">{data.centerName}</Text>
                 <Text className="text-xs font-semibold text-white">{data.address}</Text>
                 <Text className="text-xs font-semibold text-white">{data.phoneNumber}</Text>
-                <Text className="text-xs font-semibold text-white">아동수 : {data.chidrenNumber}</Text>
+                <Text className="text-xs font-semibold text-white">Children: {data.chidrenNumber}</Text>
             </View>
         </TouchableOpacity>
     );
 }
+
 export default function CenterItem() {
     const [data, setData] = useState<ChildrenCenterList[]>();
     useEffect(() => {
@@ -29,13 +30,13 @@ export default function CenterItem() {
                 const results = Papa.parse(content, {header: true});
                 setData(results.data as ChildrenCenterList[]);
             } catch (err) {
-                console.error('CSV 읽기 실패:', err);
+                console.error('Failed to read CSV:', err);
             }
         };
         loadCSV();
     }, []);
     return (
-        <RowWrapper title="인천지역아동센터">
+        <RowWrapper title="Incheon Children Centers">
             {data?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}

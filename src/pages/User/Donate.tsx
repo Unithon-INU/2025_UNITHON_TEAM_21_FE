@@ -8,12 +8,12 @@ export default function UserDonate() {
     const navigation = useNavigation<StackNavigationProp<any>>();
     return (
         <Layout>
-            {/* 상단 */}
-            <View className="flex-row items-center pb-7 space-x-2 ">
+            {/* Top Bar */}
+            <View className="flex-row items-center space-x-2 pb-7 ">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="font-inter font-Inter font-bold text-[20px]">  기부내역</Text>
+                <Text className="font-inter font-bold text-[20px]"> Donation History</Text>
             </View>
         </Layout>
     );

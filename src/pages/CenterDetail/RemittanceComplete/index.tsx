@@ -23,20 +23,18 @@ export default function Commit() {
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col items-center justify-center flex-1 gap-1">
-                <Text className="text-3xl font-semibold text-font-black">
-                    <Text className="text-main-color">{name}</Text>
-                    으로
-                </Text>
-                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
-                <Text className="text-3xl font-semibold text-font-black">후원했어요</Text>
-                <Text className="text-3xl font-semibold text-font-black">감사합니다</Text>
+                <Text className="text-3xl font-semibold text-main-color">{name}</Text>
+                <Text className="text-3xl font-semibold text-font-black">has received</Text>
+                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()} KRW</Text>
+                <Text className="text-3xl font-semibold text-font-black">in donation.</Text>
+                <Text className="text-3xl font-semibold text-font-black">Thank you!</Text>
                 <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg bg-bg-gray">
-                    <Text className="text-font-black">후원증서 받기</Text>
+                    <Text className="text-font-black">Get Donation Certificate</Text>
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col mb-16">
                 <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color" onPress={handleExit}>
-                    <Text className="text-xl font-semibold text-white">확인</Text>
+                    <Text className="text-xl font-semibold text-white">Confirm</Text>
                 </TouchableOpacity>
             </View>
         </View>

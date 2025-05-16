@@ -20,9 +20,9 @@ type VolunteerDetailParamList = {
 };
 function AbleFont({able}: {able: 'Y' | 'N'}) {
     if (able === 'Y') {
-        return <Text className="text-[#6C9B7D]"> 가능</Text>;
+        return <Text className="text-[#6C9B7D]"> Available</Text>;
     } else {
-        return <Text className="text-[#D3706D]"> 불가능</Text>;
+        return <Text className="text-[#D3706D]"> Not Available</Text>;
     }
 }
 
@@ -72,24 +72,24 @@ export default function VolunteerDetail() {
                 ) : (
                     <>
                         <Detail item={item} />
-                        <ColWrapper title="봉사활동 소개">
+                        <ColWrapper title="Volunteer Introduction">
                             <Text>{item.progrmCn ? decode(item.progrmCn) : ''}</Text>
                         </ColWrapper>
-                        <ColWrapper title="봉사장소">
+                        <ColWrapper title="Volunteer Location">
                             <Text>{item.actPlace}</Text>
                             <KakaoMap className="w-full h-[240px]" location={item.areaLalo1} name={item.actPlace} />
                         </ColWrapper>
-                        <ColWrapper title="참여 가능 여부">
+                        <ColWrapper title="Participation Availability">
                             <Text>
-                                성인
+                                Adult
                                 <AbleFont able={item.adultPosblAt} />
                             </Text>
                             <Text>
-                                청소년
+                                Youth
                                 <AbleFont able={item.grpPosblAt} />
                             </Text>
                             <Text>
-                                단체
+                                Group
                                 <AbleFont able={item.familyPosblAt} />
                             </Text>
                         </ColWrapper>
@@ -98,10 +98,10 @@ export default function VolunteerDetail() {
             </Layout>
             <View className="flex flex-row justify-between px-10 py-6 border-t border-bg-gray">
                 <TouchableOpacity className="w-[150px] bg-main-color py-3 rounded-xl" onPress={() => Linking.openURL(url)}>
-                    <Text className="text-base font-bold text-center text-white">1365에서 신청하기</Text>
+                    <Text className="text-base font-bold text-center text-white">Apply via 1365</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className="w-[150px] bg-font-gray py-3 rounded-xl" onPress={() => navigation.goBack()}>
-                    <Text className="text-base font-bold text-center text-white ">닫기</Text>
+                    <Text className="text-base font-bold text-center text-white ">Close</Text>
                 </TouchableOpacity>
             </View>
         </>

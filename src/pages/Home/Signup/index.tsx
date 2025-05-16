@@ -19,21 +19,21 @@ export default function Signup() {
 
             <View className="flex items-center justify-center flex-1">
                 <Image className="h-20 w-52" source={require('@/assets/logo.png')} />
-                <Text className="text-2xl font-semibold tracking-[-2px]">나눔의 일상을 만나다</Text>
+                <Text className="text-2xl font-semibold tracking-[-2px]">Experience a life of sharing</Text>
             </View>
 
             <View className="flex gap-3 py-10">
                 <TouchableOpacity
                     onPress={() => setModalVisible(true)}
-                    className="flex flex-row items-center justify-between w-full py-1 pl-10 pr-5 rounded-3xl bg-main-color ">
-                    <Text className="text-xl font-bold text-white">고객으로 시작</Text>
+                    className="flex flex-row items-center justify-between w-full py-1 pl-10 pr-5 rounded-3xl bg-main-color">
+                    <Text className="text-xl font-bold text-white">Continue as a Customer</Text>
                     <Image className="w-[60px] h-[60px]" source={require('@/assets/signup/customer.png')} />
                 </TouchableOpacity>
 
                 <TouchableOpacity
                     onPress={() => setModalVisible(true)}
-                    className="flex flex-row items-center justify-between w-full py-1 pl-10 pr-5 rounded-3xl bg-main-color ">
-                    <Text className="text-xl font-bold text-white">아동센터로 시작</Text>
+                    className="flex flex-row items-center justify-between w-full py-1 pl-10 pr-5 rounded-3xl bg-main-color">
+                    <Text className="text-xl font-bold text-white">Continue as a Childcare Center</Text>
                     <Image className="w-[60px] h-[60px]" source={require('@/assets/signup/childecenter.png')} />
                 </TouchableOpacity>
             </View>

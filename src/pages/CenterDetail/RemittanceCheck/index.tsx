@@ -14,28 +14,26 @@ export default function Commit() {
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col items-center justify-center flex-1 gap-1">
+                <Text className="text-3xl font-semibold text-main-color">{name}</Text>
+                <Text className="text-3xl font-semibold text-font-black">will receive</Text>
+                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()} KRW</Text>
                 <Text className="text-3xl font-semibold text-font-black">
-                    <Text className="text-main-color">{name}</Text>
-                    으로
-                </Text>
-                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
-                <Text className="text-3xl font-semibold text-font-black">
-                    <Text className="text-main-color">후원</Text>할까요?
+                    <Text className="text-main-color">Donation</Text> Proceed?
                 </Text>
             </View>
             <View className="flex flex-col mb-16">
                 <View className="flex flex-row justify-between py-2">
-                    <Text className="text-base font-semibold text-font-gray">받는 분에게 표시</Text>
-                    <Text className="text-base font-semibold text-font-black">기부왕</Text>
+                    <Text className="text-base font-semibold text-font-gray">Display to recipient</Text>
+                    <Text className="text-base font-semibold text-font-black">Donation King</Text>
                 </View>
                 <View className="flex flex-row justify-between py-2">
-                    <Text className="text-base font-semibold text-font-gray">출금 계좌</Text>
-                    <Text className="text-base font-semibold text-font-black">기부용 통장</Text>
+                    <Text className="text-base font-semibold text-font-gray">Withdrawal Account</Text>
+                    <Text className="text-base font-semibold text-font-black">Donation Account</Text>
                 </View>
                 <TouchableOpacity
                     className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color"
                     onPress={() => navigation.navigate('remittanceComplete', {name, value})}>
-                    <Text className="text-xl font-semibold text-white">후원하기</Text>
+                    <Text className="text-xl font-semibold text-white">Donate</Text>
                 </TouchableOpacity>
             </View>
         </View>
