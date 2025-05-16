@@ -3,6 +3,7 @@ import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Layout from '../Layout';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import RecommendActivity from '../Home/components/RecommendActivity';
 
 export default function UserLikedvol() {
     const navigation = useNavigation<StackNavigationProp<any>>();
@@ -15,6 +16,7 @@ export default function UserLikedvol() {
                 </TouchableOpacity>
                 <Text className="font-inter font-bold text-[20px]"> Favorite Volunteer Activities</Text>
             </View>
+
         </Layout>
     );
 }

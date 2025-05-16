@@ -46,9 +46,6 @@ export default function ChatListScreen() {
             {/* Top Bar */}
             <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
                 <Text className="font-inter font-bold text-[24px] leading-[24px]">Chats</Text>
-            {/* 상단 */}
-            <View className="flex-row justify-between h-[60px]  py-5 pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
                     <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
                 </TouchableOpacity>
@@ -85,7 +82,7 @@ export default function ChatListScreen() {
                                     {item.message}
                                 </Text>
                                 {item.unread > 0 && (
-                                    <View className="bg-[#FD5757] rounded-full w-5 h-5 items-center justify-center">
+                                    <View className="bg-[#FFB257] rounded-full px-2 ml-2 items-center justify-center">
                                         <Text className="text-[11px] text-white font-bold">{item.unread}</Text>
                                     </View>
                                 )}

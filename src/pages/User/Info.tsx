@@ -1,9 +1,7 @@
 import React from 'react';
-import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Layout from '../Layout';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 export default function UserInfo() {
@@ -12,7 +10,8 @@ export default function UserInfo() {
         <Layout>
             {/* 상단 */}
             <View className=" h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-semibold text-[24px] leading-[24px]">내정보</Text>text-
+                <Text className="font-inter font-semibold text-[24px] leading-[24px]">내정보</Text>
+            </View>
             {/* Top Bar */}
             <View className="h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
                 <Text className="font-inter font-semibold text-[24px] leading-[24px]">My Info</Text>
@@ -20,13 +19,14 @@ export default function UserInfo() {
 
             {/* Profile Edit Navigation */}
 
-            {/* 기부금 */}
-            <View className=" h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-Inter font-semibold text-[20px] leading-[24px]">기봉사와 함께하신 기부금</Text>
-                <Text className="text-[#FFB257] font-inter font-semibold text-[30px] items-center">345,678원</Text>
             {/* Donation Amount */}
-            <View className="h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-semibold text-[20px] leading-[24px]">Donations with Gibongsa</Text>
+            <View className="mb-6">
+                <Text className="mb-5 text-xl font-semibold text-left text-font-black">Donations with Gibongsa</Text>
+
+                <View className="flex-row justify-center items-end mb-2.5">
+                    <Text className="text-4xl font-semibold text-center text-main-color">345,678</Text>
+                    <Text className="mb-1 ml-1 text-base font-semibold text-main-color">원</Text>
+                </View>
             </View>
 
             <View className="h-auto pt-[10px] pb-[10px] px-[5px]">
