@@ -27,7 +27,7 @@ import UserLikedvol from './User/Likedvol';
 import UserDonate from './User/Donate';
 
 import Remittance from './CenterDetail/Remittance';
-import RemittanceCheck from './CenterDetail/remittanceCheck';
+import RemittanceCheck from './CenterDetail/RemittanceCheck';
 import RemittanceComplete from './CenterDetail/RemittanceComplete';
 
 const TAB_ICONS = {

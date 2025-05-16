@@ -38,7 +38,7 @@ export default function Remittance() {
                         <Text className="font-normal text-font-gray">으로</Text>
                     </Text>
                     <Text className={`py-4 text-3xl ${value ? 'text-font-black' : 'text-font-gray'}`}>
-                        {value ? (
+                        {value || value === '0' ? (
                             `${Number(value).toLocaleString()}원`
                         ) : (
                             <>
@@ -47,9 +47,6 @@ export default function Remittance() {
                         )}
                     </Text>
                     <View className="flex flex-row gap-2">
-                        <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('0')}>
-                            <Text className="text-base text-font-black">0원</Text>
-                        </TouchableOpacity>
                         <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('5000')}>
                             <Text className="text-base text-font-black">5,000원</Text>
                         </TouchableOpacity>
