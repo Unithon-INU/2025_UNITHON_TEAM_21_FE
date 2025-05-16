@@ -1,38 +1,41 @@
+import React, {useEffect, useState} from 'react';
+import VolunteerItem from '@/pages/Volunteer/VolunteerCategory/components/VolunteerItem';
+import {getVltrSearchWordList} from '@/types/volunteerTyps';
+
+import {xml2Json} from '@/utils/xml2json';
+
 import {ColWrapper} from '@/components/layout/ContentWrapper';
-import {useState} from 'react';
-import {Text, View} from 'react-native';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-function Item() {
-    const [like, setLike] = useState(false);
-    return (
-        <View className="flex gap-0.5x">
-            <View className="flex flex-row justify-between ">
-                <Text className="flex-1 text-xl font-semibold text-font-black" numberOfLines={2}>
-                    [제주도서관 4월 주말 오후] 본관 도서정리 및 안--------내
-                </Text>
-                {like ? (
-                    <Ionicons name="heart" size={30} color={'#FFB257'} onPress={() => setLike(false)} />
-                ) : (
-                    <Ionicons name="heart-outline" size={30} color={'#FFB257'} onPress={() => setLike(true)} />
-                )}
-            </View>
-            <Text className="font-semibold text-main-color">마감 4일 남음</Text>
-            <Text className="font-semibold text-font-gray">봉사장소 제주도서관 1층</Text>
-            <Text className="font-semibold text-font-gray">모집기간 2025.03.29 ~ 2025.04.25</Text>
-            <Text className="font-semibold text-font-gray">봉사일시 2025.03.29 ~ 2025.04.25</Text>
-            <Text className="font-semibold text-font-gray">소요시간 09:00 ~ 14:00 (5시간)</Text>
-        </View>
-    );
-}
 
 export default function RecommendActivity() {
+    const [volunteerData, setVolunteerData] = useState<getVltrSearchWordList>();
+    const items = Array.isArray(volunteerData?.body?.items?.item)
+        ? volunteerData.body.items.item
+        : volunteerData?.body?.items?.item
+        ? [volunteerData.body.items.item]
+        : [];
+    useEffect(() => {
+        const fetchvolunteerData = async () => {
+            try {
+                const response = await fetch(
+                    'http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?upperClCode=0400&schSido=6280000',
+                );
+                if (!response.ok) {
+                    throw new Error('API 호출 실패');
+                }
+                const xml = await response.text();
+                const json = xml2Json(xml);
+                setVolunteerData(json);
+            } catch (e: any) {
+                console.log(e);
+            }
+        };
+        fetchvolunteerData();
+    }, []);
     return (
-        <ColWrapper title="추천 봉사활동">
-            <Item />
-            <Item />
-            <Item />
+        <ColWrapper title="Recoommend Volunteer">
+            {items.slice(0, 3).map((item: any, index: number) => (
+                <VolunteerItem item={item} key={index} />
+            ))}
         </ColWrapper>
     );
 }

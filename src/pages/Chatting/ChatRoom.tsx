@@ -12,6 +12,16 @@ type ChatStackParamList = {
     Notification: undefined;
 };
 
+const initialMessages: Record<string, {id: string; text: string; isMe: boolean; time: string}[]> = {
+    '0': [
+        {id: '1', text: 'Personal information usage notification', isMe: false, time: '1:53 PM'},
+        {id: '2', text: 'Okay, check my info', isMe: true, time: '2:10 PM'},
+    ],
+    '1': [
+        {id: '1', text: 'Please check tomorrow’s volunteer schedule', isMe: false, time: '14:00'},
+        {id: '2', text: 'Yes, I checked', isMe: true, time: '14:01'},
+    ],
+};
 type Message = {
     id: string;
     text: string;
@@ -25,6 +35,10 @@ function getCurrentTime(): string {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
+    // AM/PM formatting
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+    return `${ampm} ${hour12}:${minutes}`;
     const isPM = hours >= 12;
     const hour12 = hours % 12 || 12;
     return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
@@ -35,19 +49,25 @@ function getCurrentDate(): string {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
+    return `${year}.${month}.${day} `; // e.g., 2025.04.26
     return `${year}년 ${month}월 ${day}일 `;
 }
 
 function getCurrentDay(): string {
     const now = new Date();
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
-    return days[now.getDay()];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const day = days[now.getDay()];
+    return day; // e.g., Sat    
 }
 
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
     const {id, name} = route.params;
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
+
+    const [allMessages, setAllMessages] = useState(initialMessages);
+
+    const messages = allMessages[id] || []; // Get messages for this room
 
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
@@ -113,10 +133,25 @@ export default function ChatRoomScreen() {
             id: Date.now().toString(),
             text: message,
             isMe: true,
+            time: currentTime, // Add time automatically
+            date: currentDate,
+            day: currentDay,
             time: getCurrentTime(),
             date: getCurrentDate(),
             day: getCurrentDay(),
         };
+        setAllMessages(prevMessages => ({
+            ...prevMessages,
+            [id]: [...(prevMessages[id] || []), newMessage], // Add to this room's messages
+        }));
+
+        setCurrentTime(getCurrentTime()); // Update current time
+        setCurrentDate(getCurrentDate()); // Update current date
+        setCurrentDay(getCurrentDay()); // Update current day
+        Alert.alert('Message sent', `Message: ${message}`, [{text: 'OK'}]); // Message sent alert
+    };
+    const renderItem = ({item}: any) => (
+        <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
 
         setMessages(prev => [...prev, newMessage]);
 
@@ -147,10 +182,16 @@ export default function ChatRoomScreen() {
     const renderItem = ({item}: {item: Message}) => (
         <View className={`flex-row items-end px-4 mb-3 ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full mr-2" />}
+            {item.isMe && (
+                <Text className="text-[10px] text-gray-500 mr-1">{item.time}</Text> // Time first for my message
+            )}
             {item.isMe && <Text className="text-[10px] text-gray-500 mr-1">{item.time}</Text>}
             <View className={`${item.isMe ? 'bg-main-color' : 'bg-[#f0f0f0]'} px-3 py-2 rounded-xl max-w-[70%]`}>
                 <Text className={`${item.isMe ? 'text-white' : 'text-black'}`}>{item.text}</Text>
             </View>
+            {!item.isMe && (
+                <Text className="text-[10px] text-gray-500 ml-1">{item.time}</Text> // Time after for other’s message
+            )}
             {!item.isMe && <Text className="text-[10px] text-gray-500 ml-1">{item.time}</Text>}
             {item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full ml-2" />}
         </View>
@@ -173,7 +214,7 @@ export default function ChatRoomScreen() {
             <View className="items-center my-2">
                 <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5 rounded-full">
                     {currentDate}
-                    {currentDay}요일
+                    {currentDay}
                 </Text>
             </View>
 

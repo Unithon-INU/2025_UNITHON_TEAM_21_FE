@@ -8,7 +8,7 @@ export default function SearchBar() {
     return (
         <View className="bg-[#EAEAEA] rounded-xl px-3 py-1 flex flex-row items-center">
             <Ionicons name="search-outline" size={20} color="#9A9A9A" />
-            <TextInput className="w-full text-lg" value={text} onChangeText={setText} placeholder="어떤 봉사를 찾으시나요?" placeholderTextColor="#9A9A9A" />
+            <TextInput className="w-full text-lg" value={text} onChangeText={setText} placeholder="Serach Volunteer" placeholderTextColor="#9A9A9A" />
         </View>
     );
 }

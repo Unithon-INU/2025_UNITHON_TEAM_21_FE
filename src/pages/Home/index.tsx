@@ -1,7 +1,8 @@
+import React from 'react';
 import {Image, View} from 'react-native';
-import SignupButton from './components/SignupButton';
 import Layout from '../Layout';
 
+import SignupButton from './components/SignupButton';
 import DonationComponents from './components/DonantionItem';
 import CenterItem from './components/CenterItem';
 import RecommendActivity from './components/RecommendActivity';

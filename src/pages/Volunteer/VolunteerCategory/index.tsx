@@ -36,7 +36,7 @@ export default function VolunterrCategory() {
                     `http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?upperClCode=${iconKey}&schSido=6280000`,
                 );
                 if (!response.ok) {
-                    throw new Error('API 호출 실패');
+                    throw new Error('API call failed');
                 }
                 const xml = await response.text();
                 const json = xml2Json(xml);
@@ -67,18 +67,18 @@ export default function VolunterrCategory() {
                 {items.length === 0 && !loading && (
                     <View className="flex justify-center h-60">
                         <Text className="text-xl text-center text-font-gray">
-                            주변에 참여하실 <Text className="text-main-color">{category}</Text> 활동을 못 찾았어요.
+                            We couldn't find any <Text className="text-main-color">{category}</Text> volunteer opportunities nearby.
                         </Text>
-                        <Text className="text-xl text-center text-font-gray">다른 카테고리에는 있을거에요!</Text>
+                        <Text className="text-xl text-center text-font-gray">Try checking other categories!</Text>
                     </View>
                 )}
                 {!loading && items.length > 0 && (
                     <View className="flex flex-col gap-3">
                         <Text className="text-xl font-bold text-font-black">
-                            전체 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
+                            Total <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text> results
                         </Text>
-                        {items.map(item => (
-                            <VolunteerItem item={item} />
+                        {items.map((item, idx) => (
+                            <VolunteerItem item={item} key={idx} />
                         ))}
                     </View>
                 )}
