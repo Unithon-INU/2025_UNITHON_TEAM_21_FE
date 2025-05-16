@@ -11,7 +11,7 @@ export default function index() {
         <>
             <Layout>
                 <View className="flex flex-col justify-between py-4">
-                    <Text className="text-xl font-bold text-font-black">지역봉사</Text>
+                    <Text className="text-xl font-bold text-font-black">Volunteer</Text>
                 </View>
                 <SearchBar />
                 <RecommendButtons />

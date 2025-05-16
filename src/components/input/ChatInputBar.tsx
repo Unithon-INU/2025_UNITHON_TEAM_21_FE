@@ -16,7 +16,7 @@ export default function ChatInputBar({onSend}: {onSend: (message: string) => voi
         <View className="flex-row items-center gap-3 px-5 py-3">
             <TextInput
                 className="flex-1 px-3 py-2 text-base rounded-full bg-bg-gray"
-                placeholder="메시지 보내기"
+                placeholder="Send a Message"
                 value={text}
                 onChangeText={setText}
                 placeholderTextColor={'#9A9A9A'}

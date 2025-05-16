@@ -13,19 +13,22 @@ type ChatStackParamList = {
 
 const initialMessages: Record<string, {id: string; text: string; isMe: boolean; time: string}[]> = {
     '0': [
-        {id: '1', text: '개인정보 이용내역 안내', isMe: false, time: '오후 1:53'},
-        {id: '2', text: '오케 내정보확인', isMe: true, time: '오후 2:10'},
+        {id: '1', text: 'Personal information usage notification', isMe: false, time: '1:53 PM'},
+        {id: '2', text: 'Okay, check my info', isMe: true, time: '2:10 PM'},
     ],
     '1': [
-        {id: '1', text: '내일 봉사일정 확인 부탁드립니다', isMe: false, time: '14:00'},
-        {id: '2', text: '네 확인했습니다', isMe: true, time: '14:01'},
+        {id: '1', text: 'Please check tomorrow’s volunteer schedule', isMe: false, time: '14:00'},
+        {id: '2', text: 'Yes, I checked', isMe: true, time: '14:01'},
     ],
 };
 function getCurrentTime(): string {
     const now = new Date();
     const hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    return `${hours >= 12 ? '오전' : '오후'} ${(hours % 12) + 9 - 12 || 12}:${minutes}`;
+    // AM/PM formatting
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+    return `${ampm} ${hour12}:${minutes}`;
 }
 
 function getCurrentDate(): string {
@@ -33,13 +36,13 @@ function getCurrentDate(): string {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
-    return `${year}년 ${month}월 ${day}일 `; // 예: 2025.04.26
+    return `${year}.${month}.${day} `; // e.g., 2025.04.26
 }
 function getCurrentDay(): string {
     const now = new Date();
-    const days = ['일', '월', '화', '수', '목', '금', '토'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const day = days[now.getDay()];
-    return day; // 예: 토
+    return day; // e.g., Sat
 }
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
@@ -50,7 +53,7 @@ export default function ChatRoomScreen() {
 
     const [allMessages, setAllMessages] = useState(initialMessages);
 
-    const messages = allMessages[id] || []; // 해당 방의 메시지를 가져옴
+    const messages = allMessages[id] || []; // Get messages for this room
 
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
     const [currentDay, setCurrentDay] = useState(getCurrentDay());
@@ -61,31 +64,31 @@ export default function ChatRoomScreen() {
             id: Date.now().toString(),
             text: message,
             isMe: true,
-            time: currentTime, // 시간 자동 추가
+            time: currentTime, // Add time automatically
             date: currentDate,
             day: currentDay,
         };
         setAllMessages(prevMessages => ({
             ...prevMessages,
-            [id]: [...(prevMessages[id] || []), newMessage], // 해당 방의 메시지에 추가
+            [id]: [...(prevMessages[id] || []), newMessage], // Add to this room's messages
         }));
 
-        setCurrentTime(getCurrentTime()); // 현재 시간 업데이트
-        setCurrentDate(getCurrentDate()); // 현재 날짜 업데이트
-        setCurrentDay(getCurrentDay()); // 현재 요일 업데이트
-        Alert.alert('메시지 전송', `메시지: ${message}`, [{text: '확인'}]); // 메시지 전송 알림
+        setCurrentTime(getCurrentTime()); // Update current time
+        setCurrentDate(getCurrentDate()); // Update current date
+        setCurrentDay(getCurrentDay()); // Update current day
+        Alert.alert('Message sent', `Message: ${message}`, [{text: 'OK'}]); // Message sent alert
     };
     const renderItem = ({item}: any) => (
         <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
             {!item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full mr-2" />}
             {item.isMe && (
-                <Text className="text-[10px] text-gray-500 mr-1">{item.time}</Text> //시간 먼저 내메시지
+                <Text className="text-[10px] text-gray-500 mr-1">{item.time}</Text> // Time first for my message
             )}
             <View className={`${item.isMe ? 'bg-main-color' : 'bg-[#f0f0f0]'} px-3 py-2 rounded-xl max-w-[70%]`}>
                 <Text className={`${item.isMe ? 'text-white' : 'text-black'}`}>{item.text}</Text>
             </View>
             {!item.isMe && (
-                <Text className="text-[10px] text-gray-500 ml-1">{item.time}</Text> //시간 나중 상대메시지
+                <Text className="text-[10px] text-gray-500 ml-1">{item.time}</Text> // Time after for other’s message
             )}
             {item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full ml-2" />}
         </View>
@@ -107,7 +110,7 @@ export default function ChatRoomScreen() {
             <View className="items-center my-2">
                 <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5  rounded-full">
                     {currentDate}
-                    {currentDay}요일
+                    {currentDay}
                 </Text>
             </View>
             <FlatList data={messages} renderItem={renderItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />

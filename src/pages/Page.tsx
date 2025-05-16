@@ -27,8 +27,9 @@ import UserLikedvol from './User/Likedvol';
 import UserDonate from './User/Donate';
 
 import Remittance from './CenterDetail/Remittance';
-import RemittanceCheck from './CenterDetail/remittanceCheck';
+import RemittanceCheck from './CenterDetail/RemittanceCheck';
 import RemittanceComplete from './CenterDetail/RemittanceComplete';
+import DonatePage from './Donation';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -38,13 +39,6 @@ const TAB_ICONS = {
     account: (color: string, size: number) => <Ionicons name="person" size={size} color={color} />,
 };
 
-function SimpleScreen({label}: {label: string}) {
-    return (
-        <View className="items-center justify-center flex-1">
-            <Text>{label}</Text>
-        </View>
-    );
-}
 function NavBar() {
     const Tab = createBottomTabNavigator();
     return (
@@ -72,11 +66,11 @@ function NavBar() {
                         fontFamily: 'System',
                     },
                 })}>
-                <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
-                <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={() => <SimpleScreen label="기부하기" />} />
-                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
-                <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
-                <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInfo} />
+                <Tab.Screen name="home" options={{tabBarLabel: 'Home'}} children={Home} />
+                <Tab.Screen name="donate" options={{tabBarLabel: 'Donate'}} children={DonatePage} />
+                <Tab.Screen name="chatting" options={{tabBarLabel: 'Chatting'}} children={ChatListScreen} />
+                <Tab.Screen name="volunteer" options={{tabBarLabel: 'Voluunteer'}} children={Volunteer} />
+                <Tab.Screen name="account" options={{tabBarLabel: 'My'}} children={UserInfo} />
             </Tab.Navigator>
         </>
     );

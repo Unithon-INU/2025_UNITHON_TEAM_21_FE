@@ -32,7 +32,7 @@ export default function RecommendActivity() {
         fetchvolunteerData();
     }, []);
     return (
-        <ColWrapper title="추천 봉사활동">
+        <ColWrapper title="Recoommend Volunteer">
             {items.slice(0, 3).map((item: any, index: number) => (
                 <VolunteerItem item={item} key={index} />
             ))}
