@@ -1,5 +1,4 @@
 import React from 'react';
-import {Text, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -30,6 +29,7 @@ import Remittance from './CenterDetail/Remittance';
 import RemittanceCheck from './CenterDetail/RemittanceCheck';
 import RemittanceComplete from './CenterDetail/RemittanceComplete';
 import DonatePage from './Donation';
+import HeroListDetail from './Donation/HeroListDetail';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -91,12 +91,17 @@ export default function Pages() {
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
+
+                <Stack.Screen name="heroListDetail" component={HeroListDetail} />
+
                 <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
                 <Stack.Screen name="Notification" component={NotificationScreen} />
+
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
                 <Stack.Screen name="chatbot" component={Chatbot} />
                 <Stack.Screen name="centerDetail" component={CenterDetail} />
+
                 <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
                 <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
                 <Stack.Screen name="Userdonate" component={UserDonate} />
