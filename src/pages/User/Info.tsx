@@ -1,8 +1,8 @@
-import React, {} from 'react';
+import React from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import Layout from '../Layout';
 import {useNavigation} from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 export default function UserInfo() {
     const navigation = useNavigation<StackNavigationProp<any>>();
@@ -10,7 +10,7 @@ export default function UserInfo() {
         <Layout>
             {/* 상단 */}
             <View className=" h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-semibold text-[24px] leading-[24px]">내정보</Text>
+                <Text className="font-inter font-semibold text-[24px] leading-[24px]">내정보</Text>text-
             </View>
 
             {/* 내정보 navi 프로필수정*/}
@@ -18,9 +18,8 @@ export default function UserInfo() {
             {/* 기부금 */}
             <View className=" h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
                 <Text className="font-inter font-Inter font-semibold text-[20px] leading-[24px]">기봉사와 함께하신 기부금</Text>
+                <Text className="text-[#FFB257] font-inter font-semibold text-[30px] items-center">345,678원</Text>
             </View>
-
-
 
             <View className="h-auto pt-[10px] pb-[10px] px-[5px]">
                 <Text className="font-inter font-bold text-[20px] leading-[24px] mb-2">나의 정보</Text>
