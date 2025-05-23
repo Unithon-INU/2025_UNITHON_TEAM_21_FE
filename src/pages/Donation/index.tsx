@@ -9,7 +9,7 @@ const DonatePage = () => {
     return (
         <Layout>
             <View className="flex flex-col justify-between py-4">
-                <Text className="text-xl font-bold text-font-black">Donate</Text>
+                <Text className="text-xl font-bold text-font-black">기부하기</Text>
             </View>
             <TotalDonationAmount />
             <DonationItem />

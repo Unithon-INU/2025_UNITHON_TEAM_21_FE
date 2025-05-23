@@ -15,7 +15,7 @@ function Item({data}: {data: ChildrenCenterList}) {
                 <Text className="text-base font-semibold text-white">{data.centerName}</Text>
                 <Text className="text-xs font-semibold text-white">{data.address}</Text>
                 <Text className="text-xs font-semibold text-white">{data.phoneNumber}</Text>
-                <Text className="text-xs font-semibold text-white">Children: {data.chidrenNumber}</Text>
+                <Text className="text-xs font-semibold text-white">아동 수 : {data.chidrenNumber}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -36,7 +36,7 @@ export default function CenterItem() {
         loadCSV();
     }, []);
     return (
-        <RowWrapper title="Incheon Children Centers">
+        <RowWrapper title="인천 지역아동센터">
             {data?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}

@@ -88,10 +88,10 @@ const HeroListDetail = () => {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="text-xl font-bold text-font-black">Donation Heros</Text>
+                <Text className="text-xl font-bold text-font-black">기부히어로로</Text>
             </View>
 
-            <Text className="mb-4 text-xs text-right text-font-gray">As of {formattedDate}</Text>
+            <Text className="mb-4 text-xs text-right text-font-gray">{formattedDate} 기준</Text>
 
             <FlatList
                 data={mergedData}

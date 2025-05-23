@@ -54,12 +54,12 @@ const MonthlyDonationHeroList = () => {
     return (
         <View className="mt-3">
             <View className="flex-row justify-between mb-3">
-                <Text className="text-xl font-semibold text-font-black">This Month's Donation Heroes</Text>
+                <Text className="text-xl font-semibold text-font-black">이번달 기부히어로</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('heroListDetail')}>
-                    <Text className="text-xs font-semibold text-main-color">See More &gt;</Text>
+                    <Text className="text-xs font-semibold text-main-color">더보기 &gt;</Text>
                 </TouchableOpacity>
             </View>
-            <Text className="text-xs font-normal text-right text-font-gray">As of {formattedDate}</Text>
+            <Text className="text-xs font-normal text-right text-font-gray">{formattedDate} 기준</Text>
 
             {[...mergedData]
                 .sort((a, b) => b.amount - a.amount)

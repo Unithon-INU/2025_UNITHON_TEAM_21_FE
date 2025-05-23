@@ -66,11 +66,11 @@ function NavBar() {
                         fontFamily: 'System',
                     },
                 })}>
-                <Tab.Screen name="home" options={{tabBarLabel: 'Home'}} children={Home} />
-                <Tab.Screen name="donate" options={{tabBarLabel: 'Donate'}} children={DonatePage} />
-                <Tab.Screen name="chatting" options={{tabBarLabel: 'Chatting'}} children={ChatListScreen} />
-                <Tab.Screen name="volunteer" options={{tabBarLabel: 'Voluunteer'}} children={Volunteer} />
-                <Tab.Screen name="account" options={{tabBarLabel: 'My'}} children={UserInfo} />
+                <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
+                <Tab.Screen name="donate" options={{tabBarLabel: '기부하기'}} children={DonatePage} />
+                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
+                <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
+                <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInfo} />
             </Tab.Navigator>
         </>
     );

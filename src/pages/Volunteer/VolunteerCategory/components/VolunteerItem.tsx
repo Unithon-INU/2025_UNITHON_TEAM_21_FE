@@ -8,9 +8,9 @@ import {getVltrSearchWordListItem} from '@/types/volunteerTyps';
 import {formatDate} from '@/utils/formatDate';
 
 const STATUS_TEXT: Record<number, string> = {
-    1: 'Pending',
-    2: 'Recruiting',
-    3: 'Closed',
+    1: '모집대기',
+    2: '모집중',
+    3: '모집완료',
 };
 
 const STATUS_COLOR: Record<number, string> = {
@@ -45,17 +45,17 @@ export default function VolunteerItem({item}: {item: getVltrSearchWordListItem})
             </View>
             <Text className="font-semibold" style={{color: STATUS_COLOR[item.progrmSttusSe] || '#000'}}>
                 {STATUS_TEXT[item.progrmSttusSe] || ''}
-                {item.progrmSttusSe === 2 ? (deadline === 0 ? ' | Deadline Today' : deadline > 0 ? ` |  ${deadline} day(s) left` : '') : ''}
+                {item.progrmSttusSe === 2 ? (deadline === 0 ? ' | 오늘 마감' : deadline > 0 ? ` |  ${deadline}일 남음` : '') : ''}
             </Text>
-            <Text className="font-semibold text-font-gray">Location {item.nanmmbyNm}</Text>
+            <Text className="font-semibold text-font-gray">봉사장소 {item.nanmmbyNm}</Text>
             <Text className="font-semibold text-font-gray">
-                Recruitment Period {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
-            </Text>
-            <Text className="font-semibold text-font-gray">
-                Volunteer Period {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
+                모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
             </Text>
             <Text className="font-semibold text-font-gray">
-                Time {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}H)
+                봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
+            </Text>
+            <Text className="font-semibold text-font-gray">
+                소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
             </Text>
         </TouchableOpacity>
     );
