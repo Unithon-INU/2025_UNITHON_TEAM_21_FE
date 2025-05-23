@@ -21,21 +21,21 @@ const iconMap: {[key: string]: any} = {
 };
 
 const buttonData = [
-    {title: 'Daily Convenience', iconKey: '0100'},
-    {title: 'Housing & Environment', iconKey: '0200'},
-    {title: 'Counseling & Mentoring', iconKey: '0300'},
-    {title: 'Education', iconKey: '0400'},
-    {title: 'Health & Medical', iconKey: '0500'},
-    {title: 'Rural Volunteering', iconKey: '0600'},
-    {title: 'Culture, Sports & Tourism', iconKey: '0700'},
-    {title: 'Environment & Ecosystem', iconKey: '0800'},
-    {title: 'Administrative Support', iconKey: '0900'},
-    {title: 'Safety & Protection', iconKey: '1000'},
-    {title: 'Human Rights & Public Good', iconKey: '1100'},
-    {title: 'Disaster & Emergency Relief', iconKey: '1200'},
-    {title: 'International Cooperation', iconKey: '1300'},
-    {title: 'Other', iconKey: '1500'},
-    {title: 'Basic Volunteer Education', iconKey: '1700'},
+    {title: '생활편의', iconKey: '0100'},
+    {title: '주거환경', iconKey: '0200'},
+    {title: '상담/멘토링', iconKey: '0300'},
+    {title: '교육', iconKey: '0400'},
+    {title: '보건/의료', iconKey: '0500'},
+    {title: '농어촌봉사', iconKey: '0600'},
+    {title: '문화/체육/예술/관광', iconKey: '0700'},
+    {title: '환경/생태계 보호', iconKey: '0800'},
+    {title: '사무행정', iconKey: '0900'},
+    {title: '지역안전/보호', iconKey: '1000'},
+    {title: '인권/공익', iconKey: '1100'},
+    {title: '재난/재해', iconKey: '1200'},
+    {title: '국제협력/해외봉사', iconKey: '1300'},
+    {title: '기타', iconKey: '1500'},
+    {title: '자원봉사 기본교육', iconKey: '1700'},
 ];
 
 function Button({title, iconKey}: {title: string; iconKey: string}) {
@@ -58,7 +58,7 @@ export default function RecommendButtons() {
     const rows = [0, 1, 2].map(row => buttonData.slice(row * 5, row * 5 + 5));
     return (
         <>
-            <Text className="text-xl font-semibold text-font-black">Volunteer Categories</Text>
+            <Text className="text-xl font-semibold text-font-black">봉사 카테고리</Text>
             {rows.map((row, i) => (
                 <View key={i} className="flex flex-row justify-between py-1">
                     {row.map(btn => (
