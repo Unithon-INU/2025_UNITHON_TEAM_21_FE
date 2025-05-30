@@ -6,6 +6,8 @@ import SignupButton from './components/SignupButton';
 import DonationComponents from './components/DonantionItem';
 import CenterItem from './components/CenterItem';
 import RecommendActivity from './components/RecommendActivity';
+import TotalDonationAmount from './components/TotalDonationAmount';
+import MonthlyDonationHeroList from './components/MonthlyDonationHeroList';
 
 export default function Home() {
     return (
@@ -14,9 +16,11 @@ export default function Home() {
                 <Image className="w-[120px] h-[46px]" source={require('@/assets/logo.png')} />
                 <SignupButton />
             </View>
+            <TotalDonationAmount />
             <CenterItem />
             <DonationComponents />
             <RecommendActivity />
+            <MonthlyDonationHeroList />
         </Layout>
     );
 }
