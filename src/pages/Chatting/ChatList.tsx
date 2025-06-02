@@ -19,10 +19,10 @@ type ChatRoomData = {
 };
 
 const initialChatRooms: ChatRoomData[] = [
-    {id: '0', name: 'Volunteer Group', message: 'Personal information usage notification', time: '13:53', unread: 1},
-    {id: '1', name: 'Hi Children Center', message: 'Please check tomorrow’s volunteer schedule.', time: 'Yesterday', unread: 0},
-    {id: '2', name: 'Our Neighborhood Volunteer King', message: 'Would you like to volunteer together?', time: 'Apr 20 (Tue)', unread: 0},
-    {id: '3', name: 'What Should We Name This?', message: 'Thank you~', time: '2024.08.27', unread: 0},
+    {id: '0', name: '기봉사', message: '개인정보 이용 안내', time: '13:53', unread: 1},
+    {id: '1', name: '하이 아동센터', message: '내일 봉사 일정 확인 부탁드려요.', time: '어제', unread: 0},
+    {id: '2', name: '우리동네 봉사왕', message: '같이 봉사하실래요?', time: '4월 20일 (화)', unread: 0},
+    {id: '3', name: '이름 뭐로하지?', message: '감사합니다~', time: '2024.08.27', unread: 0},
 ];
 
 export default function ChatListScreen() {
