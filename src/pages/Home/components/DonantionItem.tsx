@@ -37,9 +37,9 @@ function Item({data}: {data: ChildrenCenterList}) {
                         <View className="flex flex-row items-baseline justify-between gap-1">
                             <View className="flex flex-row items-baseline gap-1">
                                 <Text className="text-xl font-semibold text-main-color">{percent}%</Text>
-                                <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()} KRW</Text>
+                                <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()}원</Text>
                             </View>
-                            <Text className="font-semibold text-font-black">{daysLeft} days left</Text>
+                            <Text className="font-semibold text-font-black">{daysLeft}일 남음</Text>
                         </View>
                         <View className="w-full h-1 overflow-hidden rounded-full bg-bg-gray">
                             <View className="h-full bg-main-color" style={{width: `${Math.min(percent, 100)}%`}} />
@@ -65,7 +65,7 @@ export default function DonationItem() {
         loadCSV();
     }, []);
     return (
-        <ColWrapper title="Live Donation Status">
+        <ColWrapper title="실시간 기부현황">
             {data?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}

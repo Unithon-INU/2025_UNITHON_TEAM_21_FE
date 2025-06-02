@@ -67,15 +67,15 @@ export default function VolunterrCategory() {
                 {items.length === 0 && !loading && (
                     <View className="flex justify-center h-60">
                         <Text className="text-xl text-center text-font-gray">
-                            We couldn't find any <Text className="text-main-color">{category}</Text> volunteer opportunities nearby.
+                            <Text className="text-main-color">{category}</Text>를 찾지못했어요.
                         </Text>
-                        <Text className="text-xl text-center text-font-gray">Try checking other categories!</Text>
+                        <Text className="text-xl text-center text-font-gray">다른 봉사 카테고리를 확인해주세요!</Text>
                     </View>
                 )}
                 {!loading && items.length > 0 && (
                     <View className="flex flex-col gap-3">
                         <Text className="text-xl font-bold text-font-black">
-                            Total <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text> results
+                            총 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
                         </Text>
                         {items.map((item, idx) => (
                             <VolunteerItem item={item} key={idx} />

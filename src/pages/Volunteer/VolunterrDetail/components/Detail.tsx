@@ -10,19 +10,19 @@ import {formatDate} from '@/utils/formatDate';
 function StateIcon({state}: {state: number}) {
     const {text, icon, bgColor, textColor} = {
         1: {
-            text: 'Pending',
+            text: '모집대기',
             icon: <FontAwesome6 name="hourglass-start" size={20} color="#9A9A9A" />,
             bgColor: '#E0E0E0',
             textColor: '#9A9A9A',
         },
         2: {
-            text: 'Recruiting',
+            text: '모집중',
             icon: <MaterialCommunityIcons name="fire" size={20} color="#FFFFFF" />,
             bgColor: '#FFB257',
             textColor: '#FFFFFF',
         },
         3: {
-            text: 'Closed',
+            text: '모집완료',
             icon: <Ionicons name="ban-outline" size={20} color="#FFFFFF" />,
             bgColor: '#9E9E9E',
             textColor: '#FFFFFF',
@@ -50,30 +50,30 @@ export default function Detail({item}: {item: getVltrPartcptnItemListItem}) {
             <Text className="text-xl font-semibold">{item.progrmSj}</Text>
             <View className="flex flex-row items-center gap-1">
                 <Ionicons size={24} name="location-outline" color="#484848" />
-                <Text className="font-semibold text-font-black">Location {item.nanmmbyNm}</Text>
+                <Text className="font-semibold text-font-black">봉사장소 {item.nanmmbyNm}</Text>
             </View>
             <View className="flex flex-row items-center gap-1">
                 <MaterialCommunityIcons size={24} name="calendar-clock-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">
-                    Recruitment Period {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
+                    모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
                 </Text>
             </View>
             <View className="flex flex-row items-center gap-1">
                 <MaterialCommunityIcons size={24} name="calendar" color="#484848" />
                 <Text className="font-semibold text-font-black">
-                    Volunteer Period {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
+                    봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
                 </Text>
             </View>
             <View className="flex flex-row items-center gap-1">
                 <MaterialCommunityIcons size={24} name="clock-time-five-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">
-                    Time
-                    {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}h)
+                    소요시간
+                    {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
                 </Text>
             </View>
             <View className="flex flex-row items-center gap-1">
                 <Ionicons size={24} name="person-outline" color="#484848" />
-                <Text className="font-semibold text-font-black items-cent">Recruitment {item.rcritNmpr}</Text>
+                <Text className="font-semibold text-font-black items-cent">모집인원 {item.rcritNmpr}명</Text>
             </View>
         </View>
     );

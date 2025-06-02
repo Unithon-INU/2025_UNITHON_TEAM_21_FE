@@ -34,26 +34,26 @@ export default function Remittance() {
                 <View className="mt-4">
                     <Text className="text-2xl font-semibold text-font-black">
                         {name}
-                        <Text className="font-normal text-font-gray"> will receive</Text>
+                        <Text className="font-normal text-font-gray">으로</Text>
                     </Text>
                     <Text className={`py-4 text-3xl ${value ? 'text-font-black' : 'text-font-gray'}`}>
                         {value || value === '0' ? (
-                            `${Number(value).toLocaleString()} KRW`
+                            `${Number(value).toLocaleString()}원`
                         ) : (
                             <>
-                                <Text className="animate-pulse text-main-color">|</Text>How much would you like to donate?
+                                <Text className="animate-pulse text-main-color">|</Text>얼마를 후원할까요?
                             </>
                         )}
                     </Text>
                     <View className="flex flex-row gap-2">
                         <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('5000')}>
-                            <Text className="text-base text-font-black">5,000 KRW</Text>
+                            <Text className="text-base text-font-black">5,000원</Text>
                         </TouchableOpacity>
                         <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('10000')}>
-                            <Text className="text-base text-font-black">10,000 KRW</Text>
+                            <Text className="text-base text-font-black">10,000원</Text>
                         </TouchableOpacity>
                         <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('50000')}>
-                            <Text className="text-base text-font-black">50,000 KRW</Text>
+                            <Text className="text-base text-font-black">50,000원</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -63,7 +63,7 @@ export default function Remittance() {
                     className={`items-center py-5 ${value ? 'bg-main-color' : ''}`}
                     disabled={!value}
                     onPress={() => navigation.navigate('remittanceCheck', {name, value})}>
-                    <Text className="text-lg font-semibold text-white">Next</Text>
+                    <Text className="text-lg font-semibold text-white">다음</Text>
                 </TouchableOpacity>
                 {KEYS.map((row, rowIndex) => (
                     <View key={rowIndex} className="flex flex-row justify-between mb-4">

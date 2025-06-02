@@ -3,19 +3,19 @@ import {View, Text, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 const thisMonthData = [
-    {id: '1', name: 'Rain', amount: 10200300},
+    {id: '1', name: '레인', amount: 10200300},
     {id: '2', name: 'DAFASF', amount: 1000000},
-    {id: '3', name: 'Volunteer King', amount: 900000},
-    {id: '4', name: 'AnyangYangbanKanKaworyongWoori', amount: 1000},
-    {id: '5', name: 'Yoohoo', amount: 100},
+    {id: '3', name: '봉사킹', amount: 900000},
+    {id: '4', name: '안양양반간카워용우리', amount: 1000},
+    {id: '5', name: '유후', amount: 100},
 ];
 
 const lastMonthData = [
-    {id: '3', name: 'Volunteer King', amount: 800000},
-    {id: '1', name: 'Rain', amount: 10000000},
-    {id: '5', name: 'Yoohoo', amount: 500},
+    {id: '3', name: '봉사킹', amount: 800000},
+    {id: '1', name: '레인', amount: 10000000},
+    {id: '5', name: '유후', amount: 500},
     {id: '2', name: 'DAFASF', amount: 11000000},
-    {id: '4', name: 'AnyangYangbanKanKaworyongWoori', amount: 1000},
+    {id: '4', name: '안양양반간카워용우리', amount: 1000},
 ];
 
 const sortedThis = [...thisMonthData].sort((a, b) => b.amount - a.amount);
@@ -54,12 +54,12 @@ const MonthlyDonationHeroList = () => {
     return (
         <View className="mt-3">
             <View className="flex-row justify-between mb-3">
-                <Text className="text-xl font-semibold text-font-black">This Month's Donation Heroes</Text>
+                <Text className="text-xl font-semibold text-font-black">이번달 기부히어로</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('heroListDetail')}>
-                    <Text className="text-xs font-semibold text-main-color">See More &gt;</Text>
+                    <Text className="text-xs font-semibold text-main-color">더보기 &gt;</Text>
                 </TouchableOpacity>
             </View>
-            <Text className="text-xs font-normal text-right text-font-gray">As of {formattedDate}</Text>
+            <Text className="text-xs font-normal text-right text-font-gray">{formattedDate} 기준</Text>
 
             {[...mergedData]
                 .sort((a, b) => b.amount - a.amount)

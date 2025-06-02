@@ -23,7 +23,7 @@ const initialMessages: Record<string, MessageType[]> = {
     '0': [
         {
             id: '1',
-            text: "Hi, I'm your chatbot!\nCurious about volunteering?\nFeel free to ask anything!\nWe're cheering for your kind heart 💛",
+            text: '안녕하세요, 챗봇입니다.\n봉사활동에 대해 궁금하신가요?\n무엇이든 편하게 물어보세요!\n당신의 따뜻한 마음을 응원합니다',
             isMe: false,
             time: getCurrentTime(),
         },
@@ -37,16 +37,6 @@ function getCurrentTime(): string {
     const isPM = hours >= 12;
     const hour12 = hours % 12 || 12;
     return `${isPM ? 'PM' : 'AM'} ${hour12}:${minutes}`;
-}
-
-function getCurrentDate(): string {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, '0');
-    const day = now.getDate().toString().padStart(2, '0');
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const weekday = days[now.getDay()];
-    return `${year}.${month}.${day} (${weekday})`;
 }
 
 const sendMessageToAPI = async (message: string) => {
@@ -106,14 +96,11 @@ export default function ChatRoomScreen() {
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
-                    <Text className="text-xl font-bold text-black">Chatbot</Text>
+                    <Text className="text-xl font-bold text-black">챗봇</Text>
                 </View>
                 <TouchableOpacity>
                     <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />
                 </TouchableOpacity>
-            </View>
-            <View className="items-center py-2">
-                <Text className="text-[12px] text-font-black bg-bg-gray px-2 py-1 mb-3 rounded-xl">{getCurrentDate()}</Text>
             </View>
             <FlatList data={messages} renderItem={MessageItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />
             <ChatInputBar onSend={handleSend} />
