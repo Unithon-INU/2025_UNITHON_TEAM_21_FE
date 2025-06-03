@@ -13,12 +13,12 @@ type ChatStackParamList = {
 
 const initialMessages: Record<string, {id: string; text: string; isMe: boolean; time: string}[]> = {
     '0': [
-        {id: '1', text: 'Personal information usage notification', isMe: false, time: '1:53 PM'},
-        {id: '2', text: 'Okay, check my info', isMe: true, time: '2:10 PM'},
+        {id: '1', text: '개인정보 이용 안내', isMe: false, time: '오후 1:53'},
+        {id: '2', text: '네, 제 정보 확인하세요', isMe: true, time: '오후 2:10'},
     ],
     '1': [
-        {id: '1', text: 'Please check tomorrow’s volunteer schedule', isMe: false, time: '14:00'},
-        {id: '2', text: 'Yes, I checked', isMe: true, time: '14:01'},
+        {id: '1', text: '내일 봉사 일정 확인해주세요', isMe: false, time: '14:00'},
+        {id: '2', text: '네, 확인했습니다', isMe: true, time: '14:01'},
     ],
 };
 function getCurrentTime(): string {
@@ -40,7 +40,7 @@ function getCurrentDate(): string {
 }
 function getCurrentDay(): string {
     const now = new Date();
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const days = ['일', '월', '화', '수', '목', '금', '토'];
     const day = days[now.getDay()];
     return day; // e.g., Sat
 }
@@ -76,7 +76,7 @@ export default function ChatRoomScreen() {
         setCurrentTime(getCurrentTime()); // Update current time
         setCurrentDate(getCurrentDate()); // Update current date
         setCurrentDay(getCurrentDay()); // Update current day
-        Alert.alert('Message sent', `Message: ${message}`, [{text: 'OK'}]); // Message sent alert
+        Alert.alert('메시지가 보내졌습니다.', `메시지: ${message}`, [{text: 'OK'}]); // Message sent alert
     };
     const renderItem = ({item}: any) => (
         <View className={`flex-row items-end px-4 mb-3  ${item.isMe ? 'justify-end' : ''}`}>
