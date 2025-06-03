@@ -1,10 +1,19 @@
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-
+import {useSelector} from 'react-redux';
 export default function Commit() {
     const navigation = useNavigation() as any;
     const route = useRoute();
     const {name, value} = route.params as {name: string; value: string};
+    const {profile} = useSelector((state: any) => state.user);
+    const handleExit = () => {
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{name: 'main'}, {name: 'remittanceComplete', params: {name, value}}],
+            }),
+        );
+    };
 
     return (
         <View className="flex flex-col h-full gap-3 px-5">
@@ -26,15 +35,13 @@ export default function Commit() {
             <View className="flex flex-col mb-16">
                 <View className="flex flex-row justify-between py-2">
                     <Text className="text-base font-semibold text-font-gray">받는 분에게 표시</Text>
-                    <Text className="text-base font-semibold text-font-black">기부왕</Text>
+                    <Text className="text-base font-semibold text-font-black">{profile.nickname}</Text>
                 </View>
                 <View className="flex flex-row justify-between py-2">
                     <Text className="text-base font-semibold text-font-gray">출금 계좌</Text>
                     <Text className="text-base font-semibold text-font-black">기부용 계좌</Text>
                 </View>
-                <TouchableOpacity
-                    className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color"
-                    onPress={() => navigation.navigate('remittanceComplete', {name, value})}>
+                <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color" onPress={handleExit}>
                     <Text className="text-xl font-semibold text-white">기부하기</Text>
                 </TouchableOpacity>
             </View>

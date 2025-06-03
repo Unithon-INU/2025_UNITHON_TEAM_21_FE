@@ -29,6 +29,9 @@ import Remittance from './CenterDetail/Remittance';
 import RemittanceCheck from './CenterDetail/RemittanceCheck';
 import RemittanceComplete from './CenterDetail/RemittanceComplete';
 import HeroListDetail from './Home/components/HeroListDetail';
+import Login from './Home/Login';
+import SearchScreen from './Volunteer/SearchScreen';
+import IDLogin from './Home/IDLogin';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -41,36 +44,34 @@ const TAB_ICONS = {
 function NavBar() {
     const Tab = createBottomTabNavigator();
     return (
-        <>
-            <Tab.Navigator
-                initialRouteName="home"
-                screenOptions={({route}) => ({
-                    headerShown: false,
-                    tabBarShowLabel: true,
-                    tabBarIcon: ({color, size}) =>
-                        TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
-                    tabBarActiveTintColor: '#FFB257',
-                    tabBarInactiveTintColor: '#999999',
-                    tabBarStyle: {
-                        paddingTop: 6,
-                        paddingBottom: 10,
-                        height: 75,
-                        backgroundColor: 'white',
-                        borderTopWidth: 0.5,
-                        borderTopColor: '#D5D5D5',
-                    },
-                    tabBarLabelStyle: {
-                        fontSize: 12,
-                        fontWeight: 'semibold',
-                        fontFamily: 'System',
-                    },
-                })}>
-                <Tab.Screen name="home" options={{tabBarLabel: '홈'}} children={Home} />
-                <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} children={ChatListScreen} />
-                <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} children={Volunteer} />
-                <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} children={UserInfo} />
-            </Tab.Navigator>
-        </>
+        <Tab.Navigator
+            initialRouteName="home"
+            screenOptions={({route}) => ({
+                headerShown: false,
+                tabBarShowLabel: true,
+                tabBarIcon: ({color, size}) =>
+                    TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
+                tabBarActiveTintColor: '#FFB257',
+                tabBarInactiveTintColor: '#999999',
+                tabBarStyle: {
+                    paddingTop: 6,
+                    paddingBottom: 10,
+                    height: 75,
+                    backgroundColor: 'white',
+                    borderTopWidth: 0.5,
+                    borderTopColor: '#D5D5D5',
+                },
+                tabBarLabelStyle: {
+                    fontSize: 12,
+                    fontWeight: 'semibold',
+                    fontFamily: 'System',
+                },
+            })}>
+            <Tab.Screen name="home" options={{tabBarLabel: '홈'}} component={Home} />
+            <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} component={ChatListScreen} />
+            <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} component={Volunteer} />
+            <Tab.Screen name="account" options={{tabBarLabel: '내정보'}} component={UserInfo} />
+        </Tab.Navigator>
     );
 }
 
@@ -87,23 +88,31 @@ export default function Pages() {
     return (
         <NavigationContainer theme={MyTheme}>
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
+                {/* 홈 */}
                 <Stack.Screen name="main" component={NavBar} />
                 <Stack.Screen name="signup" component={Signup} />
+                <Stack.Screen name="login" component={Login} />
+                <Stack.Screen name="idlogin" component={IDLogin} />
 
                 <Stack.Screen name="heroListDetail" component={HeroListDetail} />
 
+                {/* 채팅 */}
                 <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
                 <Stack.Screen name="Notification" component={NotificationScreen} />
 
+                {/* 지역봉사 */}
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
                 <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
                 <Stack.Screen name="chatbot" component={Chatbot} />
                 <Stack.Screen name="centerDetail" component={CenterDetail} />
+                <Stack.Screen name="searchScreen" component={SearchScreen} options={{animation: 'none'}} />
 
+                {/* 내 정보 */}
                 <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
                 <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
                 <Stack.Screen name="Userdonate" component={UserDonate} />
 
+                {/* 기부 */}
                 <Stack.Screen name="remittance" component={Remittance} />
                 <Stack.Screen name="remittanceCheck" component={RemittanceCheck} />
                 <Stack.Screen name="remittanceComplete" component={RemittanceComplete} />

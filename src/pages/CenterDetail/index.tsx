@@ -6,10 +6,11 @@ import Papa from 'papaparse';
 
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 
-import Layout from '@/pages/Layout';
-import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {KakaoMapAddress} from '@/components/KakaoMap';
+import {ColWrapper} from '@/components/layout/ContentWrapper';
+import Layout from '@/components/Layout';
 import DonationStatus from './components/DonationStatus';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -33,12 +34,7 @@ export default function CenterDetail() {
     return (
         <>
             <Layout>
-                <View className="flex flex-row items-center py-4">
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                    </TouchableOpacity>
-                    <Text className="text-xl font-bold text-font-black">{data?.centerName}</Text>
-                </View>
+                <HeaderBackButton>{data?.centerName}</HeaderBackButton>
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
                 <ColWrapper title="오시는 길">
                     <Text className="text-base font-semibold text-font-black">{data?.address}</Text>
@@ -58,7 +54,7 @@ export default function CenterDetail() {
                     </Text>
                 </ColWrapper>
             </Layout>
-            <View className="flex flex-row justify-between px-10 py-6 border-t border-bg-gray">
+            <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">
                 <TouchableOpacity
                     className="w-[150px] bg-main-color py-3 rounded-xl flex flex-row items-center justify-center gap-2"
                     onPress={() => navigation.navigate('remittance', {name: data?.centerName})}>

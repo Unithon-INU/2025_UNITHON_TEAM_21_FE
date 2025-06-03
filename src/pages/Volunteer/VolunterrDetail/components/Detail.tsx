@@ -47,7 +47,7 @@ export default function Detail({item}: {item: getVltrPartcptnItemListItem}) {
     return (
         <View className="flex gap-2 py-3">
             <StateIcon state={item.progrmSttusSe} />
-            <Text className="text-xl font-semibold">{item.progrmSj}</Text>
+            <Text className="text-lg font-semibold">{item.progrmSj}</Text>
             <View className="flex flex-row items-center gap-1">
                 <Ionicons size={24} name="location-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">봉사장소 {item.nanmmbyNm}</Text>
@@ -67,8 +67,7 @@ export default function Detail({item}: {item: getVltrPartcptnItemListItem}) {
             <View className="flex flex-row items-center gap-1">
                 <MaterialCommunityIcons size={24} name="clock-time-five-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">
-                    소요시간
-                    {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
+                    소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
                 </Text>
             </View>
             <View className="flex flex-row items-center gap-1">
