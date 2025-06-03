@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Layout from '../../Layout';
+import Layout from '../../../components/Layout';
 
 const thisMonthData = [
     {id: '1', name: '레인', amount: 10200300},
