@@ -14,9 +14,8 @@ export default function UserLikedvol() {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="font-inter font-bold text-[20px]"> Favorite Volunteer Activities</Text>
+                <Text className="font-inter font-bold text-[20px]"> 관심 봉사활동</Text>
             </View>
-
         </Layout>
     );
 }
