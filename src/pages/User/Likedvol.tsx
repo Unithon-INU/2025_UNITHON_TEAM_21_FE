@@ -2,8 +2,9 @@ import React, { createContext, useContext, useState } from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Layout from '../Layout';
+import Layout from '../../components/Layout';
 import { formatDate } from '@/utils/formatDate';
+
 
 const LikedVolunteerContext = createContext<any>(null);
 

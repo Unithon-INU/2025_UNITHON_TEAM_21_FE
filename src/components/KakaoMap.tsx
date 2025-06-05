@@ -17,35 +17,64 @@ export function KakaoMap({location, name = '', className = ''}: {location: strin
 
     const [latitude, longitude] = location.split(',').map(Number);
     const htmlContent = `
-    <!DOCTYPE html>
+        <!DOCTYPE html>
     <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${ANDROID_KAKAO_API_KEY}&libraries=services"></script>
-      <style>html, body, #map { width: 100%; height: 100%; margin: 0; padding: 0; }</style>
-    </head>
-    <body>
-      <div id="map"></div>
-      <script>
-        window.onload = function() {
-          var mapContainer = document.getElementById('map');
-          var mapOption = {
-            center: new kakao.maps.LatLng(${latitude}, ${longitude}),
-            level: 3
-          };
-          var map = new kakao.maps.Map(mapContainer, mapOption);
-          var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
-          var marker = new kakao.maps.Marker({ position: markerPosition });
-          var infowindow = new kakao.maps.InfoWindow({
-              content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
-          });
-          infowindow.open(map, marker);
-          marker.setMap(map);
-        }
-      </script>
-    </body>
+        <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${ANDROID_KAKAO_API_KEY}&libraries=services"></script>
+            <style>
+                html,
+                body,
+                #map {
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+                .marker-label {
+                    background: #fff;
+                    color: #484848;
+                    padding: 2px 10px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.05);
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="map"></div>
+            <script>
+                var mapContainer = document.getElementById("map");
+                var mapOption = {
+                    center: new kakao.maps.LatLng(${latitude}, ${longitude}),
+                    level: 3
+                };
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+                var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
+                var imageSrc = "https://i.ibb.co/B5NGnKNj/Adobe-Express-file-1.png",
+                imageSize = new kakao.maps.Size(32, 32),
+                imageOption = { offset: new kakao.maps.Point(16,26) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition,
+                    image: markerImage,
+                });
+                marker.setMap(map);
+
+
+                var customOverlay = new kakao.maps.CustomOverlay({
+                position: markerPosition,
+                content: '<div class="marker-label">${name}</div>',
+                yAnchor: 2.4,
+                });
+                customOverlay.setMap(map);
+            </script>
+        </body>
     </html>
-  `;
+    `;
     return (
         <View className={`${className} overflow-hidden rounded-xl`}>
             <WebView nestedScrollEnabled={true} originWhitelist={['*']} source={{html: htmlContent}} javaScriptEnabled={true} domStorageEnabled={true} />
@@ -92,26 +121,45 @@ export function KakaoMapAddress({location, name = '', className = ''}: {location
                     margin: 0;
                     padding: 0;
                 }
+                .marker-label {
+                    background: #fff;
+                    color:#484848;
+                    padding: 2px 10px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.05);
+                    font-weight: bold;
+                }
             </style>
         </head>
         <body>
             <div id="map"></div>
             <script>
-                window.onload = function() {
-                  var mapContainer = document.getElementById('map');
-                  var mapOption = {
+                var mapContainer = document.getElementById("map");
+                var mapOption = {
                     center: new kakao.maps.LatLng(${latitude}, ${longitude}),
-                    level: 5
-                  };
-                  var map = new kakao.maps.Map(mapContainer, mapOption);
-                    var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
-                    var marker = new kakao.maps.Marker({ position: markerPosition });
-                    marker.setMap(map);
-                  var infowindow = new kakao.maps.InfoWindow({
-                    content: '<div style="width:150px;text-align:center;padding:6px 0;">${name}</div>'
-                })
-                  infowindow.open(map, marker);
-                }
+                    level: 3
+                };
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+                var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
+                var imageSrc = "https://i.ibb.co/B5NGnKNj/Adobe-Express-file-1.png",
+                imageSize = new kakao.maps.Size(32, 32),
+                imageOption = { offset: new kakao.maps.Point(16,26) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition,
+                    image: markerImage,
+                });
+                marker.setMap(map);
+
+                var customOverlay = new kakao.maps.CustomOverlay({
+                position: markerPosition,
+                content: '<div class="marker-label">${name}</div>',
+                yAnchor: 2.4,
+                });
+                customOverlay.setMap(map);
             </script>
         </body>
     </html>

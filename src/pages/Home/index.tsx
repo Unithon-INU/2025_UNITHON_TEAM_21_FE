@@ -1,15 +1,23 @@
-import React from 'react';
 import {Image, View} from 'react-native';
-import Layout from '../Layout';
 
+import {useUserRestore} from '@/hook/api/useKakaoInfo';
+import {useCenter} from '@/hook/api/useCenter';
+
+import Layout from '../../components/Layout';
+import Loading from '@/components/Loading';
 import SignupButton from './components/SignupButton';
 import DonationComponents from './components/DonantionItem';
 import CenterItem from './components/CenterItem';
-import RecommendActivity from './components/RecommendActivity';
+import RecommendActivity from './components/RecommendVolunteer';
 import TotalDonationAmount from './components/TotalDonationAmount';
 import MonthlyDonationHeroList from './components/MonthlyDonationHeroList';
 
 export default function Home() {
+    useUserRestore();
+    const {centerData, loading} = useCenter();
+    if (loading) {
+        return <Loading />;
+    }
     return (
         <Layout>
             <View className="flex flex-row items-center justify-between">
@@ -17,7 +25,7 @@ export default function Home() {
                 <SignupButton />
             </View>
             <TotalDonationAmount />
-            <CenterItem />
+            <CenterItem data={centerData} />
             <DonationComponents />
             <RecommendActivity />
             <MonthlyDonationHeroList />

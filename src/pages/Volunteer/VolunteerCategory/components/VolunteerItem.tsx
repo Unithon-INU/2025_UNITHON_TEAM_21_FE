@@ -27,6 +27,7 @@ function getDaysLeft(dateNumber: number) {
   today.setHours(0, 0, 0, 0);
   return Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
+<<<<<<< HEAD
 
 export default function VolunteerItem({ item }: { item: getVltrSearchWordListItem }) {
   const navigation = useNavigation<any>();
@@ -79,4 +80,39 @@ export default function VolunteerItem({ item }: { item: getVltrSearchWordListIte
       </Text>
     </TouchableOpacity>
   );
+=======
+export default function VolunteerItem({item}: {item: getVltrSearchWordListItem}) {
+    const [like, setLike] = useState(false);
+    const navigation = useNavigation() as any;
+    const deadline = getDaysLeft(item.noticeEndde);
+
+    return (
+        <TouchableOpacity className="flex gap-0.5 mb-3" onPress={() => navigation.navigate('volunteerDetail', {progrmRegistNo: item.progrmRegistNo})}>
+            <View className="flex flex-row justify-between">
+                <Text className="flex-1 text-base font-semibold text-font-black" numberOfLines={2}>
+                    {item.progrmSj}
+                </Text>
+                {like ? (
+                    <Ionicons name="heart" size={24} color={'#FFB257'} onPress={() => setLike(false)} />
+                ) : (
+                    <Ionicons name="heart-outline" size={24} color={'#FFB257'} onPress={() => setLike(true)} />
+                )}
+            </View>
+            <Text className="font-semibold" style={{color: STATUS_COLOR[item.progrmSttusSe] || '#000'}}>
+                {STATUS_TEXT[item.progrmSttusSe] || ''}
+                {item.progrmSttusSe === 2 ? (deadline === 0 ? ' | 오늘 마감' : deadline > 0 ? ` |  ${deadline}일 남음` : '') : ''}
+            </Text>
+            <Text className="font-semibold text-font-gray">봉사장소 {item.nanmmbyNm}</Text>
+            <Text className="font-semibold text-font-gray">
+                모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
+            </Text>
+            <Text className="font-semibold text-font-gray">
+                봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
+            </Text>
+            <Text className="font-semibold text-font-gray">
+                소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
+            </Text>
+        </TouchableOpacity>
+    );
+>>>>>>> team/main
 }

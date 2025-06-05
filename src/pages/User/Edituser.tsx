@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, Modal} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Layout from '../Layout'; // Layout import 추가
+import Layout from '../../components/Layout';
 
 export default function EditUser() {
     const navigation = useNavigation<StackNavigationProp<any>>();

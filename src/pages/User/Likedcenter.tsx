@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, ScrollView} from 'react-native';
-import Layout from '../Layout';
+import Layout from '../../components/Layout';
+
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 

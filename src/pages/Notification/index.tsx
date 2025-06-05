@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, Image, TouchableOpacity, ScrollView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Layout from '../Layout';
+import Layout from '../../components/Layout';
 import NotificationItem from '@/pages/Notification/components/NotificationItem';
 
 export default function NotificationScreen() {
