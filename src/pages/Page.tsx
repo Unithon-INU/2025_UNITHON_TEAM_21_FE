@@ -106,7 +106,6 @@ export default function Pages() {
           {/* 채팅 */}
           <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
-                <Stack.Screen name="heroListDetail" component={HeroListDetail} />
                 <Stack.Screen name="centerList" component={CenterList} />
 
 
