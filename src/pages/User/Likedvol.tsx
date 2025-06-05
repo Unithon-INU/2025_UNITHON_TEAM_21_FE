@@ -1,46 +1,27 @@
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 import { ScrollView, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store';
+import { toggleLike } from '@/store/slice/likedSlice';
 import Layout from '../../components/Layout';
 import { formatDate } from '@/utils/formatDate';
 
-
-const LikedVolunteerContext = createContext<any>(null);
-
-export function LikedVolunteerProvider({ children }: { children: React.ReactNode }) {
-  const [likedList, setLikedList] = useState<any[]>([]);
-
-  const toggleLike = (item: any) => {
-    setLikedList(prev =>
-      prev.some(i => i.progrmRegistNo === item.progrmRegistNo)
-        ? prev.filter(i => i.progrmRegistNo !== item.progrmRegistNo)
-        : [...prev, item]
-    );
-  };
-
-  return (
-    <LikedVolunteerContext.Provider value={{ likedList, toggleLike }}>
-      {children}
-    </LikedVolunteerContext.Provider>
-  );
+function getDaysLeft(dateNumber: number) {
+  const dateStr = String(dateNumber);
+  const endDate = new Date(`${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`);
+  const today = new Date();
+  endDate.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  return Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
-
-export const useLikedVolunteer = () => useContext(LikedVolunteerContext);
 
 function VolunteerItem({ item }: { item: any }) {
   const navigation = useNavigation<any>();
-  const { likedList, toggleLike } = useLikedVolunteer();
+  const dispatch = useDispatch();
+  const likedList = useSelector((state: RootState) => state.liked.likedList);
   const isLiked = likedList.some(v => v.progrmRegistNo === item.progrmRegistNo);
-
-  const getDaysLeft = (dateNumber: number) => {
-    const dateStr = String(dateNumber);
-    const endDate = new Date(`${dateStr.slice(0, 4)}-${dateStr.slice(4, 6)}-${dateStr.slice(6, 8)}`);
-    const today = new Date();
-    endDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    return Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
-  };
 
   const deadline = getDaysLeft(item.noticeEndde);
 
@@ -58,7 +39,7 @@ function VolunteerItem({ item }: { item: any }) {
           name={isLiked ? 'heart' : 'heart-outline'}
           size={24}
           color="#FFB257"
-          onPress={() => toggleLike(item)}
+          onPress={() => dispatch(toggleLike(item))}
         />
       </View>
 
@@ -81,7 +62,7 @@ function VolunteerItem({ item }: { item: any }) {
 
 export default function UserLikedVolunteerList() {
   const navigation = useNavigation<any>();
-  const { likedList } = useLikedVolunteer();
+  const likedList = useSelector((state: RootState) => state.liked.likedList);
 
   return (
     <Layout>

@@ -2,10 +2,10 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import { getVltrSearchWordListItem } from '@/types/volunteerTyps';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleLike } from '@/store/slice/likedSlice';
+import { RootState } from '@/store';
 import { formatDate } from '@/utils/formatDate';
-import { useLikedVolunteer } from '../../../User/Likedvol'; 
 
 const STATUS_TEXT: Record<number, string> = {
   1: '모집대기',
@@ -28,19 +28,18 @@ function getDaysLeft(dateNumber: number) {
   return Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-export default function VolunteerItem({ item }: { item: getVltrSearchWordListItem }) {
+const VolunteerItem = ({ item }: { item: any }) => {
   const navigation = useNavigation<any>();
-  const deadline = getDaysLeft(item.noticeEndde);
-
-  const { likedList, toggleLike } = useLikedVolunteer();
+  const dispatch = useDispatch();
+  const likedList = useSelector((state: RootState) => state.liked.likedList);
   const isLiked = likedList.some(v => v.progrmRegistNo === item.progrmRegistNo);
+  const deadline = getDaysLeft(item.noticeEndde);
 
   return (
     <TouchableOpacity
       className="flex gap-0.5 mb-4"
       onPress={() => navigation.navigate('volunteerDetail', { progrmRegistNo: item.progrmRegistNo })}
     >
-      {/* 제목 + 하트 */}
       <View className="flex flex-row justify-between">
         <Text className="flex-1 text-xl font-semibold text-font-black" numberOfLines={2}>
           {item.progrmSj}
@@ -49,11 +48,10 @@ export default function VolunteerItem({ item }: { item: getVltrSearchWordListIte
           name={isLiked ? 'heart' : 'heart-outline'}
           size={24}
           color="#FFB257"
-          onPress={() => toggleLike(item)}
+          onPress={() => dispatch(toggleLike(item))}
         />
       </View>
 
-      {/* 모집 상태 */}
       <Text className="font-semibold" style={{ color: STATUS_COLOR[item.progrmSttusSe] || '#000' }}>
         {STATUS_TEXT[item.progrmSttusSe] || ''}
         {item.progrmSttusSe === 2
@@ -65,7 +63,6 @@ export default function VolunteerItem({ item }: { item: getVltrSearchWordListIte
           : ''}
       </Text>
 
-      {/* 상세 정보 */}
       <Text className="font-semibold text-font-gray">봉사장소 {item.nanmmbyNm}</Text>
       <Text className="font-semibold text-font-gray">
         모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
@@ -78,4 +75,6 @@ export default function VolunteerItem({ item }: { item: getVltrSearchWordListIte
       </Text>
     </TouchableOpacity>
   );
-}
+};
+
+export default VolunteerItem;
