@@ -1,10 +1,12 @@
-import React, {useState} from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
-import {useLogin} from '@/hook/api/useLogin';
+import Layout from '@/components/Layout';
+import {useSignup} from '@/hook/api/useSignup';
+import React, {useState} from 'react';
+import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 
-export default function IDLogin() {
+export default function IDSignup() {
     const [form, setForm] = useState({
+        nickname: '',
         email: '',
         password: '',
     });
@@ -15,42 +17,44 @@ export default function IDLogin() {
             [key]: value,
         }));
     };
-    const {loading, login} = useLogin(form);
+    const {signup, loading} = useSignup(form);
 
     return (
-        <View className="flex flex-col h-full gap-12 px-5">
+        <Layout>
             <HeaderBackButton />
             <View className="flex items-center justify-center">
                 <Image className="w-40 h-16" source={require('@/assets/logo.png')} />
                 <Text className="text-2xl font-semibold tracking-[-2px]">나눔의 일상을 만나다</Text>
             </View>
-
-            <View className="flex gap-3 px-5">
+            <View className="p-5">
                 <TextInput
                     className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
-                    placeholder="이메일을 입력하세요"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    keyboardType="email-address"
+                    placeholder="닉네임"
+                    value={form.nickname}
+                    onChangeText={text => handleChange('nickname', text)}
+                    editable={!loading}
+                />
+                <TextInput
+                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
+                    placeholder="이메일"
                     value={form.email}
                     onChangeText={text => handleChange('email', text)}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                     editable={!loading}
                 />
                 <TextInput
                     className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
-                    placeholder="비밀번호를 입력하세요"
-
-                    secureTextEntry
-                    autoCapitalize="none"
-                    autoCorrect={false}
+                    placeholder="비밀번호"
                     value={form.password}
                     onChangeText={text => handleChange('password', text)}
+                    secureTextEntry
                     editable={!loading}
                 />
-                <TouchableOpacity className="flex items-center justify-center py-4 rounded-lg bg-main-color" onPress={() => login()} disabled={loading}>
-                    <Text className="text-base font-semibold text-white">{loading ? '로그인 중...' : '로그인'}</Text>
+                <TouchableOpacity className="items-center p-4 mt-4 rounded-lg bg-main-color" onPress={() => signup()} disabled={loading}>
+                    <Text className="text-lg font-bold text-white">{loading ? '가입 중...' : '회원가입'}</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </Layout>
     );
 }
