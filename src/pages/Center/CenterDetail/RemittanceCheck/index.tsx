@@ -1,11 +1,13 @@
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
+
 export default function Commit() {
     const navigation = useNavigation() as any;
     const route = useRoute();
     const {name, value} = route.params as {name: string; value: string};
     const {profile} = useSelector((state: any) => state.user);
+
     const handleExit = () => {
         navigation.dispatch(
             CommonActions.reset({
@@ -14,7 +16,13 @@ export default function Commit() {
             }),
         );
     };
-
+    if (!profile) {
+        return (
+            <View className="flex flex-col items-center justify-center h-full">
+                <Text className="text-lg font-semibold text-font-black">로그인 후 이용해주세요.</Text>
+            </View>
+        );
+    }
     return (
         <View className="flex flex-col h-full gap-3 px-5">
             <View className="flex flex-row items-center py-4">
