@@ -54,16 +54,6 @@ export function useLogin({email, password}: LoginForm) {
                         },
                     }),
                 );
-                console.log({
-                    token: {
-                        accessToken: data.accessToken,
-                        refreshToken: data.refreshToken,
-                    },
-                    profile: {
-                        id: 1000,
-                        nickname: data.nickname,
-                    },
-                });
                 navigation.replace('main');
             }
         } catch (error) {

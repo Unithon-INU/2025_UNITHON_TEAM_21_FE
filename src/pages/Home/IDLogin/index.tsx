@@ -25,7 +25,7 @@ export default function IDLogin() {
                 <Text className="text-2xl font-semibold tracking-[-2px]">나눔의 일상을 만나다</Text>
             </View>
 
-            <View className="flex gap-3 px-5">
+            <View className="flex px-5">
                 <TextInput
                     className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
                     placeholder="이메일을 입력하세요"

@@ -13,7 +13,7 @@ export default function UserDonate() {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="font-inter font-bold text-[20px]"> 기부내역</Text>
+                <Text className="font-inter font-bold text-[20px]">기부내역</Text>
             </View>
         </Layout>
     );

@@ -8,9 +8,8 @@ export default function UserInfo() {
     const navigation = useNavigation<StackNavigationProp<any>>();
     return (
         <Layout>
-            {/* 상단 */}
-            <View className=" h-[60px] pt-[5px] pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-semibold text-[24px] leading-[24px]">내정보</Text>
+            <View className="flex flex-col justify-between py-4">
+                <Text className="text-xl font-bold text-font-black">내정보</Text>
             </View>
 
             {/* Profile Edit Navigation */}

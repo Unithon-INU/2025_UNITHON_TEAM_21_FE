@@ -44,10 +44,10 @@ export default function ChatListScreen() {
     return (
         <View className="flex flex-col gap-3 px-5">
             {/* Top Bar */}
-            <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
+            <View className="flex flex-row justify-between py-4">
+                <Text className="text-xl font-bold text-font-black">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                    <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
+                    <Image source={require('@/assets/ring.png')} className="w-8 h-8 text-font-black" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
 
