@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-import Layout from '../../components/Layout';
+
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
@@ -36,9 +36,9 @@ export default function ChatListScreen() {
 
     const handleEnterRoom = (id: string, name: string) => {
         // Set unread to 0
-        setChatRooms(prev => prev.map(room => (room.id === id ? { ...room, unread: 0 } : room)));
+        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
 
-        navigation.navigate('ChatRoom', { id, name });
+        navigation.navigate('ChatRoom', {id, name});
     };
 
     return (
@@ -69,7 +69,7 @@ export default function ChatListScreen() {
             <FlatList
                 data={filteredRooms}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                     <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px]" onPress={() => handleEnterRoom(item.id, item.name)}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
                         <View className="justify-center flex-1 mb-4">
