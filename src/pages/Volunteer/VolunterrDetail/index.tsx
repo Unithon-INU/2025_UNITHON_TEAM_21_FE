@@ -1,5 +1,5 @@
-import React from 'react';
-import {Linking, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 
 import {decode} from 'he';
@@ -8,9 +8,9 @@ import {ColWrapper} from '@/components/layout/ContentWrapper';
 import Layout from '@/components/Layout';
 import Detail from './components/Detail';
 import {KakaoMap} from '../../../components/KakaoMap';
-import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Loading from '@/components/Loading';
 import {useVolunteerDeatil} from '@/hook/api/useVolunteerData';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type VolunteerDetailParamList = {
     VolunteerDetail: {
@@ -31,16 +31,26 @@ export default function VolunteerDetail() {
 
     const {progrmRegistNo} = route.params;
     const {item, loading} = useVolunteerDeatil(progrmRegistNo);
-    const url = `https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?titleNm=%EC%83%81%EC%84%B8%EB%B3%B4%EA%B8%B0&type=show&progrmRegistNo=${item.progrmRegistNo}`;
+    const [like, setLike] = useState(false);
 
+    const url = `https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?titleNm=%EC%83%81%EC%84%B8%EB%B3%B4%EA%B8%B0&type=show&progrmRegistNo=${item.progrmRegistNo}`;
     return (
         <>
             {loading ? (
                 <Loading />
             ) : (
                 <>
+                    <View className="flex-row items-center justify-between px-5 py-4">
+                        <View className="flex-row items-center">
+                            <TouchableOpacity onPress={() => navigation.goBack()}>
+                                <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity onPress={() => setLike(!like)}>
+                            {like ? <Ionicons name="heart" size={30} color={'#FFB257'} /> : <Ionicons name="heart-outline" size={30} color={'#FFB257'} />}
+                        </TouchableOpacity>
+                    </View>
                     <Layout>
-                        <HeaderBackButton />
                         <Detail item={item} />
                         <ColWrapper title="봉사활동 소개">
                             <Text>{item.progrmCn ? decode(item.progrmCn) : ''}</Text>
