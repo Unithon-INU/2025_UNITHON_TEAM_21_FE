@@ -1,8 +1,10 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
+import axios from 'axios';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -18,36 +20,37 @@ type ChatRoomData = {
     unread: number;
 };
 
-const initialChatRooms: ChatRoomData[] = [
-    {id: '0', name: '기봉사', message: '개인정보 이용 안내', time: '13:53', unread: 1},
-    {id: '1', name: '하이 아동센터', message: '내일 봉사 일정 확인 부탁드려요.', time: '어제', unread: 1},
-    {id: '2', name: '우리동네 봉사왕', message: '같이 봉사하실래요?', time: '4월 20일 (화)', unread: 0},
-    {id: '3', name: '이름 뭐로하지?', message: '감사합니다~', time: '2024.08.27', unread: 0},
-];
-
 export default function ChatListScreen() {
-    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>(initialChatRooms);
-
+    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>([]);
     const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
-
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
+    const user = useSelector((state: RootState) => state.user);
+
+    useEffect(() => {
+        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
+        if (!user.profile?.email) return;
+        axios
+            .get('/api/chatroom', {
+                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
+            })
+            .then(res => setChatRooms(res.data))
+            .catch(err => console.error(err));
+    }, [user]);
 
     const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
 
     const handleEnterRoom = (id: string, name: string) => {
-        // Set unread to 0
         setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
-
         navigation.navigate('ChatRoom', {id, name});
     };
 
     return (
         <View className="flex flex-col gap-3 px-5">
             {/* Top Bar */}
-            <View className="flex flex-row justify-between py-4">
-                <Text className="text-xl font-bold text-font-black">채팅</Text>
+            <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
+                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                    <Image source={require('@/assets/ring.png')} className="w-8 h-8 text-font-black" resizeMode="contain" />
+                    <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
 

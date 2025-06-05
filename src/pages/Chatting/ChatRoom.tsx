@@ -1,10 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, Platform} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import SockJS from 'sockjs-client';
-import {CompatClient, Stomp} from '@stomp/stompjs';
 import ChatInputBar from '@/components/input/ChatInputBar';
+import useChatSocket from '@/hook/useChatSocket';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
+import axios from 'axios';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -49,58 +51,43 @@ export default function ChatRoomScreen() {
     const {id, name} = route.params;
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
 
+    // Redux에서 유저 정보 가져오기
+    const user = useSelector((state: RootState) => state.user);
+    const senderEmail = user.profile?.email ?? '';
+    const senderId = user.profile?.id ?? ''; // 카카오 id 등 고유값
+    // 상대방 id는 서버에서 내려주는 메시지/채팅방 정보로 받아와야 함
+    const targetUserId = null; // 필요 시 채팅방 정보에서 추출
+
+    const chatRoomId = Number(id);
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
     const [currentDay, setCurrentDay] = useState(getCurrentDay());
 
-    const stompClientRef = useRef<CompatClient | null>(null);
-    const senderEmail = 'test1user@example.com'; // 하드코딩 (HTML 백엔드 기준)
-    const targetUserId = 3; //테스트용은 3번으로 지정
-    const chatRoomId = Number(id); //id값으로 받음 test에서 2번으로 지정했으므로 chatlist에서 id 2번하이으로 들어감
-
-    // ✅ WebSocket 연결 및 메시지 수신
-    useEffect(() => {
-        const stompClient = Stomp.over(() => new SockJS('https://8d7a-124-195-248-39.ngrok-free.app/')); // ✅ 수정된 부분
-        stompClient.reconnectDelay = 5000; // ✅ 재연결 설정 (선택사항)
-
-        // // 디버깅 활성화
-        // stompClient.debug = str => {
-        //     console.log('STOMP DEBUG:', str);
-        // };
-
-        stompClient.connect({}, () => {
-            console.log('🟢 Connected');
-            stompClientRef.current = stompClient;
-
-            stompClient.subscribe(`/topic/chatroom/${chatRoomId}`, message => {
-                const data = JSON.parse(message.body);
-                const isMe = data.senderEmail === senderEmail;
-
-                const newMessage: Message = {
-                    id: Date.now().toString(),
-                    text: data.content,
-                    isMe: isMe,
-                    time: getCurrentTime(),
-                    date: getCurrentDate(),
-                    day: getCurrentDay(),
-                };
-
-                setMessages(prev => [...prev, newMessage]);
-            });
-            (error: any) => {
-                console.error('❌ STOMP 연결 실패:', error); // <-- 여기 로그 꼭 확인
+    // 메시지 수신 콜백
+    const handleReceive = useCallback(
+        (data: any) => {
+            const isMe = data.senderEmail === senderEmail;
+            const newMessage: Message = {
+                id: Date.now().toString(),
+                text: data.content,
+                isMe,
+                time: getCurrentTime(),
+                date: getCurrentDate(),
+                day: getCurrentDay(),
             };
+            setMessages(prev => [...prev, newMessage]);
+        },
+        [senderEmail],
+    );
 
-            console.log('📡 stompClient 상태:', stompClientRef.current);
-            console.log('✅ 연결 상태:', stompClientRef.current?.connected);
-        });
+    // useChatSocket 훅 사용
+    const {sendMessage} = useChatSocket({
+        chatRoomId: String(chatRoomId),
+        onMessage: handleReceive,
+    });
 
-        return () => {
-            stompClient.disconnect(() => console.log('🔴 WebSocket Disconnected'));
-        };
-    }, [chatRoomId]);
-
-    // ✅ 메시지 전송
+    // 메시지 전송
     const handleSend = (message: string) => {
         const newMessage: Message = {
             id: Date.now().toString(),
@@ -110,25 +97,19 @@ export default function ChatRoomScreen() {
             date: getCurrentDate(),
             day: getCurrentDay(),
         };
-
         setMessages(prev => [...prev, newMessage]);
 
         const payload = {
             chatRoomId,
             senderEmail,
+            senderId,
             targetUserId,
-            targetOrganizationId: null,
+            targetOrganizationId: null, // 기관 채팅이면 값 할당
             content: message,
             fromUser: true,
             sentAt: new Date().toISOString(),
         };
-
-        if (stompClientRef.current?.connected) {
-            console.log('🟢 stompClient 연결됨, 메시지 보냄!');
-            stompClientRef.current.send('/app/chat.send', {'content-type': 'application/json; charset=UTF-8'}, JSON.stringify(payload));
-        } else {
-            console.error('❗ STOMP 연결 안 됨: 메시지를 보낼 수 없습니다.');
-        }
+        sendMessage(payload);
 
         setCurrentDate(getCurrentDate());
         setCurrentDay(getCurrentDay());
@@ -145,6 +126,14 @@ export default function ChatRoomScreen() {
             {item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full ml-2" />}
         </View>
     );
+
+    useEffect(() => {
+        axios
+            .get(`/api/chatroom/${chatRoomId}/messages`, {
+                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
+            })
+            .then(res => setMessages(res.data));
+    }, [chatRoomId, user.token?.accessToken]);
 
     return (
         <View className="flex-1 bg-white">
@@ -174,7 +163,7 @@ export default function ChatRoomScreen() {
                     keyExtractor={item => item.id}
                     contentContainerStyle={{paddingHorizontal: 16, paddingTop: 8}}
                     showsVerticalScrollIndicator={false}
-                    inverted // 메시지를 아래에서 위로 스크롤할 수 있도록
+                    inverted
                 />
             </View>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}>
