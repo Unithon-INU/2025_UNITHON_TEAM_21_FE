@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
-import KakoLogin from '../Signup/components/KakaoSignup';
+import KakoLogin from './components/KakaoLogin';
 import IDLogin from './components/IDLogin';
 
 export default function Login() {

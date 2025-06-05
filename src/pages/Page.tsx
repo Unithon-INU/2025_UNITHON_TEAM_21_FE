@@ -32,6 +32,7 @@ import HeroListDetail from './Home/components/HeroListDetail';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
 import IDLogin from './Home/IDLogin';
+import IDSignup from './Home/IDSignup';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -93,7 +94,7 @@ export default function Pages() {
                 <Stack.Screen name="signup" component={Signup} />
                 <Stack.Screen name="login" component={Login} />
                 <Stack.Screen name="idlogin" component={IDLogin} />
-
+                <Stack.Screen name="idSignup" component={IDSignup} />
                 <Stack.Screen name="heroListDetail" component={HeroListDetail} />
 
                 {/* 채팅 */}
