@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Image, View, TextInput, TouchableOpacity} from 'react-native';
+import {Image, View, TextInput, TouchableOpacity, Keyboard} from 'react-native';
 
 export default function ChatInputBar({onSend}: {onSend: (message: string) => void}) {
     const [text, setText] = useState('');
@@ -10,6 +10,7 @@ export default function ChatInputBar({onSend}: {onSend: (message: string) => voi
         }
         onSend(text);
         setText('');
+        Keyboard.dismiss();
     };
 
     return (
@@ -20,6 +21,8 @@ export default function ChatInputBar({onSend}: {onSend: (message: string) => voi
                 value={text}
                 onChangeText={setText}
                 placeholderTextColor={'#9A9A9A'}
+                returnKeyType="send"
+                onSubmitEditing={handleSend}
             />
             <TouchableOpacity onPress={handleSend}>
                 <Image source={require('@/assets/send.png')} className="w-8 h-8" resizeMode="contain" />
