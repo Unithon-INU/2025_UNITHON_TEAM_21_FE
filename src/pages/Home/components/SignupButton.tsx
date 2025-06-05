@@ -1,19 +1,20 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {useLogin} from '@/hook/api/useKakaoInfo';
 import {useSelector} from 'react-redux';
-import {useLogout} from '@/hook/api/useLogout';
 
 export default function SignupButton() {
     const navigation = useNavigation() as any;
-    const {logout} = useLogout();
+    const {kakaoLogout} = useLogin();
     const {profile} = useSelector((state: any) => state.user);
+
     return (
         <>
             {profile ? (
                 <View className="flex-row items-center gap-2">
                     <Text className="text-base font-semibold text-font-black">{profile.nickname} 님</Text>
-                    <TouchableOpacity onPress={logout} className="flex-row items-center px-3 py-1 bg-gray-100 rounded-xl">
+                    <TouchableOpacity onPress={kakaoLogout} className="flex-row items-center px-3 py-1 bg-gray-100 rounded-xl">
                         <Text className="text-base font-bold text-gray-500">로그아웃</Text>
                     </TouchableOpacity>
                 </View>

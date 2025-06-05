@@ -1,8 +1,11 @@
-import {CommonActions, useNavigation} from '@react-navigation/native';
-import {ActivityIndicator, Image, Text, TouchableOpacity, View} from 'react-native';
+import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-export default function Loading({name, value}: {name: string; value: string}) {
-    const navigation = useNavigation() as any;
+export default function Commit() {
+    const navigation = useNavigation();
+    const route = useRoute();
+    const {name, value} = route.params as {name: string; value: string};
+
     const handleExit = () => {
         navigation.dispatch(
             CommonActions.reset({
@@ -11,6 +14,7 @@ export default function Loading({name, value}: {name: string; value: string}) {
             }),
         );
     };
+
     return (
         <View className="flex flex-col h-full gap-3 px-5">
             <View className="flex flex-row items-center py-4">
@@ -19,20 +23,19 @@ export default function Loading({name, value}: {name: string; value: string}) {
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col items-center justify-center flex-1 gap-1">
-                <ActivityIndicator size={60} className="pb-6 text-main-color" />
                 <Text className="text-3xl font-semibold text-font-black">
                     <Text className="text-3xl font-semibold text-main-color">{name}</Text>
                     으로
                 </Text>
-                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
-                <Text className="text-3xl font-semibold text-font-black">기부할게요</Text>
-                <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg">
-                    <Text className="text-font-black"> </Text>
+                <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을 기부했어요</Text>
+                <Text className="text-3xl font-semibold text-font-black">감사합니다!</Text>
+                <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg bg-bg-gray">
+                    <Text className="text-font-black">기부증서 받기</Text>
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col mb-16">
-                <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl " onPress={handleExit}>
-                    <Text className="text-xl font-semibold text-white"> </Text>
+                <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color" onPress={handleExit}>
+                    <Text className="text-xl font-semibold text-white">확인</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -23,9 +23,7 @@ function Item({data}: {data: ChildrenCenterList}) {
                 <KakaoMapAddress className="relative w-[120px] h-[120px] bg-bg-gray rounded-xl" location={data.address} name={data.centerName} />
                 <TouchableOpacity className="flex justify-between flex-1" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>
                     <View className="flex gap-1 py-2">
-                        <Text className="text-base font-semibold text-font-black">
-                            <Text className="text-main-color">{data.city}</Text> | {data.centerName}
-                        </Text>
+                        <Text className="text-base font-semibold text-font-black">{data.centerName}</Text>
                         <Text className="text-sm font-semibold text-font-gray">{data.address}</Text>
                     </View>
                     <View className="flex gap-2">

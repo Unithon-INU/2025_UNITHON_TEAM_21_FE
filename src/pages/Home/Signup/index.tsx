@@ -6,7 +6,6 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
 import KakaoSignup from './components/KakaoSignup';
 import BottomSheet from '@/components/layout/BottomSheet';
-import SignupID from './components/SignupID';
 
 export default function Signup() {
     const navigation = useNavigation();
@@ -38,9 +37,8 @@ export default function Signup() {
                 </TouchableOpacity>
             </View>
 
-            <BottomSheet className="gap-3" isVisible={isModalVisible} setIsVisible={setModalVisible}>
+            <BottomSheet isVisible={isModalVisible} setIsVisible={setModalVisible}>
                 <KakaoSignup />
-                <SignupID />
             </BottomSheet>
         </View>
     );

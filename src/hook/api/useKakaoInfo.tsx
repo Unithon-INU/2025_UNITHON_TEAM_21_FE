@@ -3,19 +3,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {login, getProfile} from '@react-native-seoul/kakao-login';
 import {useDispatch} from 'react-redux';
-import {setUser} from '@/store/slice/userSlice';
+import {setUser, clearUser} from '@/store/slice/userSlice';
 
-const tokenName = 'token';
-const profileName = 'profile';
+const kakaoTokenName = 'kakaoToken';
+const kakaoProfileName = 'kakaoProfile';
 
 export function useUserRestore() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); // Redux dispatch to set user state
 
     useEffect(() => {
         const restore = async () => {
-            const t = await AsyncStorage.getItem(tokenName);
-            const p = await AsyncStorage.getItem(profileName);
-            console.log(p);
+            const t = await AsyncStorage.getItem(kakaoTokenName);
+            const p = await AsyncStorage.getItem(kakaoProfileName);
             if (t && p) {
                 dispatch(setUser({token: JSON.parse(t), profile: JSON.parse(p)}));
             }
@@ -32,8 +31,8 @@ export function useLogin() {
         try {
             const token = await login();
             const profile = await getProfile();
-            await AsyncStorage.setItem(tokenName, JSON.stringify(token));
-            await AsyncStorage.setItem(profileName, JSON.stringify(profile));
+            await AsyncStorage.setItem(kakaoTokenName, JSON.stringify(token));
+            await AsyncStorage.setItem(kakaoProfileName, JSON.stringify(profile));
             dispatch(setUser({token, profile}));
             navigation.replace('main');
         } catch (error) {
@@ -41,5 +40,16 @@ export function useLogin() {
         }
     }, [dispatch, navigation]);
 
-    return {kakaoLogin};
+    const kakaoLogout = useCallback(async () => {
+        try {
+            await AsyncStorage.removeItem(kakaoTokenName);
+            await AsyncStorage.removeItem(kakaoProfileName);
+            dispatch(clearUser());
+            navigation.replace('main');
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    }, [dispatch, navigation]);
+
+    return {kakaoLogin, kakaoLogout};
 }
