@@ -1,9 +1,16 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {KakaoOAuthToken, KakaoProfile} from '@react-native-seoul/kakao-login';
 
+interface TokenProp {
+    accessToken: string;
+    refreshToken: string;
+}
+interface ProfileProp {
+    id: number;
+    nickname: string;
+}
 type UserState = {
-    token: KakaoOAuthToken | null;
-    profile: KakaoProfile | null;
+    token: TokenProp | null;
+    profile: ProfileProp | null;
 };
 
 const initialState: UserState = {
@@ -15,7 +22,7 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser(state, action: PayloadAction<{token: KakaoOAuthToken; profile: KakaoProfile}>) {
+        setUser(state, action: PayloadAction<{token: TokenProp; profile: ProfileProp}>) {
             state.token = action.payload.token;
             state.profile = action.payload.profile;
         },
