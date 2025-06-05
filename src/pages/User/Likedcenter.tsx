@@ -13,7 +13,7 @@ export default function UserLikedcenter() {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="font-inter font-bold text-[20px]"> Favorite Children’s Centers</Text>
+                <Text className="font-inter font-bold text-[20px]">관심 지역아동센터</Text>
             </View>
         </Layout>
     );
