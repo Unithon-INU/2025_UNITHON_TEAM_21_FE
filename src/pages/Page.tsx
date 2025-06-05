@@ -22,8 +22,10 @@ import CenterDetail from './CenterDetail';
 
 import UserInfo from './User/Info';
 import UserLikedcenter from './User/Likedcenter';
-import UserLikedvol from './User/Likedvol';
+import UserLikedvol from './User/Likedvol'; 
+import {LikedVolunteerProvider} from './User/Likedvol';
 import UserDonate from './User/Donate';
+import Edituser from './User/Edituser'; 
 
 import Remittance from './CenterDetail/Remittance';
 import RemittanceCheck from './CenterDetail/RemittanceCheck';
@@ -85,6 +87,7 @@ const MyTheme = {
 export default function Pages() {
     const Stack = createStackNavigator();
     return (
+        <LikedVolunteerProvider>
         <NavigationContainer theme={MyTheme}>
             <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
                 <Stack.Screen name="main" component={NavBar} />
@@ -103,11 +106,14 @@ export default function Pages() {
                 <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
                 <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
                 <Stack.Screen name="Userdonate" component={UserDonate} />
+                <Stack.Screen name="Edituser" component={Edituser} />
+                <Stack.Screen name="UserInfo" component={UserInfo} />
 
                 <Stack.Screen name="remittance" component={Remittance} />
                 <Stack.Screen name="remittanceCheck" component={RemittanceCheck} />
                 <Stack.Screen name="remittanceComplete" component={RemittanceComplete} />
             </Stack.Navigator>
         </NavigationContainer>
+        </LikedVolunteerProvider>
     );
 }
