@@ -9,7 +9,7 @@ const kakaoTokenName = 'kakaoToken';
 const kakaoProfileName = 'kakaoProfile';
 
 export function useUserRestore() {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); // Redux dispatch to set user state
 
     useEffect(() => {
         const restore = async () => {

@@ -1,11 +1,14 @@
-import React, {useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/store'; // store 타입 경로에 맞게 수정
+import axios from 'axios';
 
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {id: string; name: string};
+    ChatRoom: { id: string; name: string };
     Notification: undefined;
 };
 
@@ -17,26 +20,27 @@ type ChatRoomData = {
     unread: number;
 };
 
-const initialChatRooms: ChatRoomData[] = [
-    {id: '0', name: '기봉사', message: '개인정보 이용 안내', time: '13:53', unread: 1},
-    {id: '1', name: '하이 아동센터', message: '내일 봉사 일정 확인 부탁드려요.', time: '어제', unread: 1},
-    {id: '2', name: '우리동네 봉사왕', message: '같이 봉사하실래요?', time: '4월 20일 (화)', unread: 0},
-    {id: '3', name: '이름 뭐로하지?', message: '감사합니다~', time: '2024.08.27', unread: 0},
-];
-
 export default function ChatListScreen() {
-    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>(initialChatRooms);
-
+    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>([]);
     const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
-
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
+    const user = useSelector((state: RootState) => state.user);
+
+    useEffect(() => {
+        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
+        if (!user.profile?.email) return;
+        axios
+            .get('/api/chatroom', {
+                headers: { Authorization: `Bearer ${user.token?.accessToken}` },
+            })
+            .then(res => setChatRooms(res.data))
+            .catch(err => console.error(err));
+    }, [user]);
 
     const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
 
     const handleEnterRoom = (id: string, name: string) => {
-        // Set unread to 0
         setChatRooms(prev => prev.map(room => (room.id === id ? { ...room, unread: 0 } : room)));
-
         navigation.navigate('ChatRoom', { id, name });
     };
 
