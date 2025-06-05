@@ -6,7 +6,7 @@ import {xml2Json} from '@/utils/xml2json';
 
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 
-export default function RecommendActivity() {
+export default function RecommendVolunteer() {
     const [volunteerData, setVolunteerData] = useState<getVltrSearchWordList>();
     const items = Array.isArray(volunteerData?.body?.items?.item)
         ? volunteerData.body.items.item
@@ -32,7 +32,7 @@ export default function RecommendActivity() {
         fetchvolunteerData();
     }, []);
     return (
-        <ColWrapper title="추천 봉사활동">
+        <ColWrapper title="추천 봉사활동" morebutton={true} href="volunteerCategory">
             {items.slice(0, 3).map((item: any, index: number) => (
                 <VolunteerItem item={item} key={index} />
             ))}

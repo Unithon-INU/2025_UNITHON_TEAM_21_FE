@@ -1,88 +1,56 @@
-import React, {useEffect, useState} from 'react';
-import {ActivityIndicator, Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
+import React, {useCallback} from 'react';
+import {Text, FlatList, ActivityIndicator} from 'react-native';
+import {RouteProp, useRoute} from '@react-navigation/native';
 
-import {xml2Json} from '@/utils/xml2json';
-
-import {getVltrSearchWordList} from '@/types/volunteerTyps';
+import {useVolunteerData} from '@/hook/api/useVolunteerData';
 
 import VolunteerItem from './components/VolunteerItem';
-import Layout from '@/pages/Layout';
+import Loading from '@/components/Loading';
+import EmptyComponents from './components/EmptyCoponents';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 
 type VolunterrCategoryParams = {
     category: string;
     iconKey: string;
+    keyword: string;
 };
 
 export default function VolunterrCategory() {
-    const [loading, setLoading] = useState(false);
-    const [volunteerData, setVolunteerData] = useState<getVltrSearchWordList>({} as getVltrSearchWordList);
-
-    const navigation = useNavigation();
     const route = useRoute<RouteProp<Record<string, VolunterrCategoryParams>, string>>();
-    const {category = '', iconKey = ''} = route.params || {};
+    const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params || {};
 
-    const items = Array.isArray(volunteerData?.body?.items?.item)
-        ? volunteerData.body.items.item
-        : volunteerData?.body?.items?.item
-        ? [volunteerData.body.items.item]
-        : [];
+    const {loading, volunteerData, items, loadMore, isFetchingMore, hasMore} = useVolunteerData(iconKey, keyword);
 
-    useEffect(() => {
-        const fetchvolunteerData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(
-                    `http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?upperClCode=${iconKey}&schSido=6280000`,
-                );
-                if (!response.ok) {
-                    throw new Error('API call failed');
-                }
-                const xml = await response.text();
-                const json = xml2Json(xml);
-                setVolunteerData(json);
-            } catch (e: any) {
-                console.log(e);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchvolunteerData();
-    }, [iconKey]);
+    const handleEndReached = useCallback(() => {
+        if (hasMore && !isFetchingMore && !loading) {
+            loadMore();
+        }
+    }, [hasMore, isFetchingMore, loading, loadMore]);
 
     return (
-        <Layout>
-            <View className="flex flex-row items-center py-4">
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold text-font-black">{category}</Text>
-            </View>
-            <ScrollView className="flex flex-col flex-1 gap-3">
-                {loading && (
-                    <View className="flex justify-center h-60">
-                        <ActivityIndicator />
-                    </View>
-                )}
-                {items.length === 0 && !loading && (
-                    <View className="flex justify-center h-60">
-                        <Text className="text-xl text-center text-font-gray">
-                            <Text className="text-main-color">{category}</Text>를 찾지못했어요.
-                        </Text>
-                        <Text className="text-xl text-center text-font-gray">다른 봉사 카테고리를 확인해주세요!</Text>
-                    </View>
-                )}
-                {!loading && items.length > 0 && (
-                    <View className="flex flex-col gap-3">
-                        <Text className="text-xl font-bold text-font-black">
-                            총 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
-                        </Text>
-                        {items.map((item, idx) => (
-                            <VolunteerItem item={item} key={idx} />
-                        ))}
-                    </View>
-                )}
-            </ScrollView>
-        </Layout>
+        <>
+            {loading && !items.length ? (
+                <Loading />
+            ) : (
+                <>
+                    <HeaderBackButton px={true}>{keyword ? keyword : category}</HeaderBackButton>
+                    <FlatList
+                        className="px-5 pb-10"
+                        data={items}
+                        keyExtractor={(_, idx) => idx.toString()}
+                        renderItem={({item}) => <VolunteerItem item={item} />}
+                        ListHeaderComponent={
+                            <Text className="mb-2 text-xl font-bold text-font-black">
+                                총 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
+                            </Text>
+                        }
+                        ListEmptyComponent={<EmptyComponents category={keyword ? keyword : category} />}
+                        onEndReached={handleEndReached}
+                        onEndReachedThreshold={0.2}
+                        ListFooterComponent={isFetchingMore ? <ActivityIndicator className="text-main-color" /> : null}
+                    />
+                </>
+            )}
+        </>
     );
 }

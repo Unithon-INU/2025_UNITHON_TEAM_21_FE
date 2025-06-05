@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {View, Text, Image} from 'react-native';
+import ShowMoreButton from '@/components/button/ShowMoreButton';
 
 const thisMonthData = [
     {id: '1', name: '레인', amount: 10200300},
@@ -49,15 +49,12 @@ const mergedData = sortedThis.map((item, index) => {
 const MonthlyDonationHeroList = () => {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-    const navigation = useNavigation() as any;
 
     return (
         <View className="mt-3">
             <View className="flex-row justify-between mb-3">
                 <Text className="text-xl font-semibold text-font-black">이번달 기부히어로</Text>
-                <TouchableOpacity onPress={() => navigation.navigate('heroListDetail')}>
-                    <Text className="text-xs font-semibold text-main-color">더보기 &gt;</Text>
-                </TouchableOpacity>
+                <ShowMoreButton href="heroListDetail" />
             </View>
             <Text className="text-xs font-normal text-right text-font-gray">{formattedDate} 기준</Text>
 
