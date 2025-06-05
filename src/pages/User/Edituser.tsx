@@ -34,10 +34,12 @@ export default function EditUser() {
             <View className="items-center justify-center mb-10">
                 <View className="relative">
                     <View className="w-[120px] h-[120px] rounded-full bg-main-gray" />
+                    <View className="absolute bottom-0 right-0 items-center justify-center w-10 h-10 bg-white rounded-full">
                     <Image
                         source={require('@/assets/image.png')}
-                        className="w-[32px] h-[32px] absolute bottom-0 right-0"
+                        className="w-[32px] h-[32px]"
                     />
+                    </View>
                 </View>
             </View>
 
