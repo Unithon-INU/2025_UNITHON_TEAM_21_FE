@@ -60,7 +60,7 @@
 
         // ✅ WebSocket 연결 및 메시지 수신
         useEffect(() => {
-            const stompClient = Stomp.over(() => new SockJS('https://8d7a-124-195-248-39.ngrok-free.app/')); // ✅ 수정된 부분
+            const stompClient = Stomp.over(() => new SockJS('https://63a4-106-101-8-197.ngrok-free.app/')); // ✅ 수정된 부분
             stompClient.reconnectDelay = 5000; // ✅ 재연결 설정 (선택사항)
 
             // // 디버깅 활성화
