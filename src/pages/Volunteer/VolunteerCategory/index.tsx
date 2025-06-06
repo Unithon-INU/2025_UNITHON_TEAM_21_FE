@@ -27,30 +27,26 @@ export default function VolunterrCategory() {
         }
     }, [hasMore, isFetchingMore, loading, loadMore]);
 
+    if (loading) return <Loading />;
     return (
         <>
-            {loading && !items.length ? (
-                <Loading />
-            ) : (
-                <>
-                    <HeaderBackButton px={true}>{keyword ? keyword : category}</HeaderBackButton>
-                    <FlatList
-                        className="px-5 pb-10"
-                        data={items}
-                        keyExtractor={(_, idx) => idx.toString()}
-                        renderItem={({item}) => <VolunteerItem item={item} />}
-                        ListHeaderComponent={
-                            <Text className="mb-2 text-xl font-bold text-font-black">
-                                총 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
-                            </Text>
-                        }
-                        ListEmptyComponent={<EmptyComponents category={keyword ? keyword : category} />}
-                        onEndReached={handleEndReached}
-                        onEndReachedThreshold={0.2}
-                        ListFooterComponent={isFetchingMore ? <ActivityIndicator className="text-main-color" /> : null}
-                    />
-                </>
-            )}
+            <HeaderBackButton px={true}>{keyword ? keyword : category}</HeaderBackButton>
+            <FlatList
+                className="px-5"
+                contentContainerStyle={{paddingBottom: 60}}
+                data={items}
+                keyExtractor={(_, idx) => idx.toString()}
+                renderItem={({item}) => <VolunteerItem item={item} />}
+                ListHeaderComponent={
+                    <Text className="mb-2 text-xl font-bold text-font-black">
+                        총 <Text className="text-main-color">{volunteerData?.body?.totalCount}</Text>건
+                    </Text>
+                }
+                ListEmptyComponent={<EmptyComponents category={keyword ? keyword : category} />}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.2}
+                ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} className="text-main-color" /> : null}
+            />
         </>
     );
 }

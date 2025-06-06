@@ -39,7 +39,6 @@ export default function IDLogin() {
                 <TextInput
                     className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
                     placeholder="비밀번호를 입력하세요"
-
                     secureTextEntry
                     autoCapitalize="none"
                     autoCorrect={false}

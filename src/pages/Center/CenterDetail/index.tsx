@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import Papa from 'papaparse';
@@ -11,12 +11,14 @@ import {ColWrapper} from '@/components/layout/ContentWrapper';
 import Layout from '@/components/Layout';
 import DonationStatus from './components/DonationStatus';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
+import {useSelector} from 'react-redux';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
     const route = useRoute();
     const {id} = route.params as {id: number};
     const [data, setData] = useState<ChildrenCenterList>();
+    const {profile} = useSelector((state: any) => state.user);
 
     useEffect(() => {
         const loadCSV = async () => {
@@ -30,6 +32,12 @@ export default function CenterDetail() {
         };
         loadCSV();
     }, [id]);
+
+    const handleDonate = () => {
+        if (!profile) {
+            Alert.alert('로그인 후 이용해주세요.', '기부를 위해 로그인이 필요합니다.');
+        } else navigation.navigate('remittance', {name: data?.centerName});
+    };
 
     return (
         <>
@@ -55,9 +63,7 @@ export default function CenterDetail() {
                 </ColWrapper>
             </Layout>
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">
-                <TouchableOpacity
-                    className="w-[150px] bg-main-color py-3 rounded-xl flex flex-row items-center justify-center gap-2"
-                    onPress={() => navigation.navigate('remittance', {name: data?.centerName})}>
+                <TouchableOpacity className="w-[150px] bg-main-color py-3 rounded-xl flex flex-row items-center justify-center gap-2" onPress={handleDonate}>
                     <Image className="w-6 h-6" source={require('@/assets/getCash.png')} />
                     <Text className="text-base font-bold text-center text-white">기부하기</Text>
                 </TouchableOpacity>

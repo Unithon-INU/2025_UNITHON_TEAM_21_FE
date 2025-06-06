@@ -1,6 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {useSelector} from 'react-redux';
 
 const KEYS = [
     ['1', '2', '3'],
@@ -14,6 +15,7 @@ export default function Remittance() {
     const route = useRoute();
     const {name} = route.params as {name: string};
     const [value, setValue] = useState<string>('');
+    const {profile} = useSelector((state: any) => state.user);
 
     const handleKeyPress = (key: string) => {
         if (key === '←') {
@@ -22,6 +24,7 @@ export default function Remittance() {
             setValue(value + key);
         }
     };
+    if (!profile) return <Text>에러</Text>;
 
     return (
         <View className="flex flex-col h-full gap-3 ">

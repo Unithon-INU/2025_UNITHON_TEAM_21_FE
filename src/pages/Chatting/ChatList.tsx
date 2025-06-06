@@ -5,13 +5,6 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {useSelector} from 'react-redux';
-import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
-import axios from 'axios';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -43,7 +36,6 @@ export default function ChatListScreen() {
             .then(res => setChatRooms(res.data))
             .catch(err => console.error(err));
     }, [user]);
-    const user = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정

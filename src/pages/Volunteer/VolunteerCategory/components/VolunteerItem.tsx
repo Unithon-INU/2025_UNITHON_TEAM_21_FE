@@ -33,7 +33,9 @@ export default function VolunteerItem({item}: {item: getVltrSearchWordListItem})
     const deadline = getDaysLeft(item.noticeEndde);
 
     return (
-        <TouchableOpacity className="flex gap-0.5 mb-3" onPress={() => navigation.navigate('volunteerDetail', {progrmRegistNo: item.progrmRegistNo})}>
+        <TouchableOpacity
+            className="flex gap-0.5 pb-4 border-b border-main-gray mb-2"
+            onPress={() => navigation.navigate('volunteerDetail', {progrmRegistNo: item.progrmRegistNo})}>
             <View className="flex flex-row justify-between">
                 <Text className="flex-1 text-base font-semibold text-font-black" numberOfLines={2}>
                     {item.progrmSj}
