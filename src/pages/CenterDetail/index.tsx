@@ -1,48 +1,41 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
+import RNFS from 'react-native-fs';
+import Papa from 'papaparse';
 
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
-
-import {useCenter} from '@/hook/api/useCenter';
 
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import Layout from '@/components/Layout';
 import DonationStatus from './components/DonationStatus';
-import Loading from '@/components/Loading';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
     const route = useRoute();
-    const {centerData, loading} = useCenter(180);
+    const {id} = route.params as {id: number};
+    const [data, setData] = useState<ChildrenCenterList>();
 
-    const {id} = route.params as {id: string};
-    const data = centerData?.find((item: ChildrenCenterList) => item.id === id);
-    const [like, setLike] = useState(false);
-
-    if (loading) return <Loading />;
+    useEffect(() => {
+        const loadCSV = async () => {
+            try {
+                const content = await RNFS.readFileAssets('ChildrenCenterList.csv', 'utf8');
+                const results = Papa.parse(content, {header: true});
+                setData(results.data[id] as ChildrenCenterList);
+            } catch (err) {
+                console.error('Failed to read CSV:', err);
+            }
+        };
+        loadCSV();
+    }, [id]);
 
     return (
         <>
-            <View className="flex-row items-center justify-between px-4 py-4">
-                <View className="flex-row items-center flex-1">
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                    </TouchableOpacity>
-                    <Text className="flex-1 text-xl font-bold text-font-black" numberOfLines={1}>
-                        {data?.centerName}
-                    </Text>
-                </View>
-                <TouchableOpacity onPress={() => setLike(!like)}>
-                    {like ? <Ionicons name="heart" size={30} color={'#FFB257'} /> : <Ionicons name="heart-outline" size={30} color={'#FFB257'} />}
-                </TouchableOpacity>
-            </View>
             <Layout>
+                <HeaderBackButton>{data?.centerName}</HeaderBackButton>
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
-
                 <ColWrapper title="오시는 길">
                     <Text className="text-base font-semibold text-font-black">{data?.address}</Text>
                 </ColWrapper>

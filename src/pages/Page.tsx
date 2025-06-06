@@ -18,21 +18,20 @@ import VolunteerCategory from './Volunteer/VolunteerCategory';
 import VolunterrDetail from './Volunteer/VolunterrDetail';
 import Volunteer from './Volunteer';
 import Chatbot from './Volunteer/Chatbot';
-import CenterDetail from './Center/CenterDetail';
+import CenterDetail from './CenterDetail';
 
 import UserInfo from './User/Info';
 import UserLikedcenter from './User/Likedcenter';
 import UserLikedvol from './User/Likedvol';
 import UserDonate from './User/Donate';
 
-import Remittance from './Center/CenterDetail/Remittance';
-import RemittanceCheck from './Center/CenterDetail/RemittanceCheck';
-import RemittanceComplete from './Center/CenterDetail/RemittanceComplete';
+import Remittance from './CenterDetail/Remittance';
+import RemittanceCheck from './CenterDetail/RemittanceCheck';
+import RemittanceComplete from './CenterDetail/RemittanceComplete';
 import HeroListDetail from './Home/components/HeroListDetail';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
 import IDLogin from './Home/IDLogin';
-import CenterList from './Center/CenterList';
 import IDSignup from './Home/IDSignup';
 
 const TAB_ICONS = {
@@ -96,9 +95,7 @@ export default function Pages() {
                 <Stack.Screen name="login" component={Login} />
                 <Stack.Screen name="idlogin" component={IDLogin} />
                 <Stack.Screen name="idSignup" component={IDSignup} />
-
                 <Stack.Screen name="heroListDetail" component={HeroListDetail} />
-                <Stack.Screen name="centerList" component={CenterList} />
 
                 {/* 채팅 */}
                 <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />

@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
+
 interface TokenProp {
     accessToken: string;
     refreshToken: string;
@@ -8,6 +9,7 @@ interface ProfileProp {
     id: number;
     nickname: string;
 }
+
 type UserState = {
     token: TokenProp | null;
     profile: ProfileProp | null;
