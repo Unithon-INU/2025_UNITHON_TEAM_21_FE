@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store'; // store 타입 경로에 맞게 수정
+import React, {useEffect, useState} from 'react';
+import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
 import axios from 'axios';
 
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: { id: string; name: string };
+    ChatRoom: {id: string; name: string};
     Notification: undefined;
 };
 
@@ -31,7 +31,18 @@ export default function ChatListScreen() {
         if (!user.profile?.email) return;
         axios
             .get('/api/chatroom', {
-                headers: { Authorization: `Bearer ${user.token?.accessToken}` },
+                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
+            })
+            .then(res => setChatRooms(res.data))
+            .catch(err => console.error(err));
+    }, [user]);
+
+    useEffect(() => {
+        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
+        if (!user.profile?.email) return;
+        axios
+            .get('/api/chatroom', {
+                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
             })
             .then(res => setChatRooms(res.data))
             .catch(err => console.error(err));
@@ -40,8 +51,10 @@ export default function ChatListScreen() {
     const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
 
     const handleEnterRoom = (id: string, name: string) => {
-        setChatRooms(prev => prev.map(room => (room.id === id ? { ...room, unread: 0 } : room)));
-        navigation.navigate('ChatRoom', { id, name });
+        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
+        navigation.navigate('ChatRoom', {id, name});
+        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
+        navigation.navigate('ChatRoom', {id, name});
     };
 
     return (
@@ -72,7 +85,7 @@ export default function ChatListScreen() {
             <FlatList
                 data={filteredRooms}
                 keyExtractor={item => item.id}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                     <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px]" onPress={() => handleEnterRoom(item.id, item.name)}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
                         <View className="justify-center flex-1 mb-4">

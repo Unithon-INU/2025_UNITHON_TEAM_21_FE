@@ -4,7 +4,6 @@ import {useNavigation} from '@react-navigation/native';
 import {RowWrapper} from '@/components/layout/ContentWrapper';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import React from 'react';
-import {useCenter} from '@/hook/api/useCenter';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const navigation = useNavigation() as any;
@@ -22,7 +21,7 @@ function Item({data}: {data: ChildrenCenterList}) {
 
 export default function CenterItem({data}: {data: ChildrenCenterList[] | null}) {
     return (
-        <RowWrapper title="인천 지역아동센터">
+        <RowWrapper title="인천 지역아동센터" href="centerList">
             {data?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}
