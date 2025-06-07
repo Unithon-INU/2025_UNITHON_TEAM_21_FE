@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, KeyboardAvoidingView, Platform, Keyboard} from 'react-native';
+import {FlatList, KeyboardAvoidingView, Platform, Keyboard} from 'react-native';
 
 import ChatInputBar from '../../../components/input/ChatInputBar';
 import MessageItem from './components/MessageItem';

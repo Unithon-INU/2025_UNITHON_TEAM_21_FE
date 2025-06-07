@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar';
 import RecommendButtons from './components/RecommendButtons';
 import RecommendActivity from '../Home/components/RecommendVolunteer';
 import ChatbotIcon from './components/ChatbotIcon';
+import LikeVolunteer from '../Home/components/LikeVolunteer';
 
 export default function Index() {
     const scrollY = useRef(new Animated.Value(0)).current;
@@ -28,6 +29,7 @@ export default function Index() {
                     <SearchBar isScrolled={isScrolled} />
                     <RecommendButtons />
                     <RecommendActivity />
+                    <LikeVolunteer />
                 </View>
             </Animated.ScrollView>
             <ChatbotIcon />

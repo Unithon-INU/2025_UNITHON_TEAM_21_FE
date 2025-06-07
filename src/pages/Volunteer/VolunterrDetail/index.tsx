@@ -11,6 +11,9 @@ import {KakaoMap} from '../../../components/KakaoMap';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Loading from '@/components/Loading';
 import {useVolunteerDeatil} from '@/hook/api/useVolunteerData';
+import {useDispatch, useSelector} from 'react-redux';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {toggleLike} from '@/store/slice/likedSlice';
 
 type VolunteerDetailParamList = {
     VolunteerDetail: {
@@ -32,6 +35,9 @@ export default function VolunteerDetail() {
     const {progrmRegistNo} = route.params;
     const {item, loading} = useVolunteerDeatil(progrmRegistNo);
     const url = `https://www.1365.go.kr/vols/1572247904127/partcptn/timeCptn.do?titleNm=%EC%83%81%EC%84%B8%EB%B3%B4%EA%B8%B0&type=show&progrmRegistNo=${item.progrmRegistNo}`;
+    const dispatch = useDispatch();
+    const likedList = useSelector((state: any) => state.liked.likedList);
+    const isLiked = likedList.some((v: any) => v.progrmRegistNo === item.progrmRegistNo);
 
     return (
         <>
@@ -40,7 +46,15 @@ export default function VolunteerDetail() {
             ) : (
                 <>
                     <Layout>
-                        <HeaderBackButton />
+                        <View className="flex flex-row items-center justify-between ">
+                            <HeaderBackButton className="flex-1" />
+                            <TouchableOpacity
+                                className={`flex flex-row items-center px-2 py-1 rounded-2xl ${isLiked ? 'bg-main-color' : 'border border-main-color'}`}
+                                onPress={() => dispatch(toggleLike(item))}>
+                                <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={20} color={isLiked ? '#FFFFFF' : '#FFB257'} />
+                                <Text className={`ml-1 font-semibold ${isLiked ? 'text-white' : 'text-main-color'}`}>좋아요</Text>
+                            </TouchableOpacity>
+                        </View>
                         <Detail item={item} />
                         <ColWrapper title="봉사활동 소개">
                             <Text>{item.progrmCn ? decode(item.progrmCn) : ''}</Text>
