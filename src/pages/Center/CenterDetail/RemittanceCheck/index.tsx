@@ -16,13 +16,7 @@ export default function Commit() {
             }),
         );
     };
-    if (!profile) {
-        return (
-            <View className="flex flex-col items-center justify-center h-full">
-                <Text className="text-lg font-semibold text-font-black">로그인 후 이용해주세요.</Text>
-            </View>
-        );
-    }
+
     return (
         <View className="flex flex-col h-full gap-3 px-5">
             <View className="flex flex-row items-center py-4">

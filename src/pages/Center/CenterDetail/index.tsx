@@ -8,13 +8,12 @@ import { RootState } from '@/store';
 import { ChildrenCenterList } from '@/types/ChildrenCenter';
 import { useCenter } from '@/hook/api/useCenter';
 
-import { KakaoMapAddress } from '@/components/KakaoMap';
-import { ColWrapper } from '@/components/layout/ContentWrapper';
+import {KakaoMapAddress} from '@/components/KakaoMap';
+import {ColWrapper} from '@/components/layout/ContentWrapper';
 import Layout from '@/components/Layout';
 import DonationStatus from './components/DonationStatus';
-import Loading from '@/components/Loading';
-
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
+import {useSelector} from 'react-redux';
 
 export default function CenterDetail() {
   const navigation = useNavigation() as any;
@@ -122,4 +121,3 @@ export default function CenterDetail() {
       </View>
     </>
   );
-}

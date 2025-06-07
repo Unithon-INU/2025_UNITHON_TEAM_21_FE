@@ -1,7 +1,7 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import Value from './components/Value';
+import {useSelector} from 'react-redux';
 
 const KEYS = [
     ['1', '2', '3'],
@@ -15,6 +15,7 @@ export default function Remittance() {
     const route = useRoute();
     const {name} = route.params as {name: string};
     const [value, setValue] = useState<string>('');
+    const {profile} = useSelector((state: any) => state.user);
 
     const handleKeyPress = (key: string) => {
         if (key === '←') {
@@ -23,6 +24,7 @@ export default function Remittance() {
             setValue(value + key);
         }
     };
+    if (!profile) return <Text>에러</Text>;
 
     return (
         <View className="flex flex-col h-full gap-3 ">
@@ -32,7 +34,32 @@ export default function Remittance() {
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                     </TouchableOpacity>
                 </View>
-                <Value value={value} setValue={setValue} name={name} />
+                <View className="mt-4">
+                    <Text className="text-2xl font-semibold text-font-black">
+                        {name}
+                        <Text className="font-normal text-font-gray">으로</Text>
+                    </Text>
+                    <Text className={`py-4 text-3xl ${value ? 'text-font-black' : 'text-font-gray'}`}>
+                        {value || value === '0' ? (
+                            `${Number(value).toLocaleString()}원`
+                        ) : (
+                            <>
+                                <Text className="animate-pulse text-main-color">|</Text>얼마를 후원할까요?
+                            </>
+                        )}
+                    </Text>
+                    <View className="flex flex-row gap-2">
+                        <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('5000')}>
+                            <Text className="text-base text-font-black">5,000원</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('10000')}>
+                            <Text className="text-base text-font-black">10,000원</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="px-2 py-1 rounded-lg bg-bg-gray" onPress={() => setValue('50000')}>
+                            <Text className="text-base text-font-black">50,000원</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
             <View className="absolute bottom-0 w-full ">
                 <TouchableOpacity

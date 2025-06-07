@@ -14,7 +14,7 @@ function CenterItem({item}: {item: ChildrenCenterList}) {
     const navigate = useNavigation() as any;
 
     return (
-        <View className="flex flex-row gap-2 mb-4">
+        <View className="flex flex-row gap-2 pb-4 mb-4 border-b border-main-gray">
             <KakaoMapAddress className="w-[120px] h-[120px]" location={item.address} name={item.centerName} />
             <TouchableOpacity className="flex flex-1 gap-1 " onPress={() => navigate.navigate('centerDetail', {id: item.id})}>
                 <Text className="text-base font-bold text-font-black">

@@ -9,7 +9,7 @@ export default function HeaderBackButton({children, px = false}: {children?: Rea
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
-                <Text className="flex-1 text-xl font-bold text-font-black" numberOfLines={1}>
+                <Text className="flex-1 text-xl font-bold text-black" numberOfLines={1}>
                     {children}
                 </Text>
             </View>

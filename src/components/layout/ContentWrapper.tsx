@@ -1,7 +1,12 @@
 import {ScrollView, Text, View} from 'react-native';
 import ShowMoreButton from '../button/ShowMoreButton';
 
-export function RowWrapper({title, children, href}: {title: string; children: React.ReactNode; href?: string}) {
+interface WrapperProps {
+    title: string;
+    children: React.ReactNode;
+    href?: string;
+}
+export function RowWrapper({title, children, href}: WrapperProps) {
     return (
         <View className="flex flex-col gap-3 py-3">
             {href ? (
@@ -19,7 +24,7 @@ export function RowWrapper({title, children, href}: {title: string; children: Re
     );
 }
 
-export function ColWrapper({title, children, href}: {title: string; children: React.ReactNode; href?: string}) {
+export function ColWrapper({title, children, href}: WrapperProps) {
     return (
         <View className="flex flex-col gap-3 py-3">
             {href ? (
@@ -30,7 +35,6 @@ export function ColWrapper({title, children, href}: {title: string; children: Re
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
             )}
-
             <View className="flex flex-col gap-3">{children}</View>
         </View>
     );

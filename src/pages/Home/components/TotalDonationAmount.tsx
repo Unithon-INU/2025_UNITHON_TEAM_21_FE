@@ -1,7 +1,7 @@
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Text, Animated} from 'react-native';
 
-const TotalDonationAmount = () => {
+export default function TotalDonationAmount() {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
     const animatedValue = useRef(new Animated.Value(0)).current;
@@ -37,6 +37,4 @@ const TotalDonationAmount = () => {
             <Text className="ml-32 text-xs font-normal text-center text-font-gray">{formattedDate} 기준</Text>
         </View>
     );
-};
-
-export default TotalDonationAmount;
+}

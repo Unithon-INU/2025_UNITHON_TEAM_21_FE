@@ -34,6 +34,7 @@ import HeroListDetail from './Home/components/HeroListDetail';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
 import IDLogin from './Home/IDLogin';
+import IDSignup from './Home/IDSignup';
 import CenterList from './Center/CenterList';
 
 import { store } from '../store';
@@ -106,7 +107,7 @@ export default function Pages() {
           {/* 채팅 */}
           <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
           <Stack.Screen name="Notification" component={NotificationScreen} />
-                <Stack.Screen name="centerList" component={CenterList} />
+          <Stack.Screen name="centerList" component={CenterList} />
 
 
           {/* 지역봉사 */}

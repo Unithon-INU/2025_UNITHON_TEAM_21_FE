@@ -28,6 +28,7 @@ export default function EditUser() {
                   }}>
                   <Text className="text-[16px]">완료</Text>
                 </TouchableOpacity>
+                <Text className="font-inter font-bold text-[20px]">프로필 수정</Text>
             </View>
 
             {/* 프로필 이미지 + 카메라 아이콘 */}
