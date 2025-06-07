@@ -14,7 +14,7 @@ export default function ChatInputBar({onSend}: {onSend: (message: string) => voi
     };
 
     return (
-        <View className="flex-row items-center gap-3 px-5 py-3">
+        <View className="flex-row items-center gap-3 px-5 py-3 mb-3">
             <TextInput
                 className="flex-1 px-3 py-2 text-base rounded-full bg-bg-gray"
                 placeholder="메시지 보내기..."

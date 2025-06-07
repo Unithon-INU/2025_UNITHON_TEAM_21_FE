@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, FlatList, KeyboardAvoidingView, Platform, TouchableOpacity, Image, Text} from 'react-native';
-
-import {useNavigation} from '@react-navigation/native';
+import {FlatList, KeyboardAvoidingView, Platform, Keyboard} from 'react-native';
 
 import ChatInputBar from '../../../components/input/ChatInputBar';
 import MessageItem from './components/MessageItem';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 
 type MessageType = {
     id: string;
@@ -24,7 +23,7 @@ function getCurrentTime(): string {
 
 const sendMessageToAPI = async (message: string) => {
     try {
-        const response = await fetch('https://chatbot-server-cyan.vercel.app/api/chatbot', {
+        const response = await fetch('https://chatbot-server-cyan.vercel.app/api/chatbot/message', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({message}),
@@ -38,7 +37,6 @@ const sendMessageToAPI = async (message: string) => {
 };
 
 export default function ChatRoomScreen() {
-    const navigation = useNavigation() as any;
     const flatListRef = useRef<FlatList>(null);
     const [messages, setMessages] = useState<MessageType[]>([
         {
@@ -50,10 +48,29 @@ export default function ChatRoomScreen() {
     ]);
 
     useEffect(() => {
-        if (flatListRef.current) {
-            flatListRef.current.scrollToEnd({animated: true});
-        }
+        setTimeout(() => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({animated: true});
+            }
+        }, 100); // 초기 메시지 로드 후 스크롤을 아래로 이동
     }, [messages.length]);
+    // --- 새로운 "편법" 로직 ---
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (flatListRef.current) {
+                // KeyboardAvoidingView가 레이아웃을 조정한 후 스크롤하기 위해
+                // 아주 짧은 지연을 줄 수 있습니다. (선택 사항 및 값 조절 필요)
+                setTimeout(() => {
+                    flatListRef.current?.scrollToEnd({animated: true});
+                }, 50); // 50ms 지연, 필요에 따라 조절하거나 제거
+            }
+        });
+
+        // 컴포넌트 언마운트 시 리스너 제거 (메모리 누수 방지)
+        return () => {
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     const handleSend = async (message: string) => {
         const userMessage: MessageType = {
@@ -75,18 +92,19 @@ export default function ChatRoomScreen() {
     };
 
     return (
-        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={20} className="flex-1 bg-white">
-            <View className="flex-row items-center justify-between p-4">
-                <View className="flex-row items-center">
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                    </TouchableOpacity>
-                    <Text className="text-xl font-bold text-black">챗봇</Text>
-                </View>
-            </View>
-            <View className="flex-1">
-                <FlatList ref={flatListRef} data={messages} renderItem={MessageItem} keyExtractor={item => item.id} showsVerticalScrollIndicator={false} />
-            </View>
+        <KeyboardAvoidingView
+            behavior="padding" // iOS와 Android 모두 "padding"으로 시도
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 20}
+            className="flex-1 bg-white">
+            <HeaderBackButton px={true}>챗봇</HeaderBackButton>
+            <FlatList
+                className="flex-1"
+                ref={flatListRef}
+                data={messages}
+                renderItem={MessageItem}
+                keyExtractor={item => item.id}
+                showsVerticalScrollIndicator={false}
+            />
             <ChatInputBar onSend={handleSend} />
         </KeyboardAvoidingView>
     );

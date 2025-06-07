@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {RowWrapper} from '@/components/layout/ContentWrapper';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
-import React from 'react';
+import {useSelector} from 'react-redux';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const navigation = useNavigation() as any;
@@ -21,10 +21,12 @@ function Item({data}: {data: ChildrenCenterList}) {
     );
 }
 
-export default function CenterItem({data}: {data: ChildrenCenterList[] | null}) {
+export default function FollowCenter() {
+    const centerList = useSelector((state: any) => state.likedCenter?.likedList || []);
+    if (centerList.length === 0) return null;
     return (
-        <RowWrapper title="인천 지역아동센터" href="centerList">
-            {data?.map((item, index) => (
+        <RowWrapper title="팔로우 중인 센터" href="Userlikedcenter">
+            {centerList?.map((item: ChildrenCenterList, index: React.Key | null | undefined) => (
                 <Item key={index} data={item} />
             ))}
         </RowWrapper>
