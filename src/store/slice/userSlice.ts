@@ -8,6 +8,7 @@ interface TokenProp {
 interface ProfileProp {
     id: number;
     nickname: string;
+    email: string;
 }
 
 type UserState = {
