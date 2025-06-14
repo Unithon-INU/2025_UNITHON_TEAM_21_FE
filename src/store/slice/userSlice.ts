@@ -1,6 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 
-
 interface TokenProp {
     accessToken: string;
     refreshToken: string;
@@ -33,8 +32,13 @@ const userSlice = createSlice({
             state.token = null;
             state.profile = null;
         },
+        setProfileName: (state, action) => {
+            if (state.profile) {
+                state.profile.nickname = action.payload;
+            }
+        },
     },
 });
 
-export const {setUser, clearUser} = userSlice.actions;
+export const {setUser, clearUser, setProfileName} = userSlice.actions;
 export default userSlice.reducer;

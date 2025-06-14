@@ -11,6 +11,8 @@ import CenterItem from './components/CenterItem';
 import RecommendActivity from './components/RecommendVolunteer';
 import TotalDonationAmount from './components/TotalDonationAmount';
 import MonthlyDonationHeroList from './components/MonthlyDonationHeroList';
+import FollowCenter from './components/FollowCenter';
+import LikeVolunteer from './components/LikeVolunteer';
 
 export default function Home() {
     useUserRestore();
@@ -25,8 +27,10 @@ export default function Home() {
                 <SignupButton />
             </View>
             <TotalDonationAmount />
-            <CenterItem data={centerData} />
+            <FollowCenter />
             <DonationComponents />
+            <CenterItem data={centerData} />
+            <LikeVolunteer />
             <RecommendActivity />
             <MonthlyDonationHeroList />
         </Layout>

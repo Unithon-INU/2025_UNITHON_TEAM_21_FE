@@ -1,7 +1,7 @@
 import React from 'react';
-import {View, Text, FlatList, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import Layout from '../../../components/Layout';
+import {View, Text, FlatList, Image} from 'react-native';
+
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 
 const thisMonthData = [
     {id: '1', name: '레인', amount: 10200300},
@@ -77,25 +77,18 @@ const mergedData = sortedThis.map((item, index) => {
     };
 });
 
-const HeroListDetail = () => {
+export default function HeroListDetail() {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
-    const navigation = useNavigation();
 
     return (
-        <Layout>
-            <View className="flex flex-row items-center py-4">
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                </TouchableOpacity>
-                <Text className="text-xl font-bold text-font-black">기부히어로</Text>
-            </View>
-
-            <Text className="mb-4 text-xs text-right text-font-gray">{formattedDate} 기준</Text>
-
+        <>
+            <HeaderBackButton px={true}>기부히어로</HeaderBackButton>
             <FlatList
+                className="px-5"
                 data={mergedData}
                 keyExtractor={item => item.id}
+                ListHeaderComponent={<Text className="mb-4 text-xs text-right text-font-gray">{formattedDate} 기준</Text>}
                 renderItem={({item, index}) => (
                     <View className="flex-row items-center justify-between py-3">
                         <Text className="w-6 font-semibold">{index + 1}</Text>
@@ -116,8 +109,6 @@ const HeroListDetail = () => {
                 )}
                 showsVerticalScrollIndicator={false}
             />
-        </Layout>
+        </>
     );
-};
-
-export default HeroListDetail;
+}

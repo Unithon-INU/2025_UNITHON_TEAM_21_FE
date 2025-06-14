@@ -9,10 +9,10 @@ interface NotificationItemProps {
 }
 
 const ICON_MAP: Record<string, any> = {
-    'Recommended Volunteer': require('@/assets/recommend.png'),
-    'Volunteer Schedule': require('@/assets/calender.png'),
-    'Donation Delivered': require('@/assets/thanksdonate.png'),
-    'Donation Registered': require('@/assets/confirmdonate.png'),
+    '추천 봉사': require('@/assets/recommend.png'),
+    '봉사 일정': require('@/assets/calender.png'),
+    '기부 전달 완료': require('@/assets/thanksdonate.png'),
+    '기부 등록 완료': require('@/assets/confirmdonate.png'),
 };
 
 export default function NotificationItem({type, message, time, subtext}: NotificationItemProps) {

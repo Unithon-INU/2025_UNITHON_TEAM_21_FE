@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {useLogout} from '@/hook/api/useLogout';
+
 export default function SignupButton() {
     const navigation = useNavigation() as any;
     const {logout} = useLogout();

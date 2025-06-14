@@ -7,8 +7,6 @@ import NotificationItem from '@/pages/Notification/components/NotificationItem';
 export default function NotificationScreen() {
     const navigation = useNavigation();
 
-    // 알림 데이터를 상태로 관리합니다.
-    // 실제 앱에서는 서버나 로컬 스토리지에서 가져올 수 있습니다.
     const [notifications, setNotifications] = useState([
         {
             id: '1',

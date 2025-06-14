@@ -18,21 +18,23 @@ import VolunteerCategory from './Volunteer/VolunteerCategory';
 import VolunterrDetail from './Volunteer/VolunterrDetail';
 import Volunteer from './Volunteer';
 import Chatbot from './Volunteer/Chatbot';
-import CenterDetail from './CenterDetail';
+import CenterDetail from './Center/CenterDetail';
 
 import UserInfo from './User/Info';
 import UserLikedcenter from './User/Likedcenter';
 import UserLikedvol from './User/Likedvol';
 import UserDonate from './User/Donate';
+import Edituser from './User/Edituser';
 
-import Remittance from './CenterDetail/Remittance';
-import RemittanceCheck from './CenterDetail/RemittanceCheck';
-import RemittanceComplete from './CenterDetail/RemittanceComplete';
+import Remittance from './Center/CenterDetail/Remittance';
+import RemittanceCheck from './Center/CenterDetail/RemittanceCheck';
+import RemittanceComplete from './Center/CenterDetail/RemittanceComplete';
 import HeroListDetail from './Home/components/HeroListDetail';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
 import IDLogin from './Home/IDLogin';
 import IDSignup from './Home/IDSignup';
+import CenterList from './Center/CenterList';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -50,8 +52,7 @@ function NavBar() {
             screenOptions={({route}) => ({
                 headerShown: false,
                 tabBarShowLabel: true,
-                tabBarIcon: ({color, size}) =>
-                    TAB_ICONS[route.name as keyof typeof TAB_ICONS] ? TAB_ICONS[route.name as keyof typeof TAB_ICONS](color, size) : null,
+                tabBarIcon: ({color, size}) => TAB_ICONS[route.name as keyof typeof TAB_ICONS]?.(color, size),
                 tabBarActiveTintColor: '#FFB257',
                 tabBarInactiveTintColor: '#999999',
                 tabBarStyle: {
@@ -94,12 +95,13 @@ export default function Pages() {
                 <Stack.Screen name="signup" component={Signup} />
                 <Stack.Screen name="login" component={Login} />
                 <Stack.Screen name="idlogin" component={IDLogin} />
-                <Stack.Screen name="idSignup" component={IDSignup} />
                 <Stack.Screen name="heroListDetail" component={HeroListDetail} />
+                <Stack.Screen name="idSignup" component={IDSignup} />
 
                 {/* 채팅 */}
                 <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
                 <Stack.Screen name="Notification" component={NotificationScreen} />
+                <Stack.Screen name="centerList" component={CenterList} />
 
                 {/* 지역봉사 */}
                 <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
@@ -112,6 +114,8 @@ export default function Pages() {
                 <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
                 <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
                 <Stack.Screen name="Userdonate" component={UserDonate} />
+                <Stack.Screen name="Edituser" component={Edituser} />
+                <Stack.Screen name="UserInfo" component={UserInfo} />
 
                 {/* 기부 */}
                 <Stack.Screen name="remittance" component={Remittance} />

@@ -37,7 +37,7 @@ export default function Signup() {
                 </TouchableOpacity>
             </View>
 
-            <BottomSheet className="gap-3" isVisible={isModalVisible} setIsVisible={setModalVisible}>Add commentMore actions
+            <BottomSheet className="gap-3" isVisible={isModalVisible} setIsVisible={setModalVisible}>
                 <KakaoSignup />
                 <SignupID />
             </BottomSheet>

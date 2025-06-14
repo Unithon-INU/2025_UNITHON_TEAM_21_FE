@@ -1,20 +1,31 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {Text, ScrollView} from 'react-native';
+
 import Layout from '../../components/Layout';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+
+import {useSelector} from 'react-redux';
+import {ChildrenCenterList} from '@/types/ChildrenCenter';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
+import CenterItem from '../Center/CenterList/components/CenterItem';
 
 export default function UserLikedcenter() {
-    const navigation = useNavigation<StackNavigationProp<any>>();
+    const centerList = useSelector((state: any) => state.likedCenter?.likedList || []);
+
     return (
         <Layout>
-            {/* Top Bar */}
-            <View className="flex-row items-center space-x-2 pb-7 ">
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
-                </TouchableOpacity>
-                <Text className="font-inter font-bold text-[20px]">관심 지역아동센터</Text>
-            </View>
+            <HeaderBackButton>관심 지역아동센터</HeaderBackButton>
+            <Text className="mb-2 text-xl font-bold text-font-black">
+                총 <Text className="text-main-color">{centerList.length}</Text>건
+            </Text>
+            <ScrollView className="flex-1 px-2">
+                {centerList.length === 0 ? (
+                    <Text className="mt-10 text-lg font-semibold text-center text-font-black">
+                        좋아요 한 <Text className="text-main-color">지역아동센터</Text>가 없습니다.
+                    </Text>
+                ) : (
+                    centerList.map((item: ChildrenCenterList, idx: number) => <CenterItem key={idx} item={item} />)
+                )}
+            </ScrollView>
         </Layout>
     );
 }
