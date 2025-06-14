@@ -54,7 +54,10 @@ export function useLogin({email, password}: LoginForm) {
                         },
                     }),
                 );
-                navigation.replace('main');
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: 'main'}],
+                });
             }
         } catch (error) {
             Alert.alert('네트워크 오류', '로그인 요청 중 문제가 발생했습니다.');

@@ -46,7 +46,10 @@ export default function IDLogin() {
                     onChangeText={text => handleChange('password', text)}
                     editable={!loading}
                 />
-                <TouchableOpacity className="flex items-center justify-center py-4 rounded-lg bg-main-color" onPress={() => login()} disabled={loading}>
+                <TouchableOpacity
+                    className={`flex items-center justify-center py-4 rounded-lg ${loading ? 'bg-main-gray' : 'bg-main-color'}`}
+                    onPress={() => login()}
+                    disabled={loading}>
                     <Text className="text-base font-semibold text-white">{loading ? '로그인 중...' : '로그인'}</Text>
                 </TouchableOpacity>
             </View>

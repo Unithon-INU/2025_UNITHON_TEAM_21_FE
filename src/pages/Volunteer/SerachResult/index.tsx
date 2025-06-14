@@ -4,11 +4,10 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 
 import {useVolunteerData} from '@/hook/api/useVolunteerData';
 
-import VolunteerItem from './components/VolunteerItem';
 import Loading from '@/components/Loading';
-import EmptyComponents from './components/EmptyCoponents';
-import HeaderBackButton from '@/components/button/HeaderBackButton';
-import Category from './components/Category';
+import EmptyComponents from '../VolunteerCategory/components/EmptyCoponents';
+import VolunteerItem from '../VolunteerCategory/components/VolunteerItem';
+import Header from './components/Header';
 
 type VolunterrCategoryParams = {
     category: string;
@@ -31,7 +30,7 @@ export default function VolunterrCategory() {
     if (loading) return <Loading />;
     return (
         <>
-            <HeaderBackButton px={true}>{keyword ? keyword : category}</HeaderBackButton>
+            <Header text={keyword} />
             <FlatList
                 className="px-5 bg-white"
                 contentContainerStyle={{paddingBottom: 60}}
@@ -48,7 +47,6 @@ export default function VolunterrCategory() {
                 onEndReachedThreshold={0.2}
                 ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} className="text-main-color" /> : null}
             />
-            <Category />
         </>
     );
 }

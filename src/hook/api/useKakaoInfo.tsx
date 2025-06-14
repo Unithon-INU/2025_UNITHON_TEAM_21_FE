@@ -35,7 +35,10 @@ export function useLogin() {
             await AsyncStorage.setItem(tokenName, JSON.stringify(token));
             await AsyncStorage.setItem(profileName, JSON.stringify(profile));
             dispatch(setUser({token, profile}));
-            navigation.replace('main');
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'main'}],
+            });
         } catch (error) {
             console.error('Login failed:', error);
         }
