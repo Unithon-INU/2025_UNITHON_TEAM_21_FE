@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {PermissionsAndroid, Platform} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -34,6 +35,8 @@ import IDLogin from './Home/IDLogin';
 import IDSignup from './Home/IDSignup';
 import CenterList from './Center/CenterList';
 import SerachResult from './Volunteer/SerachResult';
+import Permission from './Permission';
+import Loading from '@/components/Loading';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -77,8 +80,38 @@ function NavBar() {
 
 export default function Pages() {
     const Stack = createStackNavigator();
+    const [isLoading, setIsLoading] = useState(true);
+    const [initialRouteName, setInitialRouteName] = useState<string>('permission');
+
+    useEffect(() => {
+        const checkPermissions = async () => {
+            if (Platform.OS === 'android') {
+                try {
+                    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
+                    if (hasPermission) {
+                        setInitialRouteName('main');
+                    }
+                } catch (e) {
+                    console.error('Failed to check permissions', e);
+                } finally {
+                    setIsLoading(false);
+                }
+            } else {
+                setInitialRouteName('main');
+                setIsLoading(false);
+            }
+        };
+
+        checkPermissions();
+    }, []);
+    if (isLoading) {
+        return <Loading />;
+    }
     return (
-        <Stack.Navigator initialRouteName={'main'} screenOptions={{headerShown: false}}>
+        <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{headerShown: false}}>
+            {/* 권한 요청 */}
+            <Stack.Screen name="permission" component={Permission} />
+
             {/* 홈 */}
             <Stack.Screen name="main" component={NavBar} />
             <Stack.Screen name="signup" component={Signup} />

@@ -33,6 +33,7 @@ const VolunteerItem = ({item}: {item: any}) => {
     const likedList = useSelector((state: any) => state.liked.likedList);
     const isLiked = likedList.some((v: any) => v.progrmRegistNo === item.progrmRegistNo);
     const deadline = getDaysLeft(item.noticeEndde);
+    console.log('item', item);
 
     return (
         <TouchableOpacity className="flex gap-0.5 mb-4" onPress={() => navigation.navigate('volunteerDetail', {progrmRegistNo: item.progrmRegistNo})}>

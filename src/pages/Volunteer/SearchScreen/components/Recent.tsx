@@ -20,12 +20,11 @@ export default function Recent({onPress}: {onPress: (keyword: string) => void}) 
                     </View>
                     <ScrollView className="mt-2" horizontal showsHorizontalScrollIndicator={false}>
                         {keywords.map((keyword: string, index: number) => (
-                            <TouchableOpacity
-                                key={index}
-                                className="flex flex-row items-center px-3 py-1 mr-2 rounded-full bg-bg-gray"
-                                onPress={() => onPress(keyword)}>
+                            <TouchableOpacity key={index} className="flex flex-row px-3 py-1 mr-2 rounded-full bg-bg-gray" onPress={() => onPress(keyword)}>
                                 <Text className="mr-1 text-sm text-font-black">{keyword.length > 10 ? keyword.slice(0, 10) + '…' : keyword}</Text>
-                                <EvilIcons size={12} name="close" color="#484848" onPress={() => dispatch(removeKeyword(keyword))} />
+                                <TouchableOpacity key={index} onPress={() => dispatch(removeKeyword(keyword))}>
+                                    <EvilIcons size={16} name="close" color="#484848" />
+                                </TouchableOpacity>
                             </TouchableOpacity>
                         ))}
                     </ScrollView>

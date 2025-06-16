@@ -5,7 +5,6 @@ import {Text, TouchableOpacity, View} from 'react-native';
 
 export default function CenterItem({item}: {item: ChildrenCenterList}) {
     const navigate = useNavigation() as any;
-
     return (
         <View className="flex flex-row gap-2 pb-4 mb-4 border-b border-main-gray">
             <KakaoMapAddress className="w-[120px] h-[120px]" location={item.address} name={item.centerName} />
@@ -16,9 +15,11 @@ export default function CenterItem({item}: {item: ChildrenCenterList}) {
                 <Text className="text-sm font-semibold text-font-gray" numberOfLines={1}>
                     {item.address}
                 </Text>
-                <Text className="text-sm font-semibold text-font-gray">{item.phoneNumber}</Text>
+                <Text className="text-sm font-semibold text-font-gray">전화번호 : {item.phoneNumber}</Text>
                 <Text className="text-sm font-semibold text-font-gray">아동수 : {item.chidrenNumber}명</Text>
-                <Text className="text-sm font-semibold text-font-gray">봉사자 : {item.volunter}명</Text>
+                <Text className="text-sm font-semibold text-font-gray">
+                    거리 : {item.distance ? `${item.distance >= 1000 ? `${(item.distance / 1000).toFixed(1)}km` : `${item.distance.toFixed(0)}m`}` : ''}
+                </Text>
             </TouchableOpacity>
         </View>
     );
