@@ -9,6 +9,7 @@ import {addKeyword} from '@/store/slice/recentSearch';
 
 import Recent from './components/Recent';
 import Popular from './components/Popular';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function SearchScreen() {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ export default function SearchScreen() {
         const keyword = (searchWord ?? text).trim();
         if (keyword.length === 0) return;
         dispatch(addKeyword(keyword));
-        navigation.replace('volunteerCategory', {keyword});
+        navigation.replace('searchResult', {keyword});
         setText('');
         Keyboard.dismiss();
     };
@@ -34,7 +35,7 @@ export default function SearchScreen() {
         <>
             <View className="flex flex-row items-center px-3 py-1 border-b-2 border-main-color">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Image source={require('@/assets/navi.png')} className="w-6 h-6" />
+                    <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
                 <TextInput
                     className="flex-1 ml-2 text-base"
@@ -48,10 +49,11 @@ export default function SearchScreen() {
                     autoFocus
                     onSubmitEditing={() => handleSearch()}
                 />
+                <Ionicons name="search-outline" size={20} color="#9A9A9A" />
             </View>
             {debouncedText.length === 0 && (
                 <View className="px-5">
-                    <Recent />
+                    <Recent onPress={handleSearch} />
                     <Popular data={volunteerData} onPress={handleSearch} />
                 </View>
             )}

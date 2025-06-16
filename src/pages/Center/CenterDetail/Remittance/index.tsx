@@ -2,6 +2,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
+import Error from '@/components/Error';
 
 const KEYS = [
     ['1', '2', '3'],
@@ -24,7 +25,7 @@ export default function Remittance() {
             setValue(value + key);
         }
     };
-    if (!profile) return <Text>에러</Text>;
+    if (!profile) return <Error text="로그인 후 이용해주세요." />;
 
     return (
         <View className="flex flex-col h-full gap-3 ">

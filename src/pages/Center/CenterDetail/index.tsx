@@ -22,12 +22,12 @@ export default function CenterDetail() {
 
     const {centerData, loading} = useCenter(180);
     const {id} = route.params as {id: string};
-    const data = centerData?.find((item: ChildrenCenterList) => item.id === id);
+
+    const data = centerData.find((item: ChildrenCenterList) => item.id === id);
 
     const likedList = useSelector((state: any) => state.likedCenter.likedList);
 
-    const isLiked = data ? likedList.some((item: ChildrenCenterList) => item.centerName === data.centerName) : false;
-
+    const isLiked = data ? likedList.some((data: ChildrenCenterList) => data.centerName === data.centerName) : false;
     const handleLikeToggle = () => {
         if (data) {
             dispatch(
@@ -37,7 +37,6 @@ export default function CenterDetail() {
             );
         }
     };
-
     if (loading) return <Loading />;
 
     return (
@@ -56,23 +55,20 @@ export default function CenterDetail() {
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
 
                 <ColWrapper title="오시는 길">
-                    <Text className="text-base font-semibold text-font-black">{data?.address}</Text>
+                    <Text className="text-base font-semibold text-font-black">
+                        {data?.address}
+                        {data?.distance !== Infinity && data?.distance
+                            ? ` (${data.distance >= 1000 ? `${(data.distance / 1000).toFixed(1)}km` : `${data.distance.toFixed(0)}m`})`
+                            : ''}
+                    </Text>
                 </ColWrapper>
 
                 <ColWrapper title="기부 현황">
                     <DonationStatus />
                 </ColWrapper>
 
-                <ColWrapper title="센터소식">
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.05.20 센터소식
-                    </Text>
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.04.25 센터소식
-                    </Text>
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.04.19 센터소식
-                    </Text>
+                <ColWrapper title="센터에서 진행중인 활동">
+                    <Text className="text-base font-semibold text-font-gray">{'아직 진행중인 활동이 없네요...\n활동을 찾으면 바로 알려드릴게요!'}</Text>
                 </ColWrapper>
             </Layout>
 

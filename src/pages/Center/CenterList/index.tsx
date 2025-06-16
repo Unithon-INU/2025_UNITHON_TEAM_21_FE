@@ -9,8 +9,9 @@ import CenterItem from './components/CenterItem';
 
 export default function CenterList() {
     const {centerData, loading, fetchMore, isFetchingMore, hasMore} = useCenter();
-
     if (loading) return <Loading />;
+    console.log('CenterList rendered with data:', centerData);
+
     return (
         <>
             <HeaderBackButton px={true}>인근 지역아동센터</HeaderBackButton>
