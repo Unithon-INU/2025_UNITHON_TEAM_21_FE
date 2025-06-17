@@ -14,6 +14,7 @@ import DonationStatus from './components/DonationStatus';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading from '@/components/Loading';
+import List from './components/List';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -63,13 +64,13 @@ export default function CenterDetail() {
                     </Text>
                 </ColWrapper>
 
-                <ColWrapper title="기부 현황">
-                    <DonationStatus />
-                </ColWrapper>
+                <DonationStatus />
 
                 <ColWrapper title="센터에서 진행중인 활동">
                     <Text className="text-base font-semibold text-font-gray">{'아직 진행중인 활동이 없네요...\n활동을 찾으면 바로 알려드릴게요!'}</Text>
                 </ColWrapper>
+
+                <List />
             </Layout>
 
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">

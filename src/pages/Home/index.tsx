@@ -32,7 +32,7 @@ export default function Home() {
     return (
         <Layout>
             <View className="flex flex-row items-center justify-between">
-                <Image className="w-[120px] h-[46px]" source={require('@/assets/logo.png')} />
+                <Image className="w-[100px] h-[36px]" source={require('@/assets/logo.png')} />
                 <SignupButton />
             </View>
             <TotalDonationAmount />

@@ -1,18 +1,19 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity, Image, Modal} from 'react-native';
+import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import Layout from '../../components/Layout';
-import HeaderBackButton from '@/components/button/HeaderBackButton';
 import {useDispatch} from 'react-redux';
 import {setProfileName} from '@/store/slice/userSlice';
 
+import Layout from '../../components/Layout';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
+import CustomModal from '@/components/layout/CustomModal';
+
 export default function EditUser() {
-    const navigation = useNavigation<StackNavigationProp<any>>();
+    const navigation = useNavigation() as any;
     const dispatch = useDispatch();
 
     const [nickname, setNickname] = useState('');
-    const [showCancelModal, setShowCancelModal] = useState(false); // 기존 '취소' 모달 상태
+    const [showCancelModal, setShowCancelModal] = useState(false);
 
     const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
 
@@ -44,7 +45,6 @@ export default function EditUser() {
                 </TouchableOpacity>
             </View>
 
-            {/* 프로필 이미지 (기존과 동일) */}
             <View className="items-center justify-center mb-10">
                 <View className="relative">
                     <View className="w-[120px] h-[120px] rounded-full bg-main-gray" />
@@ -54,7 +54,6 @@ export default function EditUser() {
                 </View>
             </View>
 
-            {/* 닉네임 입력 필드 (기존과 동일) */}
             <View className="px-4 mb-2">
                 <Text className="mb-1 font-bold text-[16px] text-font-black">닉네임</Text>
                 <TextInput
@@ -71,42 +70,25 @@ export default function EditUser() {
                 )}
             </View>
 
-            <Modal transparent visible={showCancelModal} animationType="fade">
-                <View className="items-center justify-center flex-1 bg-black/20">
-                    <View className="bg-white px-6 py-5 rounded-2xl w-[280px] items-center">
-                        <Text className="mb-3 text-base font-semibold text-font-black">프로필 수정을 취소하시겠습니까?</Text>
-                        <View className="flex-row justify-between" style={{gap: 8}}>
-                            <TouchableOpacity className="bg-bg-gray px-4 py-2 rounded-lg w-[80px] items-center" onPress={() => setShowCancelModal(false)}>
-                                <Text className="font-bold">아니요</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                className="bg-main-color px-4 py-2 rounded-lg w-[80px] items-center"
-                                onPress={() => {
-                                    setShowCancelModal(false);
-                                    navigation.goBack();
-                                }}>
-                                <Text className="font-bold text-white">예</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+            <CustomModal
+                title="프로필 수정을 취소하시겠습니까?"
+                visible={showCancelModal}
+                action="cancel"
+                onClose={() => setShowCancelModal(false)}
+                onAction={() => {
+                    setShowCancelModal(false);
+                    navigation.goBack();
+                }}>
+                <Text className="mb-2 text-font-gray">변경사항이 없습니다</Text>
+            </CustomModal>
 
-            <Modal transparent visible={showSaveConfirmModal} animationType="fade">
-                <View className="items-center justify-center flex-1 bg-black/20">
-                    <View className="bg-white px-6 py-5 rounded-2xl w-[280px] items-center">
-                        <Text className="mb-3 text-base font-semibold text-font-black">변경사항을 저장하시겠습니까?</Text>
-                        <View className="flex-row justify-between mt-2" style={{gap: 8}}>
-                            <TouchableOpacity className="bg-bg-gray px-4 py-2 rounded-lg w-[80px] items-center" onPress={() => setShowSaveConfirmModal(false)}>
-                                <Text className="font-bold">아니요</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity className="bg-main-color px-4 py-2 rounded-lg w-[80px] items-center" onPress={handleConfirmSave}>
-                                <Text className="font-bold text-white">예</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+            <CustomModal
+                title="변경사항을 수정하시겠습니까?"
+                visible={showSaveConfirmModal}
+                action="edit"
+                onClose={() => setShowSaveConfirmModal(false)}
+                onAction={handleConfirmSave}
+            />
         </Layout>
     );
 }

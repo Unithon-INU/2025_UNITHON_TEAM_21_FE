@@ -37,6 +37,7 @@ import CenterList from './Center/CenterList';
 import SerachResult from './Volunteer/SerachResult';
 import Permission from './Permission';
 import Loading from '@/components/Loading';
+import CenterHome from './Center/CenterHome';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -74,6 +75,7 @@ function NavBar() {
             <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} component={ChatListScreen} />
             <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} component={Volunteer} />
             <Tab.Screen name="userInfo" options={{tabBarLabel: '내정보'}} component={UserInfo} />
+            <Tab.Screen name="centerHome" options={{tabBarLabel: '센터'}} component={CenterHome} />
         </Tab.Navigator>
     );
 }
