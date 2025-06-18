@@ -1,4 +1,6 @@
 import React from 'react';
+import {useEffect} from 'react';
+
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -14,6 +16,8 @@ import DonationStatus from './components/DonationStatus';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading from '@/components/Loading';
+import {useVolunteerData} from '@/hook/api/useVolunteerData';
+import VolunteerItem from '@/pages/Volunteer/VolunteerCategory/components/VolunteerItem';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -28,6 +32,13 @@ export default function CenterDetail() {
 
     const isLiked = data ? likedList.some((item: ChildrenCenterList) => item.centerName === data.centerName) : false;
 
+    const {items: allItems} = useVolunteerData();
+
+    const centerVolunteers = allItems.filter(
+        (item: any) => item.centerName === data?.centerName
+    );
+
+
     const handleLikeToggle = () => {
         if (data) {
             dispatch(
@@ -37,6 +48,11 @@ export default function CenterDetail() {
             );
         }
     };
+
+     useEffect(() => {
+        console.log('현재 centerName 검색어:', data?.centerName);
+    }, [data]);
+
 
     if (loading) return <Loading />;
 
@@ -61,6 +77,16 @@ export default function CenterDetail() {
 
                 <ColWrapper title="기부 현황">
                     <DonationStatus />
+                </ColWrapper>
+
+                <ColWrapper title="센터 봉사활동">
+                    {volunteerData?.items?.length > 0 ? (
+                        volunteerData.items.map((item) => (
+                            <VolunteerItem key={item.id} item={item} />
+                        ))
+                    ) : (
+                        <Text className="text-base text-font-gray">진행 중인 봉사활동이 없습니다.</Text>
+                    )}
                 </ColWrapper>
 
                 <ColWrapper title="센터소식">
