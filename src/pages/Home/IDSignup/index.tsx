@@ -70,7 +70,10 @@ export default function IDSignup() {
                     secureTextEntry
                     editable={!loading}
                 />
-                <TouchableOpacity className="items-center p-4 mt-4 rounded-lg bg-main-color" onPress={handleSignup} disabled={loading}>
+                <TouchableOpacity
+                    className={`items-center p-4 mt-4 rounded-lg ${loading ? 'bg-main-gray' : 'bg-main-color'}`}
+                    onPress={handleSignup}
+                    disabled={loading}>
                     <Text className="text-lg font-bold text-white">{loading ? '가입 중...' : '회원가입'}</Text>
                 </TouchableOpacity>
             </View>

@@ -16,7 +16,10 @@ export function useLogout() {
             await AsyncStorage.removeItem(tokenName);
             await AsyncStorage.removeItem(profileName);
             dispatch(clearUser());
-            navigation.replace('main');
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'main'}],
+            });
         } catch (error) {
             console.error('Logout failed:', error);
         }

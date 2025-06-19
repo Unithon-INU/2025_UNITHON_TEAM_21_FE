@@ -27,7 +27,10 @@ export default function EditUser() {
     const handleConfirmSave = () => {
         dispatch(setProfileName(nickname));
         setShowSaveConfirmModal(false);
-        navigation.replace('UserInfo');
+        navigation.reset({
+            index: 0,
+            routes: [{name: 'UserInfo'}],
+        });
     };
 
     return (

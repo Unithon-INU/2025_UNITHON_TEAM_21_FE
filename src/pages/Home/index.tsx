@@ -2,6 +2,10 @@ import {Image, View} from 'react-native';
 
 import {useUserRestore} from '@/hook/api/useKakaoInfo';
 import {useCenter} from '@/hook/api/useCenter';
+import {useDispatch} from 'react-redux';
+import {AppDispatch} from '@/store/store';
+import {useEffect} from 'react';
+import {fetchLocation} from '@/store/slice/locationSlice';
 
 import Layout from '../../components/Layout';
 import Loading from '@/components/Loading';
@@ -15,8 +19,13 @@ import FollowCenter from './components/FollowCenter';
 import LikeVolunteer from './components/LikeVolunteer';
 
 export default function Home() {
+    const dispatch = useDispatch<AppDispatch>();
     useUserRestore();
+    useEffect(() => {
+        dispatch(fetchLocation());
+    }, [dispatch]);
     const {centerData, loading} = useCenter();
+
     if (loading) {
         return <Loading />;
     }
@@ -30,8 +39,8 @@ export default function Home() {
             <FollowCenter />
             <DonationComponents />
             <CenterItem data={centerData} />
-            <LikeVolunteer />
             <RecommendActivity />
+            <LikeVolunteer />
             <MonthlyDonationHeroList />
         </Layout>
     );

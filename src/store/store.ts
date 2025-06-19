@@ -4,6 +4,7 @@ import userReducer from './slice/userSlice';
 import recentReducer from './slice/recentSearch';
 import likedCenterReducer from './slice/likedCenterSlice';
 import likedReducer from './slice/likedSlice';
+import locationReducer from './slice/locationSlice';
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         search: recentReducer,
         likedCenter: likedCenterReducer,
         liked: likedReducer,
+        location: locationReducer,
     },
 });
 

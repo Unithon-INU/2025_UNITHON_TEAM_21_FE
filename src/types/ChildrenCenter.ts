@@ -7,4 +7,7 @@ export interface ChildrenCenterList {
     chidrenNumber: number;
     volunter: number;
     operator: string;
+    x: number;
+    y: number;
+    distance: number;
 }

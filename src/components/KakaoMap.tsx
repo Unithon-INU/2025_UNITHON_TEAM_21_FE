@@ -11,13 +11,14 @@ import {ANDROID_KAKAO_API_KEY, REST_KAKAO_API_KEY} from '@env';
  * @returns
  */
 export function KakaoMap({location, name = '', className = ''}: {location: string; name?: string; className?: string}) {
+    console.log(ANDROID_KAKAO_API_KEY);
     if (!location || !location.includes(',')) {
         return <Text>위치 정보를 불러오는 중입니다...</Text>;
     }
 
     const [latitude, longitude] = location.split(',').map(Number);
     const htmlContent = `
-        <!DOCTYPE html>
+    <!DOCTYPE html>
     <html>
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
