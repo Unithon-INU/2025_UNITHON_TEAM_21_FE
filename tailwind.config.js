@@ -10,6 +10,7 @@ module.exports = {
                 'font-black': '#484848',
                 'font-gray': '#9A9A9A',
                 'bg-gray': '#EDEDED',
+                'bg-red': '#FD5757',
             },
         },
     },

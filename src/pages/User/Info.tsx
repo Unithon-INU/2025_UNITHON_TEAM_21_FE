@@ -55,7 +55,7 @@ export default function UserInfo() {
 
             {/* 나의 정보 섹션 */}
             <View className="h-auto pt-[10px] pb-[10px] px-[5px]">
-                <Text className="font-inter font-bold text-[20px] leading-[24px] mb-2 text-font-black">나의 정보</Text>
+                <Text className="font-inter font-semibold text-[20px] leading-[24px] mb-2 text-font-black">나의 정보</Text>
 
                 {/* 관심 지역아동센터 */}
                 <TouchableOpacity onPress={() => navigation.navigate('Userlikedcenter')} className="flex-row items-center justify-between mt-5 mb-3">

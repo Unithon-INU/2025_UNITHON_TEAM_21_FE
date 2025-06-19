@@ -61,7 +61,7 @@ export interface getVltrPartcptnItemListItem {
     actBeginTm: number;
     actEndTm: number;
     actPlace: string;
-    actWkdy: string; // 주간 활동 가능일 (예: '1111111'은 매일 가능)
+    actWkdy: string;
     adultPosblAt: 'Y' | 'N';
     appTotal: number;
     areaAddress1: string;
@@ -107,4 +107,14 @@ export interface getVltrPartcptnItemList {
         resultCode: number;
         resultMsg: string;
     };
+}
+export interface getVltrAreaListItem {
+    gugunCd: string;
+    nammbyNm: string;
+    progrmBgnde: number;
+    progrmEndde: number;
+    progrmRegistNo: number;
+    progrmSj: string;
+    progrmSttusSe: number;
+    sidoCd: number;
 }
