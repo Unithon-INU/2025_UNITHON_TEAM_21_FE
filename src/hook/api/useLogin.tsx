@@ -49,7 +49,7 @@ export function useLogin({email, password}: LoginForm) {
                             refreshToken: data.refreshToken,
                         },
                         profile: {
-                            id: 1000,
+                            id: data.id,
                             nickname: data.nickname,
                         },
                     }),

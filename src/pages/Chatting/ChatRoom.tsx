@@ -53,7 +53,7 @@ export default function ChatRoomScreen() {
 
     // Redux에서 유저 정보 가져오기
     const user = useSelector((state: RootState) => state.user);
-    const senderEmail = user.profile?.email ?? '';
+    const senderEmail = user.profile?.id ?? '';
     const senderId = user.profile?.id ?? ''; // 카카오 id 등 고유값
     // 상대방 id는 서버에서 내려주는 메시지/채팅방 정보로 받아와야 함
     const targetUserId = null; // 필요 시 채팅방 정보에서 추출
