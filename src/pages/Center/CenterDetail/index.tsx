@@ -6,6 +6,7 @@ import {toggleCenterLike} from '@/store/slice/likedCenterSlice';
 
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import {useCenter} from '@/hook/api/useCenter';
+import {useVolunteerCenterName} from '@/hook/api/useVolunteerData';
 
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
@@ -14,6 +15,8 @@ import DonationStatus from './components/DonationStatus';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading from '@/components/Loading';
+import List from './components/List';
+import Activity from './components/Activity';
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -24,10 +27,10 @@ export default function CenterDetail() {
     const {id} = route.params as {id: string};
 
     const data = centerData.find((item: ChildrenCenterList) => item.id === id);
-
     const likedList = useSelector((state: any) => state.likedCenter.likedList);
+    const {items, loading: activityLoading} = useVolunteerCenterName(data?.centerName);
 
-    const isLiked = data ? likedList.some((data: ChildrenCenterList) => data.centerName === data.centerName) : false;
+    const isLiked = data ? likedList.some((item: ChildrenCenterList) => data.centerName === item.centerName) : false;
     const handleLikeToggle = () => {
         if (data) {
             dispatch(
@@ -37,11 +40,11 @@ export default function CenterDetail() {
             );
         }
     };
-    if (loading) return <Loading />;
+    if (loading || activityLoading) return <Loading />;
 
     return (
         <>
-            <View className="flex flex-row items-center justify-between px-4">
+            <View className="flex flex-row justify-between items-center px-4">
                 <HeaderBackButton className="flex-1">{data?.centerName}</HeaderBackButton>
                 <TouchableOpacity
                     className={`flex flex-row items-center px-2 py-1 rounded-2xl ${isLiked ? 'bg-main-color' : 'border border-main-color'}`}
@@ -63,13 +66,10 @@ export default function CenterDetail() {
                     </Text>
                 </ColWrapper>
 
-                <ColWrapper title="기부 현황">
-                    <DonationStatus />
-                </ColWrapper>
+                <DonationStatus />
 
-                <ColWrapper title="센터에서 진행중인 활동">
-                    <Text className="text-base font-semibold text-font-gray">{'아직 진행중인 활동이 없네요...\n활동을 찾으면 바로 알려드릴게요!'}</Text>
-                </ColWrapper>
+                <Activity items={items} />
+                <List />
             </Layout>
 
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">

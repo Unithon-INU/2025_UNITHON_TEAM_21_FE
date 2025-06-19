@@ -53,8 +53,7 @@ export default function ChatRoomScreen() {
 
     // Redux에서 유저 정보 가져오기
     const user = useSelector((state: RootState) => state.user);
-    const senderEmail = user.profile?.id ?? '';
-    const senderId = user.profile?.id ?? ''; // 카카오 id 등 고유값
+    const senderId = user.profile?.id ?? null; // 카카오 id 등 고유값
     // 상대방 id는 서버에서 내려주는 메시지/채팅방 정보로 받아와야 함
     const targetUserId = null; // 필요 시 채팅방 정보에서 추출
 
@@ -67,7 +66,7 @@ export default function ChatRoomScreen() {
     // 메시지 수신 콜백
     const handleReceive = useCallback(
         (data: any) => {
-            const isMe = data.senderEmail === senderEmail;
+            const isMe = data.senderid === senderId;
             const newMessage: Message = {
                 id: Date.now().toString(),
                 text: data.content,
@@ -78,7 +77,7 @@ export default function ChatRoomScreen() {
             };
             setMessages(prev => [...prev, newMessage]);
         },
-        [senderEmail],
+        [senderId] // senderId가 변경될 때만 콜백 재생성,
     );
 
     // useChatSocket 훅 사용
@@ -99,12 +98,11 @@ export default function ChatRoomScreen() {
         };
         setMessages(prev => [...prev, newMessage]);
 
+        // 메시지 전송 payload 예시
         const payload = {
             chatRoomId,
-            senderEmail,
             senderId,
             targetUserId,
-            targetOrganizationId: null, // 기관 채팅이면 값 할당
             content: message,
             fromUser: true,
             sentAt: new Date().toISOString(),
@@ -126,7 +124,6 @@ export default function ChatRoomScreen() {
             {item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full ml-2" />}
         </View>
     );
-
     useEffect(() => {
         axios
             .get(`/api/chatroom/${chatRoomId}/messages`, {

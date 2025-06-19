@@ -1,8 +1,11 @@
 import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import {useSelector, useDispatch} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+
+import {getVltrSearchWordListItem} from '@/types/volunteerTyps';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {toggleLike} from '@/store/slice/likedSlice';
 import {formatDate} from '@/utils/formatDate';
 
@@ -27,13 +30,12 @@ function getDaysLeft(dateNumber: number) {
     return Math.ceil((endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-const VolunteerItem = ({item}: {item: any}) => {
+export default function VolunteerItem({item}: {item: getVltrSearchWordListItem}) {
     const navigation = useNavigation() as any;
     const dispatch = useDispatch();
     const likedList = useSelector((state: any) => state.liked.likedList);
     const isLiked = likedList.some((v: any) => v.progrmRegistNo === item.progrmRegistNo);
     const deadline = getDaysLeft(item.noticeEndde);
-    console.log('item', item);
 
     return (
         <TouchableOpacity className="flex gap-0.5 mb-4" onPress={() => navigation.navigate('volunteerDetail', {progrmRegistNo: item.progrmRegistNo})}>
@@ -50,17 +52,21 @@ const VolunteerItem = ({item}: {item: any}) => {
             </Text>
 
             <Text className="font-semibold text-font-gray">봉사장소 {item.nanmmbyNm}</Text>
-            <Text className="font-semibold text-font-gray">
-                모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
-            </Text>
-            <Text className="font-semibold text-font-gray">
-                봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
-            </Text>
-            <Text className="font-semibold text-font-gray">
-                소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
-            </Text>
+            {item.noticeBgnde && item.noticeEndde && (
+                <Text className="font-semibold text-font-gray">
+                    모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
+                </Text>
+            )}
+            {item.progrmBgnde && item.progrmEndde && (
+                <Text className="font-semibold text-font-gray">
+                    봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
+                </Text>
+            )}
+            {item.actBeginTm && item.actEndTm && (
+                <Text className="font-semibold text-font-gray">
+                    소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
+                </Text>
+            )}
         </TouchableOpacity>
     );
-};
-
-export default VolunteerItem;
+}

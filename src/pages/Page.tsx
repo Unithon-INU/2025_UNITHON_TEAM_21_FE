@@ -31,12 +31,16 @@ import RemittanceComplete from './Center/CenterDetail/RemittanceComplete';
 import HeroListDetail from './Home/components/HeroListDetail';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
-import IDLogin from './Home/IDLogin';
+
 import IDSignup from './Home/IDSignup';
 import CenterList from './Center/CenterList';
 import SerachResult from './Volunteer/SerachResult';
 import Permission from './Permission';
 import Loading from '@/components/Loading';
+import CenterHome from './Center/CenterHome';
+import {useSelector, useDispatch} from 'react-redux';
+import {AppDispatch, RootState} from '@/store/store';
+import {fetchLocation} from '@/store/slice/locationSlice';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -74,6 +78,7 @@ function NavBar() {
             <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} component={ChatListScreen} />
             <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} component={Volunteer} />
             <Tab.Screen name="userInfo" options={{tabBarLabel: '내정보'}} component={UserInfo} />
+            <Tab.Screen name="centerHome" options={{tabBarLabel: '센터'}} component={CenterHome} />
         </Tab.Navigator>
     );
 }
@@ -82,6 +87,12 @@ export default function Pages() {
     const Stack = createStackNavigator();
     const [isLoading, setIsLoading] = useState(true);
     const [initialRouteName, setInitialRouteName] = useState<string>('permission');
+
+    const locationLoading = useSelector((state: RootState) => state.location.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        dispatch(fetchLocation());
+    }, [dispatch]);
 
     useEffect(() => {
         const checkPermissions = async () => {
@@ -104,7 +115,7 @@ export default function Pages() {
 
         checkPermissions();
     }, []);
-    if (isLoading) {
+    if (isLoading || locationLoading === 'pending') {
         return <Loading />;
     }
     return (
@@ -116,7 +127,6 @@ export default function Pages() {
             <Stack.Screen name="main" component={NavBar} />
             <Stack.Screen name="signup" component={Signup} />
             <Stack.Screen name="login" component={Login} />
-            <Stack.Screen name="idlogin" component={IDLogin} />
             <Stack.Screen name="heroListDetail" component={HeroListDetail} />
             <Stack.Screen name="idSignup" component={IDSignup} />
 
