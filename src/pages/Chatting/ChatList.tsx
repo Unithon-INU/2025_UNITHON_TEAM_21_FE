@@ -28,7 +28,7 @@ export default function ChatListScreen() {
 
     useEffect(() => {
         // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.email) return;
+        if (!user.profile?.id) return;
         axios
             .get('/api/chatroom', {
                 headers: {Authorization: `Bearer ${user.token?.accessToken}`},
@@ -39,7 +39,7 @@ export default function ChatListScreen() {
 
     useEffect(() => {
         // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.email) return;
+        if (!user.profile?.id) return;
         axios
             .get('/api/chatroom', {
                 headers: {Authorization: `Bearer ${user.token?.accessToken}`},
