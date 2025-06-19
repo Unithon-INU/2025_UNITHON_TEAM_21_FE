@@ -38,6 +38,9 @@ import SerachResult from './Volunteer/SerachResult';
 import Permission from './Permission';
 import Loading from '@/components/Loading';
 import CenterHome from './Center/CenterHome';
+import {useSelector, useDispatch} from 'react-redux';
+import {AppDispatch, RootState} from '@/store/store';
+import {fetchLocation} from '@/store/slice/locationSlice';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -85,6 +88,12 @@ export default function Pages() {
     const [isLoading, setIsLoading] = useState(true);
     const [initialRouteName, setInitialRouteName] = useState<string>('permission');
 
+    const locationLoading = useSelector((state: RootState) => state.location.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        dispatch(fetchLocation());
+    }, [dispatch]);
+
     useEffect(() => {
         const checkPermissions = async () => {
             if (Platform.OS === 'android') {
@@ -106,7 +115,7 @@ export default function Pages() {
 
         checkPermissions();
     }, []);
-    if (isLoading) {
+    if (isLoading || locationLoading === 'pending') {
         return <Loading />;
     }
     return (
