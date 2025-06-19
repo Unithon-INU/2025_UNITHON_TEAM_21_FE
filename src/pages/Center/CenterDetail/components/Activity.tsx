@@ -4,6 +4,7 @@ import {getVltrSearchWordListItem} from '@/types/volunteerTyps';
 import VolunteerItem from '@/pages/Volunteer/VolunteerCategory/components/VolunteerItem';
 
 export default function Activity({items}: {items: getVltrSearchWordListItem[] | null}) {
+    console.log(items);
     if (!items || items.length === 0) {
         return (
             <ColWrapper title="센터에서 진행중인 봉사활동">

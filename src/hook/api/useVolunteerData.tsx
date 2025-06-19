@@ -222,6 +222,10 @@ export function useVolunteerCenterName(name?: string) {
     const [items, setItems] = useState<getVltrSearchWordListItem[] | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    function normalizeItems(item: any): getVltrSearchWordListItem[] {
+        if (!item) return [];
+        return Array.isArray(item) ? item : [item];
+    }
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
@@ -233,7 +237,7 @@ export function useVolunteerCenterName(name?: string) {
                 }
                 const xml = await response.text();
                 const data = xml2Json(xml);
-                setItems(data.body.items.item || []);
+                setItems(normalizeItems(data.body.items.item));
             } catch (e: any) {
                 setError(e.message);
             } finally {
