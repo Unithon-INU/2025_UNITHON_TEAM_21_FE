@@ -5,6 +5,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
 import axios from 'axios';
+import { API_URL } from '@env';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -30,7 +31,7 @@ export default function ChatListScreen() {
         // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
         if (!user.profile?.id) return;
         axios
-            .get('/api/chatroom', {
+            .get(`${API_URL}/api/chatroom`, {
                 headers: {Authorization: `Bearer ${user.token?.accessToken}`},
             })
             .then(res => setChatRooms(res.data))
