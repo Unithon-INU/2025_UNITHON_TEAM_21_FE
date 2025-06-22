@@ -5,7 +5,7 @@ interface TokenProp {
     refreshToken: string;
 }
 interface ProfileProp {
-    id: number;
+    id: string; //원래는 number였으나, 서버에서 내려주는 값이 string으로 변경되어 수정
     nickname: string;
 }
 
