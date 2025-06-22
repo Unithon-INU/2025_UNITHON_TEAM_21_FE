@@ -1,8 +1,4 @@
-import {useEffect, useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
-
-import Papa from 'papaparse';
-import RNFS from 'react-native-fs';
 
 import {useNavigation} from '@react-navigation/native';
 
@@ -21,20 +17,20 @@ function Item({data}: {data: ChildrenCenterList}) {
         <View className="flex flex-col gap-2">
             <View className="flex flex-row gap-2">
                 <KakaoMapAddress className="relative w-[120px] h-[120px] bg-bg-gray rounded-xl" location={data.address} name={data.centerName} />
-                <TouchableOpacity className="flex justify-between flex-1" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>
+                <TouchableOpacity className="flex flex-1 justify-between" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>
                     <View className="flex gap-1 py-2">
                         <Text className="text-base font-semibold text-font-black">{data.centerName}</Text>
                         <Text className="text-sm font-semibold text-font-gray">{data.address}</Text>
                     </View>
                     <View className="flex gap-2">
-                        <View className="flex flex-row items-baseline justify-between gap-1">
-                            <View className="flex flex-row items-baseline gap-1">
+                        <View className="flex flex-row gap-1 justify-between items-baseline">
+                            <View className="flex flex-row gap-1 items-baseline">
                                 <Text className="text-lg font-semibold text-main-color">{percent}%</Text>
                                 <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()}원</Text>
                             </View>
                             <Text className="text-sm font-semibold text-font-black">{daysLeft}일 남음</Text>
                         </View>
-                        <View className="w-full h-1 overflow-hidden rounded-full bg-bg-gray">
+                        <View className="overflow-hidden w-full h-1 rounded-full bg-bg-gray">
                             <View className="h-full bg-main-color" style={{width: `${Math.min(percent, 100)}%`}} />
                         </View>
                     </View>
@@ -43,23 +39,11 @@ function Item({data}: {data: ChildrenCenterList}) {
         </View>
     );
 }
-export default function DonationItem() {
-    const [data, setData] = useState<ChildrenCenterList[]>();
-    useEffect(() => {
-        const loadCSV = async () => {
-            try {
-                const content = await RNFS.readFileAssets('ChildrenCenterList.csv', 'utf8');
-                const results = Papa.parse(content, {header: true});
-                setData(results.data.slice(0, 3) as ChildrenCenterList[]);
-            } catch (err) {
-                console.error('Failed to read CSV:', err);
-            }
-        };
-        loadCSV();
-    }, []);
+export default function DonationItem({items}: {items: ChildrenCenterList[]}) {
+    if (!items) return null;
     return (
         <ColWrapper title="실시간 기부현황">
-            {data?.map((item, index) => (
+            {items.slice(0, 3)?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}
         </ColWrapper>

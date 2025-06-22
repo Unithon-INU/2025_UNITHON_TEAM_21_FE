@@ -7,6 +7,9 @@ interface WrapperProps {
     href?: string;
 }
 export function RowWrapper({title, children, href}: WrapperProps) {
+    const childrenArray = Array.isArray(children) ? children : [children];
+    const [first, ...rest] = childrenArray;
+
     return (
         <View className="flex flex-col gap-3 py-3">
             {href ? (
@@ -17,8 +20,11 @@ export function RowWrapper({title, children, href}: WrapperProps) {
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
             )}
+
+            {first}
+
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="flex flex-row gap-3">{children}</View>
+                <View className="flex flex-row gap-3">{rest}</View>
             </ScrollView>
         </View>
     );

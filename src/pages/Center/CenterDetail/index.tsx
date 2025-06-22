@@ -8,6 +8,7 @@ import {toggleCenterLike} from '@/store/slice/likedCenterSlice';
 
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import {useCenter} from '@/hook/api/useCenter';
+import {useVolunteerCenterName} from '@/hook/api/useVolunteerData';
 
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
@@ -16,8 +17,9 @@ import DonationStatus from './components/DonationStatus';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading from '@/components/Loading';
-import {useVolunteerData} from '@/hook/api/useVolunteerData';
-import VolunteerItem from '@/pages/Volunteer/VolunteerCategory/components/VolunteerItem';
+import List from './components/List';
+import Activity from './components/Activity';
+
 
 export default function CenterDetail() {
     const navigation = useNavigation() as any;
@@ -26,18 +28,12 @@ export default function CenterDetail() {
 
     const {centerData, loading} = useCenter(180);
     const {id} = route.params as {id: string};
-    const data = centerData?.find((item: ChildrenCenterList) => item.id === id);
 
+    const data = centerData.find((item: ChildrenCenterList) => item.id === id);
     const likedList = useSelector((state: any) => state.likedCenter.likedList);
+    const {items, loading: activityLoading} = useVolunteerCenterName(data?.centerName);
 
-    const isLiked = data ? likedList.some((item: ChildrenCenterList) => item.centerName === data.centerName) : false;
-
-    const {items: allItems} = useVolunteerData();
-
-    const centerVolunteers = allItems.filter(
-        (item: any) => item.centerName === data?.centerName
-    );
-
+    const isLiked = data ? likedList.some((item: ChildrenCenterList) => data.centerName === item.centerName) : false;
 
     const handleLikeToggle = () => {
         if (data) {
@@ -48,13 +44,7 @@ export default function CenterDetail() {
             );
         }
     };
-
-     useEffect(() => {
-        console.log('현재 centerName 검색어:', data?.centerName);
-    }, [data]);
-
-
-    if (loading) return <Loading />;
+    if (loading || activityLoading) return <Loading />;
 
     return (
         <>
@@ -72,34 +62,19 @@ export default function CenterDetail() {
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
 
                 <ColWrapper title="오시는 길">
-                    <Text className="text-base font-semibold text-font-black">{data?.address}</Text>
-                </ColWrapper>
-
-                <ColWrapper title="기부 현황">
-                    <DonationStatus />
-                </ColWrapper>
-
-                <ColWrapper title="센터 봉사활동">
-                    {volunteerData?.items?.length > 0 ? (
-                        volunteerData.items.map((item) => (
-                            <VolunteerItem key={item.id} item={item} />
-                        ))
-                    ) : (
-                        <Text className="text-base text-font-gray">진행 중인 봉사활동이 없습니다.</Text>
-                    )}
-                </ColWrapper>
-
-                <ColWrapper title="센터소식">
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.05.20 센터소식
-                    </Text>
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.04.25 센터소식
-                    </Text>
-                    <Text className="text-base font-semibold text-font-black" numberOfLines={1}>
-                        2025.04.19 센터소식
+                    <Text className="text-base font-semibold text-font-black">
+                        {data?.address}
+                        {data?.distance !== Infinity && data?.distance
+                            ? ` (${data.distance >= 1000 ? `${(data.distance / 1000).toFixed(1)}km` : `${data.distance.toFixed(0)}m`})`
+                            : ''}
                     </Text>
                 </ColWrapper>
+
+                <DonationStatus />
+
+
+                <Activity items={items} />
+                <List />
             </Layout>
 
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">

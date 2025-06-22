@@ -39,15 +39,15 @@ export default function IDSignup() {
             </View>
             <View className="p-5">
                 <TextInput
-                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
+                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg"
                     placeholder="닉네임"
                     value={form.nickname}
                     onChangeText={text => handleChange('nickname', text)}
                     editable={!loading}
                 />
                 <TextInput
-                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
-                    placeholder="이메일"
+                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg"
+                    placeholder="이메일을 입력해 주세요"
                     value={form.email}
                     onChangeText={text => handleChange('email', text)}
                     keyboardType="email-address"
@@ -55,22 +55,25 @@ export default function IDSignup() {
                     editable={!loading}
                 />
                 <TextInput
-                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
-                    placeholder="비밀번호"
+                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg"
+                    placeholder="비밀번호를 입력해 주세요"
                     value={form.password}
                     onChangeText={text => handleChange('password', removeKorean(text))}
                     secureTextEntry
                     editable={!loading}
                 />
                 <TextInput
-                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg bg-gray-50"
+                    className="p-3 mb-4 text-base border border-gray-300 rounded-lg"
                     placeholder="비밀번호 확인"
                     value={passwordConfirm}
                     onChangeText={text => setPasswordConfirm(removeKorean(text))}
                     secureTextEntry
                     editable={!loading}
                 />
-                <TouchableOpacity className="items-center p-4 mt-4 rounded-lg bg-main-color" onPress={handleSignup} disabled={loading}>
+                <TouchableOpacity
+                    className={`items-center p-4 mt-4 rounded-lg ${loading ? 'bg-main-gray' : 'bg-main-color'}`}
+                    onPress={handleSignup}
+                    disabled={loading}>
                     <Text className="text-lg font-bold text-white">{loading ? '가입 중...' : '회원가입'}</Text>
                 </TouchableOpacity>
             </View>

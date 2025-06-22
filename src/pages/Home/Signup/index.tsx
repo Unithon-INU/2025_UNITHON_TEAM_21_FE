@@ -1,6 +1,6 @@
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
@@ -10,6 +10,14 @@ import SignupID from './components/SignupID';
 export default function Signup() {
     const navigation = useNavigation();
     const [isModalVisible, setModalVisible] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                setModalVisible(false);
+            };
+        }, []),
+    );
     return (
         <View className="flex flex-col h-full gap-3 p-5">
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -18,7 +26,7 @@ export default function Signup() {
 
             <View className="flex items-center justify-center flex-1">
                 <Image className="h-20 w-52" source={require('@/assets/logo.png')} />
-                <Text className="text-2xl font-semibold tracking-[-2px]">나눔의 일상을 만나다</Text>
+                <Text className="text-2xl font-semibold tracking-[-2px] text-font-black">나눔의 일상을 만나다</Text>
             </View>
 
             <View className="flex gap-3 py-10">

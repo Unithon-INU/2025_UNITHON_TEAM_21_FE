@@ -15,7 +15,6 @@ export function useUserRestore() {
         const restore = async () => {
             const t = await AsyncStorage.getItem(tokenName);
             const p = await AsyncStorage.getItem(profileName);
-            console.log(p);
             if (t && p) {
                 dispatch(setUser({token: JSON.parse(t), profile: JSON.parse(p)}));
             }
@@ -35,7 +34,10 @@ export function useLogin() {
             await AsyncStorage.setItem(tokenName, JSON.stringify(token));
             await AsyncStorage.setItem(profileName, JSON.stringify(profile));
             dispatch(setUser({token, profile}));
-            navigation.replace('main');
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'main'}],
+            });
         } catch (error) {
             console.error('Login failed:', error);
         }
