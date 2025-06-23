@@ -1,7 +1,8 @@
-import {View, Text} from 'react-native';
 import {useCallback} from 'react';
+import {View, Text} from 'react-native';
 
 import {useInquiryDonation, useCenterTotalDonation} from '@/hook/api/useDonation';
+import {useGetItemDonation} from '@/hook/api/useItemDonation';
 
 import Layout from '@/components/Layout';
 import DonationStatus from './components/DonationStatus';
@@ -14,13 +15,17 @@ export default function UserInfo() {
     const id = 1;
 
     const {items, loading: InquiryLoading, fetchDonations} = useInquiryDonation(id);
+    const {items: donationItem, loading: itemsLoading, refetch} = useGetItemDonation(id);
     const {total, loading: TotalLoading} = useCenterTotalDonation(id);
 
     const handleRefresh = useCallback(() => {
         fetchDonations();
     }, [fetchDonations]);
+    const handleRefetch = useCallback(() => {
+        refetch();
+    }, [refetch]);
 
-    if (InquiryLoading || TotalLoading) return <Loading />;
+    if (InquiryLoading || TotalLoading || itemsLoading) return <Loading />;
 
     return (
         <Layout>
@@ -29,7 +34,7 @@ export default function UserInfo() {
             </View>
 
             <DonationStatus total={total} />
-            <List />
+            <List centerId={id} items={donationItem} onRefresh={handleRefetch} />
             <Waiting items={items} onRefresh={handleRefresh} />
             <AllDonation items={items} />
         </Layout>

@@ -1,35 +1,24 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, TextInput, Alert} from 'react-native';
+
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import CustomModal from '@/components/layout/CustomModal';
-
-const initialDonationItems = [
-    {id: '1', name: '두루마리 휴지', current: 30, required: 50},
-    {id: '2', name: '스케치북', current: 8, required: 20},
-    {id: '3', name: '유아용 기저귀 (L)', current: 15, required: 40},
-];
-
-interface DonationItemType {
-    id: string;
-    name: string;
-    current: number;
-    required: number;
-}
+import {ItemDonationType} from '@/types/ItemDonationType';
+import {useEditItemDonation} from '@/hook/api/useItemDonation';
 
 interface DonationItemCardProps {
-    item: DonationItemType;
+    item: ItemDonationType;
     isLast: boolean;
-    onDonatePress: (item: DonationItemType) => void;
+    onDonatePress: (item: ItemDonationType) => void;
 }
-
 function DonationItemCard({item, isLast, onDonatePress}: DonationItemCardProps) {
-    const progress = item.required > 0 ? (item.current / item.required) * 100 : 0;
+    const progress = item.requiredQuantity > 0 ? (item.currentQuantity / item.requiredQuantity) * 100 : 0;
     const containerClassName = `p-2 ${isLast ? '' : 'border-b-2 border-bg-gray'}`;
 
     return (
         <View className={containerClassName}>
             <View className="flex-row justify-between mb-2">
-                <Text className="text-base font-semibold text-font-black">{item.name}</Text>
+                <Text className="text-base font-semibold text-font-black">{item.itemName}</Text>
                 <Text className="text-base font-semibold text-main-color">{progress}%</Text>
             </View>
             <View className="overflow-hidden h-1 rounded-full bg-bg-gray">
@@ -37,7 +26,7 @@ function DonationItemCard({item, isLast, onDonatePress}: DonationItemCardProps) 
             </View>
             <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-font-gray">
-                    현재 {item.current}개 / 필요 {item.required}개
+                    현재 {item.currentQuantity}개 / 필요 {item.requiredQuantity}개
                 </Text>
                 <TouchableOpacity className="px-3 py-1.5 rounded-full bg-main-color" onPress={() => onDonatePress(item)}>
                     <Text className="font-bold text-white">기부하기</Text>
@@ -47,14 +36,13 @@ function DonationItemCard({item, isLast, onDonatePress}: DonationItemCardProps) 
     );
 }
 
-export default function List() {
-    const [donationItems, setDonationItems] = useState(initialDonationItems);
-
+export default function List({items}: {items: ItemDonationType[]}) {
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<DonationItemType | null>(null);
+    const [selectedItem, setSelectedItem] = useState<ItemDonationType | null>(null);
     const [quantity, setQuantity] = useState('');
+    const {editItem} = useEditItemDonation();
 
-    const handleOpenModal = (item: DonationItemType) => {
+    const handleOpenModal = (item: ItemDonationType) => {
         setSelectedItem(item);
         setModalVisible(true);
     };
@@ -72,14 +60,12 @@ export default function List() {
         }
 
         const donationAmount = Number(quantity);
-        Alert.alert('기부 확인', `${selectedItem.name} ${donationAmount}개를 기부하시겠습니까?`, [
+        Alert.alert('기부 확인', `${selectedItem.itemName} ${donationAmount}개를 기부하시겠습니까?`, [
             {text: '취소', style: 'cancel'},
             {
                 text: '확인',
                 onPress: () => {
-                    console.log(`${selectedItem.name} ${donationAmount}개 기부 완료!`);
-                    const newItems = donationItems.map(item => (item.id === selectedItem.id ? {...item, current: item.current + donationAmount} : item));
-                    setDonationItems(newItems);
+                    editItem(selectedItem.id, selectedItem.itemName, selectedItem.requiredQuantity, selectedItem.currentQuantity + donationAmount);
                     handleCloseModal();
                 },
             },
@@ -88,10 +74,8 @@ export default function List() {
 
     return (
         <ColWrapper title="필요 기부물품">
-            {donationItems.length > 0 ? (
-                donationItems.map((item, index) => (
-                    <DonationItemCard key={item.id} item={item} isLast={index === donationItems.length - 1} onDonatePress={handleOpenModal} />
-                ))
+            {items.length > 0 ? (
+                items.map((item, index) => <DonationItemCard key={item.id} item={item} isLast={index === items.length - 1} onDonatePress={handleOpenModal} />)
             ) : (
                 <Text className="text-base font-semibold text-font-gray">센터에서 아직 필요한 기부품목이 없어요!</Text>
             )}
@@ -100,7 +84,7 @@ export default function List() {
                 <CustomModal
                     visible={modalVisible}
                     onClose={handleCloseModal}
-                    title={`${selectedItem.name} 기부하기`}
+                    title={`${selectedItem.itemName} 기부하기`}
                     action="donation"
                     onAction={handleDonate}>
                     <View className="items-center w-full">

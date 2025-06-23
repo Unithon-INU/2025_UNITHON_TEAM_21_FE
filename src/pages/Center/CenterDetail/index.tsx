@@ -21,6 +21,7 @@ import Activity from './components/Activity';
 import Button from './components/Button';
 import Error from '@/components/Error';
 import {useCenterTotalDonation} from '@/hook/api/useDonation';
+import {useGetItemDonation} from '@/hook/api/useItemDonation';
 
 export default function CenterDetail() {
     const route = useRoute();
@@ -43,7 +44,8 @@ export default function CenterDetail() {
         }
     };
     const {total, loading: TotalLoading} = useCenterTotalDonation(Number(id));
-    if (loading || activityLoading || TotalLoading) return <Loading />;
+    const {items: itemDonation, loading: itemsLoading} = useGetItemDonation(Number(id));
+    if (loading || activityLoading || TotalLoading || itemsLoading) return <Loading />;
 
     if (!data) return <Error text="센터 정보를 찾을 수 없습니다." />;
 
@@ -72,7 +74,7 @@ export default function CenterDetail() {
 
                 <DonationStatus data={total} />
                 <Activity items={items} />
-                <List />
+                <List items={itemDonation} />
             </Layout>
             <Button data={data} />
         </>

@@ -5,8 +5,12 @@ import KakoLogin from './components/KakaoLogin';
 import {useNavigation} from '@react-navigation/native';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 
+import CustomModal from '@/components/layout/CustomModal';
+
 export default function IDLogin() {
     const navigation = useNavigation() as any;
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [modalInfo, setModalInfo] = useState({title: '', message: ''});
     const [form, setForm] = useState({
         email: '',
         password: '',
@@ -19,6 +23,15 @@ export default function IDLogin() {
         }));
     };
     const {loading, login} = useLogin(form);
+    const showLoginResultModal = (title: string, message: string) => {
+        setModalInfo({title, message});
+        setModalVisible(true);
+    };
+
+    // ✅ 모달을 닫을 때 실행될 함수
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    };
 
     return (
         <View className="flex flex-col gap-12 p-5 h-full">
@@ -53,7 +66,7 @@ export default function IDLogin() {
                 />
                 <TouchableOpacity
                     className={`flex items-center justify-center mb-4 py-3.5 rounded-lg ${loading ? 'bg-main-gray' : 'bg-main-color'}`}
-                    onPress={() => login()}
+                    onPress={() => login(showLoginResultModal)}
                     disabled={loading}>
                     <Text className="text-base font-semibold text-white">{loading ? '로그인 중...' : '로그인'}</Text>
                 </TouchableOpacity>
@@ -71,6 +84,14 @@ export default function IDLogin() {
                     <Text className="font-bold text-main-color">회원가입</Text>
                 </TouchableOpacity>
             </View>
+            <CustomModal visible={isModalVisible} onClose={handleCloseModal} title={modalInfo.title} action="none">
+                <View className="items-center w-full">
+                    <Text className="my-4 text-center text-font-gray">{modalInfo.message}</Text>
+                    <TouchableOpacity className="justify-center items-center py-3 mt-2 w-full rounded-lg bg-main-color" onPress={handleCloseModal}>
+                        <Text className="font-bold text-white">확인</Text>
+                    </TouchableOpacity>
+                </View>
+            </CustomModal>
         </View>
     );
 }

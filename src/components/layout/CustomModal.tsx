@@ -12,13 +12,14 @@ interface CustomModalProps {
      * - 'add': Shows an add button.
      * - 'none': No action buttons are displayed.
      */
-    onAction?: () => void;
     action?: 'delete' | 'edit' | 'add' | 'none' | 'cancel' | 'donation';
+    onAction?: () => void;
+    restricted?: boolean;
 }
-export default function CustomModal({visible, onClose, children, title, onAction, action = 'none'}: CustomModalProps) {
+export default function CustomModal({visible, onClose, children, title, onAction, action = 'none', restricted}: CustomModalProps) {
     return (
-        <Modal transparent visible={visible} animationType="fade" onRequestClose={onClose}>
-            <TouchableWithoutFeedback onPress={onClose}>
+        <Modal transparent visible={visible} animationType="fade" onRequestClose={restricted ? undefined : onClose}>
+            <TouchableWithoutFeedback onPress={restricted ? undefined : onClose}>
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} className="flex-1 justify-center items-center bg-black/30">
                     <View className="bg-white px-6 py-5 rounded-2xl w-[300px] items-center shadow-lg">
                         <Text className="mb-4 text-lg font-bold text-font-black">{title}</Text>
