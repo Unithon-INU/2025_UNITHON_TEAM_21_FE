@@ -1,22 +1,26 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 
-import {useNavigation} from '@react-navigation/native';
-
-import {ColWrapper} from '@/components/layout/ContentWrapper';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 import {KakaoMapAddress} from '@/components/KakaoMap';
+import {useNavigation} from '@react-navigation/native';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import {useCenterTotalDonation} from '@/hook/api/useDonation';
+import {useCenter} from '@/hook/api/useCenter';
+
+import Loading from '@/components/Loading';
 import {daysLeft} from '@/utils/formatDate';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const {total, loading: TotalLoading} = useCenterTotalDonation(Number(data.id));
+
     const target = 100000;
     const percent = Math.floor((total.totalAmount / target) * 100);
     const navigation = useNavigation() as any;
-    if (TotalLoading) return null;
+    if (TotalLoading) return <Loading />;
 
     return (
-        <View className="flex flex-col gap-2">
+        <View className="flex flex-col gap-2 pb-4">
             <View className="flex flex-row gap-2">
                 <KakaoMapAddress className="relative w-[120px] h-[120px] bg-bg-gray rounded-xl" location={data.address} name={data.centerName} />
                 <TouchableOpacity className="flex flex-1 justify-between" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>
@@ -41,14 +45,21 @@ function Item({data}: {data: ChildrenCenterList}) {
         </View>
     );
 }
-export default function DonationItem({items}: {items: ChildrenCenterList[]}) {
-    if (!items) return null;
-
+export default function RealTimeDonation() {
+    const {centerData, loading, fetchMore, isFetchingMore, hasMore} = useCenter(5);
+    if (loading) return <Loading />;
     return (
-        <ColWrapper title="실시간 기부현황" href="realTimeDonation">
-            {items.slice(0, 3)?.map((item, index) => (
-                <Item key={index} data={item} />
-            ))}
-        </ColWrapper>
+        <>
+            <HeaderBackButton px={true}>실시간 기부현황</HeaderBackButton>
+            <FlatList
+                data={centerData}
+                renderItem={({item}) => <Item data={item} />}
+                keyExtractor={item => item.id}
+                onEndReached={() => {
+                    if (hasMore && !isFetchingMore) fetchMore();
+                }}
+                contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 20}}
+            />
+        </>
     );
 }

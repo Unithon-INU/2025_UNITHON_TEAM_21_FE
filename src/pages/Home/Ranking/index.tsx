@@ -90,10 +90,10 @@ export default function HeroListDetail() {
                 keyExtractor={item => item.id}
                 ListHeaderComponent={<Text className="mb-4 text-xs text-right text-font-gray">{formattedDate} 기준</Text>}
                 renderItem={({item, index}) => (
-                    <View className="flex-row items-center justify-between py-3">
+                    <View className="flex-row justify-between items-center py-3">
                         <Text className="w-6 font-semibold">{index + 1}</Text>
 
-                        <View className="flex-row items-center flex-1 ml-2">
+                        <View className="flex-row flex-1 items-center ml-2">
                             {item.diff === 'up' && <Text className="mr-1 text-lg text-green-500">▲</Text>}
                             {item.diff === 'down' && <Text className="mr-1 text-lg text-red-500">▼</Text>}
                             {item.diff === 'same' && <Text className="mr-1 text-lg text-neutral-500">●</Text>}

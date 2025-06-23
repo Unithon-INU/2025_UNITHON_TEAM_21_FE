@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+
 import AnimatedNumber from '@/components/animation/AnimatedNumber';
 import CustomModal from '@/components/layout/CustomModal';
+import {CenterTotalDonation} from '@/types/DonationType';
 
 interface EditTargetAmountModalProps {
     visible: boolean;
@@ -9,7 +11,6 @@ interface EditTargetAmountModalProps {
     onClose: () => void;
     onSave: (newAmount: number) => void;
 }
-
 function EditTargetAmountModal({visible, initialValue, onClose, onSave}: EditTargetAmountModalProps) {
     const [amount, setAmount] = useState<string>('');
 
@@ -34,7 +35,7 @@ function EditTargetAmountModal({visible, initialValue, onClose, onSave}: EditTar
     return (
         <CustomModal visible={visible} onClose={onClose} title="목표 기부금 수정" action="edit" onAction={handleSave}>
             <TextInput
-                className="w-full px-4 py-3 text-base text-center text-black border border-gray-300 rounded-xl"
+                className="px-4 py-3 w-full text-base text-center text-black rounded-xl border border-gray-300"
                 keyboardType="number-pad"
                 value={amount}
                 onChangeText={handleNumberChange}
@@ -44,13 +45,11 @@ function EditTargetAmountModal({visible, initialValue, onClose, onSave}: EditTar
     );
 }
 
-export default function DonationStatus() {
-    const currentCollected = 10000000;
-
-    const [targetAmount, setTargetAmount] = useState<number>(100000000);
+export default function DonationStatus({total}: {total: CenterTotalDonation}) {
+    const [targetAmount, setTargetAmount] = useState<number>(100000);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
 
-    const progressPercent = targetAmount > 0 ? Math.floor((currentCollected / targetAmount) * 100) : 0;
+    const progressPercent = targetAmount > 0 ? Math.floor((total.totalAmount / targetAmount) * 100) : 0;
 
     const handleSaveTargetAmount = (newAmount: number) => {
         setTargetAmount(newAmount);
@@ -59,7 +58,7 @@ export default function DonationStatus() {
 
     return (
         <View className="flex flex-col gap-3 py-3">
-            <View className="flex flex-row items-center justify-between">
+            <View className="flex flex-row justify-between items-center">
                 <Text className="text-xl font-semibold text-font-black">기부 현황</Text>
             </View>
 
@@ -67,15 +66,14 @@ export default function DonationStatus() {
                 <View className="flex flex-col gap-1">
                     <Text className="font-semibold text-font-gray">모인금액</Text>
                     <View className="flex flex-row justify-between">
-                        <Text className="text-base font-semibold text-font-black">{currentCollected.toLocaleString()}원</Text>
+                        <Text className="text-base font-semibold text-font-black">{total.totalAmount.toLocaleString()}원</Text>
                         <Text className="text-base font-semibold text-main-color">{progressPercent}%</Text>
                     </View>
                     <View className="w-full h-1.5 overflow-hidden rounded-full bg-bg-gray">
                         <View className="h-full bg-main-color" style={{width: `${Math.min(progressPercent, 100)}%`}} />
                     </View>
                     <Text className="text-base font-semibold text-font-black">
-                        목표 기부금 :
-                        <AnimatedNumber className="text-main-color" value={targetAmount} duration={1500} />
+                        목표 기부금 : <AnimatedNumber className="text-main-color" value={targetAmount} duration={1500} />
                         <Text className="text-main-color">원</Text>
                     </Text>
                 </View>

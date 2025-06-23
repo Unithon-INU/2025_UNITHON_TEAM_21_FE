@@ -9,8 +9,8 @@ import CenterItem from './components/CenterItem';
 
 export default function CenterList() {
     const {centerData, loading, fetchMore, isFetchingMore, hasMore} = useCenter();
+
     if (loading) return <Loading />;
-    console.log('CenterList rendered with data:', centerData);
 
     return (
         <>
@@ -21,7 +21,7 @@ export default function CenterList() {
                 data={centerData}
                 keyExtractor={(_, idx) => idx.toString()}
                 renderItem={({item}) => <CenterItem item={item} />}
-                ListEmptyComponent={<Text className="text-base text-font-black">센터 정보가 없습니다.</Text>}
+                ListEmptyComponent={<Text className="text-base font-semibold text-font-black">센터 정보가 없습니다.</Text>}
                 onEndReached={() => {
                     if (hasMore && !isFetchingMore) fetchMore();
                 }}

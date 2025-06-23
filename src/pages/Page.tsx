@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import {PermissionsAndroid, Platform} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+import usePermission from '@/hook/usePermission';
+import {useUserRestore} from '@/hook/api/useKakaoInfo';
 
 import Home from './Home';
 import Signup from './Home/Signup';
@@ -19,16 +20,16 @@ import Volunteer from './Volunteer';
 import Chatbot from './Volunteer/Chatbot';
 import CenterDetail from './Center/CenterDetail';
 
-import UserInfo from './User/Info';
+import UserInfo from './User';
 import UserLikedcenter from './User/Likedcenter';
 import UserLikedvol from './User/Likedvol';
 import UserDonate from './User/Donate';
 import Edituser from './User/Edituser';
 
-import Remittance from './Center/CenterDetail/Remittance';
-import RemittanceCheck from './Center/CenterDetail/RemittanceCheck';
-import RemittanceComplete from './Center/CenterDetail/RemittanceComplete';
-import HeroListDetail from './Home/components/HeroListDetail';
+import Remittance from './Donation/Remittance';
+import RemittanceCheck from './Donation/RemittanceCheck';
+import RemittanceComplete from './Donation/RemittanceComplete';
+import HeroListDetail from './Home/Ranking';
 import Login from './Home/Login';
 import SearchScreen from './Volunteer/SearchScreen';
 
@@ -38,9 +39,8 @@ import SerachResult from './Volunteer/SerachResult';
 import Permission from './Permission';
 import Loading from '@/components/Loading';
 import CenterHome from './Center/CenterHome';
-import {useSelector, useDispatch} from 'react-redux';
-import {AppDispatch, RootState} from '@/store/store';
-import {fetchLocation} from '@/store/slice/locationSlice';
+import CenterDonationAll from './Center/CenterHome/CenterDonationAll';
+import RealTimeDonation from './Home/RealTimeDonation';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
@@ -84,40 +84,12 @@ function NavBar() {
 }
 
 export default function Pages() {
+    useUserRestore();
     const Stack = createStackNavigator();
-    const [isLoading, setIsLoading] = useState(true);
-    const [initialRouteName, setInitialRouteName] = useState<string>('permission');
+    const {isLoading, initialRouteName} = usePermission();
 
-    const locationLoading = useSelector((state: RootState) => state.location.loading);
-    const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        dispatch(fetchLocation());
-    }, [dispatch]);
+    if (isLoading) return <Loading />;
 
-    useEffect(() => {
-        const checkPermissions = async () => {
-            if (Platform.OS === 'android') {
-                try {
-                    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
-                    if (hasPermission) {
-                        setInitialRouteName('main');
-                    }
-                } catch (e) {
-                    console.error('Failed to check permissions', e);
-                } finally {
-                    setIsLoading(false);
-                }
-            } else {
-                setInitialRouteName('main');
-                setIsLoading(false);
-            }
-        };
-
-        checkPermissions();
-    }, []);
-    if (isLoading || locationLoading === 'pending') {
-        return <Loading />;
-    }
     return (
         <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{headerShown: false}}>
             {/* 권한 요청 */}
@@ -129,6 +101,7 @@ export default function Pages() {
             <Stack.Screen name="login" component={Login} />
             <Stack.Screen name="heroListDetail" component={HeroListDetail} />
             <Stack.Screen name="idSignup" component={IDSignup} />
+            <Stack.Screen name="realTimeDonation" component={RealTimeDonation} />
 
             {/* 채팅 */}
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
@@ -153,6 +126,9 @@ export default function Pages() {
             <Stack.Screen name="remittance" component={Remittance} />
             <Stack.Screen name="remittanceCheck" component={RemittanceCheck} />
             <Stack.Screen name="remittanceComplete" component={RemittanceComplete} />
+
+            {/* 아동센터 페이지 */}
+            <Stack.Screen name="CenterDonationAll" component={CenterDonationAll} />
         </Stack.Navigator>
     );
 }

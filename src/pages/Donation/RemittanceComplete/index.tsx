@@ -1,19 +1,25 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 
+import {useDonation} from '@/hook/api/useDonation';
+
 import Loading from './components/Loading';
+import Error from '@/components/Error';
 
 export default function Commit() {
     const navigation = useNavigation();
     const route = useRoute();
-    const {name, value} = route.params as {name: string; value: string};
-    const [loading, setLoading] = useState(true);
+    const {name, value, id} = route.params as {name: string; value: string; id: number};
+    const {donation, loading, error} = useDonation();
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 2000);
-        return () => clearTimeout(timer);
+        const fetchData = async () => {
+            // 추후에 id로 바꿔야함
+            await donation(1, Number(value.replace(/,/g, '')));
+        };
+        fetchData();
     }, []);
 
     const handleExit = () => {
@@ -24,15 +30,17 @@ export default function Commit() {
             }),
         );
     };
+    if (error) return <Error text={error} />;
     if (loading) return <Loading name={name} value={value} />;
+
     return (
-        <View className="flex flex-col h-full gap-3 px-5">
+        <View className="flex flex-col gap-3 px-5 h-full">
             <View className="flex flex-row items-center py-4">
                 <TouchableOpacity onPress={handleExit}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
             </View>
-            <View className="flex flex-col items-center justify-center flex-1 gap-1">
+            <View className="flex flex-col flex-1 gap-1 justify-center items-center">
                 <Octicons className="pb-6" name="check-circle-fill" size={60} color="#FFB257" />
                 <Text className="text-3xl font-semibold text-font-black">
                     <Text className="text-3xl font-semibold text-main-color">{name}</Text>
@@ -45,7 +53,7 @@ export default function Commit() {
                 </TouchableOpacity>
             </View>
             <View className="flex flex-col mb-16">
-                <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color" onPress={handleExit}>
+                <TouchableOpacity className="flex flex-row justify-center items-center py-4 mt-6 w-full rounded-xl bg-main-color" onPress={handleExit}>
                     <Text className="text-xl font-semibold text-white">확인</Text>
                 </TouchableOpacity>
             </View>

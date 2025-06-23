@@ -1,7 +1,8 @@
 import {useEffect, useCallback} from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {login, getProfile} from '@react-native-seoul/kakao-login';
+
 import {useDispatch} from 'react-redux';
 import {setUser} from '@/store/slice/userSlice';
 
@@ -38,8 +39,8 @@ export function useLogin() {
                 index: 0,
                 routes: [{name: 'main'}],
             });
-        } catch (error) {
-            console.error('Login failed:', error);
+        } catch (e: any) {
+            console.error('Login failed:', e);
         }
     }, [dispatch, navigation]);
 

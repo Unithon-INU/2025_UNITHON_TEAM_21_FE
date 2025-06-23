@@ -28,6 +28,7 @@ export default function VolunterrCategory() {
     }, [hasMore, isFetchingMore, loading, loadMore]);
 
     if (loading) return <Loading />;
+
     return (
         <>
             <Header text={keyword} />

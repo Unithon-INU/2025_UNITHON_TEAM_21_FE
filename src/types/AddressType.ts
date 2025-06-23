@@ -17,8 +17,8 @@ export interface KakaoAddressDocument {
     ];
 }
 export interface AddressCodeType {
-    gugunCd: string; // 구군 코드
-    gugunNm: string; // 구군 이름
-    sidoCd: string; // 시도 코드
-    sidoNm: string; // 시도 이름
+    gugunCd: string;
+    gugunNm: string;
+    sidoCd: string;
+    sidoNm: string;
 }

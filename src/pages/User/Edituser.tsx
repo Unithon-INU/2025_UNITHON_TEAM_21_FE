@@ -36,8 +36,7 @@ export default function EditUser() {
 
     return (
         <Layout>
-            {/* Top Bar */}
-            <View className="flex-row items-center justify-between pb-4">
+            <View className="flex-row justify-between items-center pb-4">
                 <HeaderBackButton className="flex-1">프로필수정</HeaderBackButton>
 
                 <TouchableOpacity onPress={handleCompletePress}>
@@ -45,10 +44,10 @@ export default function EditUser() {
                 </TouchableOpacity>
             </View>
 
-            <View className="items-center justify-center mb-10">
+            <View className="justify-center items-center mb-10">
                 <View className="relative">
                     <View className="w-[120px] h-[120px] rounded-full bg-main-gray" />
-                    <View className="absolute bottom-0 right-0 items-center justify-center w-10 h-10 bg-white rounded-full">
+                    <View className="absolute right-0 bottom-0 justify-center items-center w-10 h-10 bg-white rounded-full">
                         <Image source={require('@/assets/image.png')} className="w-[32px] h-[32px]" />
                     </View>
                 </View>
@@ -57,7 +56,7 @@ export default function EditUser() {
             <View className="px-4 mb-2">
                 <Text className="mb-1 font-bold text-[16px] text-font-black">닉네임</Text>
                 <TextInput
-                    className="px-3 py-2 text-sm text-black border border-font-black rounded-xl"
+                    className="px-3 py-2 text-sm text-black rounded-xl border border-font-black"
                     placeholder={'닉네임을 입력해주세요.'}
                     placeholderTextColor="black"
                     value={nickname}
