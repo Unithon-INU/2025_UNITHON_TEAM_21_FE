@@ -42,6 +42,9 @@ import CenterHome from './Center/CenterHome';
 import CenterDonationAll from './Center/CenterHome/CenterDonationAll';
 import RealTimeDonation from './Home/RealTimeDonation';
 
+import CenterSearchScreen from './Home/SearchScreen';
+import CenterSearchResult from './Home/SerachResult';
+
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
     chatting: (color: string, size: number) => <Ionicons name="chatbubbles" size={size} color={color} />,
@@ -94,7 +97,6 @@ export default function Pages() {
         <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{headerShown: false}}>
             {/* 권한 요청 */}
             <Stack.Screen name="permission" component={Permission} />
-
             {/* 홈 */}
             <Stack.Screen name="main" component={NavBar} />
             <Stack.Screen name="signup" component={Signup} />
@@ -102,12 +104,13 @@ export default function Pages() {
             <Stack.Screen name="heroListDetail" component={HeroListDetail} />
             <Stack.Screen name="idSignup" component={IDSignup} />
             <Stack.Screen name="realTimeDonation" component={RealTimeDonation} />
+            <Stack.Screen name="centerSearchScreen" component={CenterSearchScreen} options={{animation: 'none'}} />
+            <Stack.Screen name="centerSerachResult" component={CenterSearchResult} />
 
             {/* 채팅 */}
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="centerList" component={CenterList} />
-
             {/* 지역봉사 */}
             <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
             <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
@@ -115,18 +118,15 @@ export default function Pages() {
             <Stack.Screen name="centerDetail" component={CenterDetail} />
             <Stack.Screen name="searchScreen" component={SearchScreen} options={{animation: 'none'}} />
             <Stack.Screen name="searchResult" component={SerachResult} />
-
             {/* 내 정보 */}
             <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
             <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
             <Stack.Screen name="Userdonate" component={UserDonate} />
             <Stack.Screen name="Edituser" component={Edituser} />
-
             {/* 기부 */}
             <Stack.Screen name="remittance" component={Remittance} />
             <Stack.Screen name="remittanceCheck" component={RemittanceCheck} />
             <Stack.Screen name="remittanceComplete" component={RemittanceComplete} />
-
             {/* 아동센터 페이지 */}
             <Stack.Screen name="CenterDonationAll" component={CenterDonationAll} />
         </Stack.Navigator>

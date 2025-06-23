@@ -24,7 +24,7 @@ export default function SearchScreen() {
         const keyword = (searchWord ?? text).trim();
         if (keyword.length === 0) return;
         dispatch(addKeyword(keyword));
-        navigation.replace('centerSearchResult', {keyword});
+        navigation.replace('searchResult', {keyword});
         setText('');
         Keyboard.dismiss();
     };

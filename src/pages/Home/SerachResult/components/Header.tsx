@@ -10,7 +10,7 @@ export default function Header({text}: {text: string}) {
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
             </TouchableOpacity>
-            <TouchableOpacity className="flex-1 py-2.5 ml-2" onPress={() => navigation.navigate('searchScreen')}>
+            <TouchableOpacity className="flex-1 py-2.5 ml-2" onPress={() => navigation.navigate('centerSearchScreen')}>
                 <Text className="text-base">{text}</Text>
             </TouchableOpacity>
             <Ionicons name="search-outline" size={20} color="#9A9A9A" />

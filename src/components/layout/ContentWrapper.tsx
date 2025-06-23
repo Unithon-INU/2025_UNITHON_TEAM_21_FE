@@ -14,7 +14,7 @@ export default function ShowMoreButton({href, param}: {href?: string; param?: Re
 }
 
 interface WrapperProps {
-    title: string;
+    title?: string;
     children: React.ReactNode;
     href?: string;
     param?: Record<string, any>;
@@ -30,11 +30,8 @@ export function RowWrapper({title, children, href, param}: WrapperProps) {
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
             )}
-
-            {first}
-
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="flex flex-row gap-3">{rest}</View>
+                <View className="flex flex-row gap-3">{children}</View>
             </ScrollView>
         </View>
     );
