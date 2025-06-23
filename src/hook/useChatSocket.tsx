@@ -1,13 +1,15 @@
 import {useEffect, useRef} from 'react';
 import SockJS from 'sockjs-client';
-import {Client} from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
+import { API_URL } from '@env';
+
 
 export default function useChatSocket({chatRoomId, onMessage}: {chatRoomId: string; onMessage: (msg: any) => void}) {
     const clientRef = useRef<Client | null>(null);
 
     useEffect(() => {
         // 서버 주소는 실제 서버 주소로 변경
-        const socket = new SockJS('https://63a4-106-101-8-197.ngrok-free.app/ws-chat');
+        const socket = new SockJS(`${API_URL}/ws-chat`);
         const client = new Client({
             webSocketFactory: () => socket as any,
             debug: str => console.log(str),
@@ -41,5 +43,5 @@ export default function useChatSocket({chatRoomId, onMessage}: {chatRoomId: stri
         });
     };
 
-    return {sendMessage};
+    return { sendMessage };
 }

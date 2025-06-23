@@ -30,8 +30,11 @@ export function RowWrapper({title, children, href, param}: WrapperProps) {
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
             )}
+
+            {first}
+
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                <View className="flex flex-row gap-3">{children}</View>
+                <View className="flex flex-row gap-3">{rest}</View>
             </ScrollView>
         </View>
     );

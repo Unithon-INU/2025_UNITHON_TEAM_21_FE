@@ -36,6 +36,7 @@ export function useCenter(perPage: number = 10) {
                 const response = await fetch('https://chatbot-server-cyan.vercel.app/api/childrenCenter/data?perPage=180');
                 const results = await response.json();
                 if (results.data && results.data.length > 0) {
+                    console.log(results.data[0]); //임의추가
                     setRawCenterData(results.data);
                 }
             } catch (e) {
