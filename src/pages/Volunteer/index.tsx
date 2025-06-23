@@ -8,12 +8,13 @@ import RecommendButtons from './components/RecommendButtons';
 import RecommendActivity from '../Home/components/RecommendVolunteer';
 import ChatbotIcon from './components/ChatbotIcon';
 import LikeVolunteer from '../Home/components/LikeVolunteer';
-import NearbyVolunteer from './components/NearbyVolunteer';
+import NearbyVolunteerMap from './components/NearbyVolunteerMap';
+import NearbyVolunteerList from './components/NearbyVolunteerList';
 import Layout from '@/components/Layout';
 import Loading from '@/components/Loading';
 
 export default function Index() {
-    const {volunteerData: recommendItems, loading: recommedLoading} = useVolunteerData('0400');
+    const {items: recommendItems, loading: recommedLoading} = useVolunteerData('0400');
     const {items: nearByItems, loading: nearByLoading} = useVolunteerNearBy();
     if (recommedLoading || nearByLoading) return <Loading />;
     console.log(nearByItems);
@@ -25,9 +26,10 @@ export default function Index() {
                 </View>
                 <SearchBar />
                 <RecommendButtons />
+                <NearbyVolunteerMap items={nearByItems} />
                 <RecommendActivity items={recommendItems} />
+                <NearbyVolunteerList items={nearByItems} />
                 <LikeVolunteer />
-                <NearbyVolunteer items={nearByItems} />
             </Layout>
             <ChatbotIcon />
         </>

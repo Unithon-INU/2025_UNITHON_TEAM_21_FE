@@ -2,7 +2,7 @@ import {KakaoMapManyMarkers} from '@/components/KakaoMap';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {getVltrPartcptnItemListItem} from '@/types/volunteerTyps';
 
-export default function NearbyVolunteer({items}: {items: getVltrPartcptnItemListItem[] | null}) {
+export default function NearbyVolunteerMap({items}: {items: getVltrPartcptnItemListItem[] | null}) {
     if (!items) return null;
 
     return (

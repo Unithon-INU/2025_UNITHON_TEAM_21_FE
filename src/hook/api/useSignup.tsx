@@ -1,14 +1,13 @@
-import {API_URL} from '@env';
-import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
 import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {API_URL} from '@env';
 
 export interface SignupForm {
     nickname: string;
     email: string;
     password: string;
 }
-
 export function useSignup({nickname, email, password}: SignupForm) {
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation() as any;
@@ -36,8 +35,6 @@ export function useSignup({nickname, email, password}: SignupForm) {
                     index: 0,
                     routes: [{name: 'main'}],
                 });
-
-                // 필요하다면 폼 초기화 등 추가
             }
         } catch (error) {
             Alert.alert('네트워크 오류', '회원가입 요청 중 문제가 발생했습니다.');

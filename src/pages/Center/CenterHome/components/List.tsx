@@ -40,7 +40,7 @@ function EditDonationModal({visible, item, onClose, onSave}: EditModalProps) {
         <CustomModal visible={visible} onClose={onClose} title="기부 물품 수정" onAction={handleSave} action="edit">
             <Text className="mb-2 text-font-gray">{item.name}</Text>
             <TextInput
-                className="w-full px-4 py-3 text-base text-center text-black border border-gray-300 rounded-xl"
+                className="px-4 py-3 w-full text-base text-center text-black rounded-xl border border-gray-300"
                 keyboardType="number-pad"
                 value={currentValue}
                 onChangeText={setCurrentValue}
@@ -79,13 +79,13 @@ function AddDonationModal({visible, onClose, onSave}: {visible: boolean; onClose
     return (
         <CustomModal visible={visible} onClose={onClose} title="기부 물품 추가" onAction={handleSave} action="add">
             <TextInput
-                className="w-full px-4 py-3 mb-3 text-base text-black border border-gray-300 rounded-xl"
+                className="px-4 py-3 mb-3 w-full text-base text-black rounded-xl border border-gray-300"
                 placeholder="품목 이름"
                 value={name}
                 onChangeText={setName}
             />
             <TextInput
-                className="w-full px-4 py-3 text-base text-black border border-gray-300 rounded-xl"
+                className="px-4 py-3 w-full text-base text-black rounded-xl border border-gray-300"
                 placeholder="필요 수량"
                 keyboardType="number-pad"
                 value={required}
@@ -103,7 +103,7 @@ interface DonationItemCardProps {
 }
 function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationItemCardProps) {
     const progress = item.required > 0 ? Math.floor((item.current / item.required) * 100) : 0;
-    const containerClassName = `p-4 ${isLast ? '' : 'border-b border-gray-200'}`;
+    const containerClassName = `p-4 ${isLast ? '' : 'border-b border-main-gray'}`;
     return (
         <View className={containerClassName}>
             <View className="flex-row justify-between mb-2">
@@ -113,11 +113,11 @@ function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationIt
             <View className="h-1.5 overflow-hidden rounded-full bg-bg-gray">
                 <View className="h-full bg-main-color" style={[{width: `${progress}%`}]} />
             </View>
-            <View className="flex-row items-center justify-between mt-2">
+            <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-font-gray">
                     현재 {item.current}개 / 필요 {item.required}개
                 </Text>
-                <View className="flex-row gap-1">
+                <View className="flex-row gap-2">
                     <TouchableOpacity className="px-3 py-1.5 rounded-full bg-main-color" onPress={() => onEditPress(item)}>
                         <Text className="font-bold text-white">수정</Text>
                     </TouchableOpacity>
@@ -130,7 +130,7 @@ function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationIt
     );
 }
 
-export default function List(): React.ReactElement {
+export default function List() {
     const [items, setItems] = useState<DonationItem[]>(initialDonationItems);
     const [selectedItem, setSelectedItem] = useState<DonationItem | null>(null);
 
@@ -197,9 +197,9 @@ export default function List(): React.ReactElement {
                 <Text className="text-base font-semibold text-center text-font-gray">아직 등록하신 기부품목이 없네요!</Text>
             )}
             <TouchableOpacity
-                className="flex-row items-center justify-center p-4 mt-4 border-2 border-gray-300 border-dotted rounded-lg bg-gray-50"
+                className="flex-row justify-center items-center p-4 mt-4 bg-gray-50 rounded-lg border-2 border-gray-300 border-dotted"
                 onPress={handleAddPress}>
-                <Image className="w-4 h-4 mr-2" source={require('@/assets/add.png')} />
+                <Image className="mr-2 w-4 h-4" source={require('@/assets/add.png')} />
                 <Text className="font-bold text-font-gray">기부 물품 추가하기</Text>
             </TouchableOpacity>
 

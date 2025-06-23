@@ -5,26 +5,26 @@ import {useSelector} from 'react-redux';
 export default function Commit() {
     const navigation = useNavigation() as any;
     const route = useRoute();
-    const {name, value} = route.params as {name: string; value: string};
+    const {name, value, id} = route.params as {name: string; value: string; id: number};
     const {profile} = useSelector((state: any) => state.user);
 
     const handleExit = () => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{name: 'main'}, {name: 'remittanceComplete', params: {name, value}}],
+                routes: [{name: 'main'}, {name: 'remittanceComplete', params: {name, value, id}}],
             }),
         );
     };
 
     return (
-        <View className="flex flex-col h-full gap-3 px-5">
+        <View className="flex flex-col gap-3 px-5 h-full">
             <View className="flex flex-row items-center py-4">
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                 </TouchableOpacity>
             </View>
-            <View className="flex flex-col items-center justify-center flex-1 gap-1">
+            <View className="flex flex-col flex-1 gap-1 justify-center items-center">
                 <Text className="text-3xl font-semibold text-font-black">
                     <Text className="text-3xl font-semibold text-main-color">{name}</Text>
                     으로
@@ -43,7 +43,7 @@ export default function Commit() {
                     <Text className="text-base font-semibold text-font-gray">출금 계좌</Text>
                     <Text className="text-base font-semibold text-font-black">기부용 계좌</Text>
                 </View>
-                <TouchableOpacity className="flex flex-row items-center justify-center w-full py-4 mt-6 rounded-xl bg-main-color" onPress={handleExit}>
+                <TouchableOpacity className="flex flex-row justify-center items-center py-4 mt-6 w-full rounded-xl bg-main-color" onPress={handleExit}>
                     <Text className="text-xl font-semibold text-white">기부하기</Text>
                 </TouchableOpacity>
             </View>

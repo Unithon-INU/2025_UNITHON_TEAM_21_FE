@@ -24,7 +24,7 @@ export function useVolunteerData(iconKey: string = '', keyword: string = '') {
             if (!hasMore && page !== 1) return;
             if (page === 1) setLoading(true);
             else setIsFetchingMore(true);
-            const params = [`upperClCode=${iconKey}`, `schSido=${location.address?.sidoCd}`, 'numOfRows=10', `pageNo=${page}`];
+            const params = [`upperClCode=${iconKey}`, `schSido=${location.address?.sidoCd ? location.address?.sidoCd : ''}`, 'numOfRows=10', `pageNo=${page}`];
             if (keyword) params.push(`keyword=${encodeURIComponent(keyword)}`);
 
             try {
@@ -125,7 +125,9 @@ export function useVolunteerDataKeyword(keyword: string = '') {
             else setIsFetchingMore(true);
             try {
                 const response = await fetch(
-                    `http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?Keyword=${keyword}&schSido=${location.address?.sidoCd? location.address?.sidoCd:''}&numOfRows=10&pageNo=${page}`,
+                    `http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrSearchWordList?Keyword=${keyword}&schSido=${
+                        location.address?.sidoCd ? location.address?.sidoCd : ''
+                    }&numOfRows=10&pageNo=${page}`,
                 );
                 if (!response.ok) throw new Error('API call failed');
                 const xml = await response.text();

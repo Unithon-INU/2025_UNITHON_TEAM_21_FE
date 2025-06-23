@@ -1,4 +1,3 @@
-import React from 'react';
 import {View, Text, Image} from 'react-native';
 import ShowMoreButton from '@/components/button/ShowMoreButton';
 
@@ -46,7 +45,7 @@ const mergedData = sortedThis.map((item, index) => {
     };
 });
 
-const MonthlyDonationHeroList = () => {
+export default function MonthlyDonationHeroList() {
     const today = new Date();
     const formattedDate = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, '0')}.${String(today.getDate()).padStart(2, '0')}`;
 
@@ -61,10 +60,10 @@ const MonthlyDonationHeroList = () => {
             {[...mergedData]
                 .sort((a, b) => b.amount - a.amount)
                 .map((item, index) => (
-                    <View key={item.id} className="flex-row items-center justify-between py-3">
+                    <View key={item.id} className="flex-row justify-between items-center py-3">
                         <Text className="w-4 font-semibold">{index + 1}</Text>
 
-                        <View className="flex-row items-center flex-1 ml-2">
+                        <View className="flex-row flex-1 items-center ml-2">
                             {item.diff === 'up' && <Text className="mr-1 text-lg text-green-500">▲</Text>}
                             {item.diff === 'down' && <Text className="mr-1 text-lg text-red-500">▼</Text>}
                             {item.diff === 'same' && <Text className="mr-1 text-lg text-neutral-500">●</Text>}
@@ -80,6 +79,4 @@ const MonthlyDonationHeroList = () => {
                 ))}
         </View>
     );
-};
-
-export default MonthlyDonationHeroList;
+}

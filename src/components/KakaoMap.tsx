@@ -57,7 +57,7 @@ export function KakaoMap({location, name = '', className = ''}: {location: strin
                 };
                 var map = new kakao.maps.Map(mapContainer, mapOption);
                 var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
-                var imageSrc = "https://i.ibb.co/B5NGnKNj/Adobe-Express-file-1.png",
+                var imageSrc = "https://i.ibb.co/5hQ94h66/generated-image-1.png",
                 imageSize = new kakao.maps.Size(32, 32),
                 imageOption = { offset: new kakao.maps.Point(16,26) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
@@ -147,7 +147,7 @@ export function KakaoMapAddress({location, name = '', className = ''}: {location
                 };
                 var map = new kakao.maps.Map(mapContainer, mapOption);
                 var markerPosition = new kakao.maps.LatLng(${latitude}, ${longitude});
-                var imageSrc = "https://i.ibb.co/B5NGnKNj/Adobe-Express-file-1.png",
+                var imageSrc = "https://i.ibb.co/5hQ94h66/generated-image-1.png",
                 imageSize = new kakao.maps.Size(32, 32),
                 imageOption = { offset: new kakao.maps.Point(16,26) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
@@ -217,7 +217,7 @@ export function KakaoMapManyMarkers({items, className = ''}: {items: getVltrPart
                 var mapContainer = document.getElementById("map");
                 var mapOption = {
                     center: new kakao.maps.LatLng(${location.location?.latitude}, ${location.location?.longitude}),
-                    level: 6
+                    level: 9
                 };
                 var map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -233,7 +233,7 @@ export function KakaoMapManyMarkers({items, className = ''}: {items: getVltrPart
                 });
                 myMarker.setMap(map);
 
-                var imageSrc = "https://i.ibb.co/B5NGnKNj/Adobe-Express-file-1.png",
+                var imageSrc = "https://i.ibb.co/5hQ94h66/generated-image-1.png",
                     imageSize = new kakao.maps.Size(32, 32),
                     imageOption = { offset: new kakao.maps.Point(16,26) };
                 var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);

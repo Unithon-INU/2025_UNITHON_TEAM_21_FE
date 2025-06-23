@@ -3,6 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 
 import {ColWrapper, RowWrapper} from '@/components/layout/ContentWrapper';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
+
 import React from 'react';
 import SearchBar from './CenterSearchBar';
 
@@ -28,8 +29,9 @@ function Item({data}: {data: ChildrenCenterList}) {
 }
 
 export default function CenterItem({items}: {items: ChildrenCenterList[] | null}) {
+    if (!items) return null;
     return (
-        <RowWrapper title="인천 지역아동센터" href="centerList">
+        <RowWrapper title="근처 지역아동센터" href="centerList">
             <View className="w-full mb-2">
                 <SearchBar />
             </View>

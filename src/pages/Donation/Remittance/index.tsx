@@ -14,7 +14,7 @@ const KEYS = [
 export default function Remittance() {
     const navigation = useNavigation() as any;
     const route = useRoute();
-    const {name} = route.params as {name: string};
+    const {name, id} = route.params as {name: string; id: number};
     const [value, setValue] = useState<string>('');
     const {profile} = useSelector((state: any) => state.user);
 
@@ -28,8 +28,8 @@ export default function Remittance() {
     if (!profile) return <Error text="로그인 후 이용해주세요." />;
 
     return (
-        <View className="flex flex-col h-full gap-3 ">
-            <View className="px-5 ">
+        <View className="flex flex-col gap-3 h-full">
+            <View className="px-5">
                 <View className="flex flex-row items-center py-4">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
@@ -62,17 +62,17 @@ export default function Remittance() {
                     </View>
                 </View>
             </View>
-            <View className="absolute bottom-0 w-full ">
+            <View className="absolute bottom-0 w-full">
                 <TouchableOpacity
                     className={`items-center py-5 ${value ? 'bg-main-color' : ''}`}
                     disabled={!value}
-                    onPress={() => navigation.navigate('remittanceCheck', {name, value})}>
+                    onPress={() => navigation.navigate('remittanceCheck', {name, value, id})}>
                     <Text className="text-lg font-semibold text-white">다음</Text>
                 </TouchableOpacity>
                 {KEYS.map((row, rowIndex) => (
                     <View key={rowIndex} className="flex flex-row justify-between mb-4">
                         {row.map(key => (
-                            <TouchableOpacity key={key} className="items-center flex-1 p-5" onPress={() => handleKeyPress(key)}>
+                            <TouchableOpacity key={key} className="flex-1 items-center p-5" onPress={() => handleKeyPress(key)}>
                                 <Text className="text-3xl text-font-black">{key}</Text>
                             </TouchableOpacity>
                         ))}

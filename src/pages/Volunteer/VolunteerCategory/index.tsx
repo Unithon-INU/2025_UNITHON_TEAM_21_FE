@@ -15,7 +15,6 @@ type VolunterrCategoryParams = {
     iconKey: string;
     keyword: string;
 };
-
 export default function VolunterrCategory() {
     const route = useRoute<RouteProp<Record<string, VolunterrCategoryParams>, string>>();
     const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params || {};
@@ -38,7 +37,7 @@ export default function VolunterrCategory() {
                     className="px-5"
                     contentContainerStyle={{paddingBottom: 60}}
                     data={items}
-                    keyExtractor={(_, idx) => idx.toString()}
+                    keyExtractor={(item, idx) => item.progrmRegistNo || idx.toString()}
                     renderItem={({item}) => <VolunteerItem item={item} />}
                     ListHeaderComponent={
                         <Text className="mb-2 text-xl font-bold text-font-black">
@@ -51,7 +50,6 @@ export default function VolunterrCategory() {
                     ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} className="text-main-color" /> : null}
                 />
             </View>
-
             <Category />
         </View>
     );

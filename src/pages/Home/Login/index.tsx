@@ -21,18 +21,18 @@ export default function IDLogin() {
     const {loading, login} = useLogin(form);
 
     return (
-        <View className="flex flex-col h-full gap-12 p-5">
+        <View className="flex flex-col gap-12 p-5 h-full">
             <TouchableOpacity onPress={() => navigation.goBack()}>
                 <EvilIcons size={32} name="close" color="#484848" />
             </TouchableOpacity>
-            <View className="flex items-center justify-center">
+            <View className="flex justify-center items-center">
                 <Image className="w-32 h-12" source={require('@/assets/logo.png')} />
                 <Text className="text-2xl font-semibold tracking-[-2px] text-font-black">나눔의 일상을 만나다</Text>
             </View>
 
             <View className="flex px-5">
                 <TextInput
-                    className="p-3 text-base border border-gray-300 rounded-t-lg"
+                    className="p-3 text-base rounded-t-lg border border-gray-300"
                     placeholder="이메일을 입력해 주세요"
                     autoCapitalize="none"
                     autoCorrect={false}
@@ -42,7 +42,7 @@ export default function IDLogin() {
                     editable={!loading}
                 />
                 <TextInput
-                    className="p-3 mb-4 text-base border border-t-0 border-gray-300 rounded-b-lg"
+                    className="p-3 mb-4 text-base rounded-b-lg border border-t-0 border-gray-300"
                     placeholder="비밀번호를 입력해 주세요"
                     secureTextEntry
                     autoCapitalize="none"

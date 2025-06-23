@@ -1,21 +1,31 @@
-import {ScrollView, Text, View} from 'react-native';
-import ShowMoreButton from '../button/ShowMoreButton';
+import {useNavigation} from '@react-navigation/native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
+export default function ShowMoreButton({href, param}: {href?: string; param?: Record<string, any>}) {
+    const navigation = useNavigation() as any;
+    return (
+        <TouchableOpacity className="flex-row items-center" onPress={() => navigation.navigate(href, param)}>
+            <Text className="text-xs font-semibold text-main-color">더보기</Text>
+            <MaterialIcons name="keyboard-arrow-right" color={'#FFB257'} />
+        </TouchableOpacity>
+    );
+}
 
 interface WrapperProps {
     title: string;
     children: React.ReactNode;
     href?: string;
+    param?: Record<string, any>;
 }
-export function RowWrapper({title, children, href}: WrapperProps) {
-    const childrenArray = Array.isArray(children) ? children : [children];
-    const [first, ...rest] = childrenArray;
-
+export function RowWrapper({title, children, href, param}: WrapperProps) {
     return (
         <View className="flex flex-col gap-3 py-3">
             {href ? (
-                <View className="flex flex-row items-center justify-between">
+                <View className="flex flex-row justify-between items-center">
                     <Text className="text-xl font-semibold text-font-black">{title}</Text>
-                    <ShowMoreButton href={href} />
+                    <ShowMoreButton href={href} param={param} />
                 </View>
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
@@ -30,13 +40,13 @@ export function RowWrapper({title, children, href}: WrapperProps) {
     );
 }
 
-export function ColWrapper({title, children, href}: WrapperProps) {
+export function ColWrapper({title, children, href, param}: WrapperProps) {
     return (
         <View className="flex flex-col gap-3 py-3">
             {href ? (
-                <View className="flex flex-row items-center justify-between">
+                <View className="flex flex-row justify-between items-center">
                     <Text className="text-xl font-semibold text-font-black">{title}</Text>
-                    <ShowMoreButton href={href} />
+                    <ShowMoreButton href={href} param={param} />
                 </View>
             ) : (
                 <Text className="text-xl font-semibold text-font-black">{title}</Text>
