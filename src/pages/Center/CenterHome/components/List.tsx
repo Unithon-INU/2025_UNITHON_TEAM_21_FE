@@ -158,7 +158,7 @@ export default function List({items, centerId, onRefresh}: {items: ItemDonationT
 
     const handleEdit = async (newrequiredQuantity: number) => {
         if (!selectedItem) return;
-        await editItem(centerId, selectedItem.itemName, newrequiredQuantity, selectedItem.currentQuantity);
+        await editItem(selectedItem.id, selectedItem.itemName, newrequiredQuantity, selectedItem.currentQuantity);
         handleCloseModals();
         onRefresh();
     };

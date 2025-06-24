@@ -1,10 +1,10 @@
 import {useEffect, useCallback} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {login, getProfile} from '@react-native-seoul/kakao-login';
+import {login, getProfile, unlink} from '@react-native-seoul/kakao-login';
 
 import {useDispatch} from 'react-redux';
-import {setUser} from '@/store/slice/userSlice';
+import {clearUser, setUser} from '@/store/slice/userSlice';
 
 const tokenName = 'token';
 const profileName = 'profile';
@@ -34,15 +34,47 @@ export function useLogin() {
             const profile = await getProfile();
             await AsyncStorage.setItem(tokenName, JSON.stringify(token));
             await AsyncStorage.setItem(profileName, JSON.stringify(profile));
-            dispatch(setUser({token, profile}));
+            dispatch(
+                setUser({
+                    token,
+                    profile: {
+                        id: profile.id,
+                        nickname: profile.nickname,
+                        userRole: 0,
+                    },
+                }),
+            );
             navigation.reset({
                 index: 0,
                 routes: [{name: 'main'}],
             });
-        } catch (e: any) {
+        } catch (e) {
             console.error('Login failed:', e);
         }
     }, [dispatch, navigation]);
 
     return {kakaoLogin};
+}
+export function useUnlink() {
+    const dispatch = useDispatch();
+    const navigation = useNavigation() as any;
+
+    const kakaoUnlink = async () => {
+        try {
+            await unlink();
+
+            await AsyncStorage.removeItem(tokenName);
+            await AsyncStorage.removeItem(profileName);
+
+            dispatch(clearUser());
+
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'main'}],
+            });
+        } catch (e) {
+            console.error('Unlink failed:', e);
+        }
+    };
+    return {kakaoUnlink};
 }

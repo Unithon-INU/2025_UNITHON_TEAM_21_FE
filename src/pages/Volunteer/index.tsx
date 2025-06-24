@@ -16,8 +16,8 @@ import Loading from '@/components/Loading';
 export default function Index() {
     const {items: recommendItems, loading: recommedLoading} = useVolunteerData('0400');
     const {items: nearByItems, loading: nearByLoading} = useVolunteerNearBy();
+
     if (recommedLoading || nearByLoading) return <Loading />;
-    console.log(nearByItems);
     return (
         <>
             <Layout>

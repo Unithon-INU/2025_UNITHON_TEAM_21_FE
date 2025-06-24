@@ -5,7 +5,7 @@ import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 
 import React from 'react';
-import SearchBar from './CenterSearchBar';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const navigation = useNavigation() as any;
@@ -29,11 +29,19 @@ function Item({data}: {data: ChildrenCenterList}) {
 }
 
 export default function CenterItem({items}: {items: ChildrenCenterList[] | null}) {
+    const navigation = useNavigation() as any;
     if (!items) return null;
 
     return (
         <ColWrapper title="근처 지역아동센터" href="centerList">
-            <SearchBar />
+            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('centerSearchScreen')}>
+                <View className="bg-[#EAEAEA] rounded-xl px-3 py-3 flex flex-row items-center">
+                    <Ionicons name="search-outline" size={20} color="#9A9A9A" />
+                    <Text className="text-base text-[#9A9A9A]" style={{color: '#9A9A9A'}}>
+                        찾는 지역센터가 있으신가요?
+                    </Text>
+                </View>
+            </TouchableOpacity>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex flex-row gap-3">
                     {items?.map((item, index) => (

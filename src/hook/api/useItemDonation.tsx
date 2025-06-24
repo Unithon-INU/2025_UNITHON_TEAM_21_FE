@@ -5,7 +5,8 @@ import {API_URL} from '@env';
 export function useGetItemDonation(id: number) {
     const [items, setItems] = useState<ItemDonationType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const [e, sete] = useState<string | null>(null);
+
     const fetchItems = async () => {
         try {
             setLoading(true);
@@ -13,7 +14,7 @@ export function useGetItemDonation(id: number) {
             const data = await response.json();
             setItems(data);
         } catch (err) {
-            setError('Failed to fetch items');
+            sete('Failed to fetch items');
         } finally {
             setLoading(false);
         }
@@ -21,31 +22,30 @@ export function useGetItemDonation(id: number) {
     useEffect(() => {
         fetchItems();
     }, [id]);
-    return {items, loading, error, refetch: fetchItems};
+    return {items, loading, e, refetch: fetchItems};
 }
 
 export function useEditItemDonation() {
-    const addItem = async (id: number, itemName: string, requiredQuantity: number) => {
+    const addItem = async (orgid: number, itemName: string, requiredQuantity: number) => {
         try {
-            const response = await fetch(`${API_URL}/api/donation-items/${id}`, {
+            const response = await fetch(`${API_URL}/api/donation-items/${orgid}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({id, itemName, requiredQuantity}),
+                body: JSON.stringify({orgid, itemName, requiredQuantity}),
             });
             if (!response.ok) {
                 throw new Error('Failed to create item');
             }
             return await response.json();
-        } catch (error) {
-            console.error('Error creating item:', error);
-            throw error;
+        } catch (e) {
+            throw e;
         }
     };
-    const editItem = async (itemId: number, itemName: string, requiredQuantity: number, currentQuantity: number) => {
+    const editItem = async (itemid: number, itemName: string, requiredQuantity: number, currentQuantity: number) => {
         try {
-            const response = await fetch(`${API_URL}/api/donation-items/${itemId}`, {
+            const response = await fetch(`${API_URL}/api/donation-items/${itemid}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -56,9 +56,8 @@ export function useEditItemDonation() {
                 throw new Error('Failed to edit item');
             }
             return await response.json();
-        } catch (error) {
-            console.error('Error creating item:', error);
-            throw error;
+        } catch (e) {
+            throw e;
         }
     };
     const deleteItem = async (id: number) => {
@@ -67,12 +66,11 @@ export function useEditItemDonation() {
                 method: 'DELETE',
             });
             if (!response.ok) {
-                throw new Error('Failed to delete item');
+                throw new e('Failed to delete item');
             }
             return await response.json();
-        } catch (error) {
-            console.error('Error deleting item:', error);
-            throw error;
+        } catch (e) {
+            throw e;
         }
     };
     return {addItem, editItem, deleteItem};

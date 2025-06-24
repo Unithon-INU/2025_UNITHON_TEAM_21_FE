@@ -64,7 +64,7 @@ export default function Waiting({items, onRefresh}: {items: DonationInquiry[]; o
     };
     const handleCloseResultModal = () => {
         setResultModalVisible(false);
-        onRefresh(); // 사용자가 결과를 확인하고 닫기 버튼을 눌렀을 때 목록을 새로고침
+        onRefresh();
     };
 
     const handlePressApprove = (item: DonationInquiry) => {

@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {PermissionsAndroid, Platform} from 'react-native';
 
 export default function usePermission() {
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [initialRouteName, setInitialRouteName] = useState<string>('permission');
     useEffect(() => {
         const checkPermissions = async () => {
@@ -15,15 +15,15 @@ export default function usePermission() {
                 } catch (e) {
                     console.error('Failed to check permissions', e);
                 } finally {
-                    setIsLoading(false);
+                    setLoading(false);
                 }
             } else {
                 setInitialRouteName('main');
-                setIsLoading(false);
+                setLoading(false);
             }
         };
 
         checkPermissions();
     }, []);
-    return {isLoading, initialRouteName};
+    return {loading, initialRouteName};
 }

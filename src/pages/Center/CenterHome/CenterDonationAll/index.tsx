@@ -1,5 +1,6 @@
 import React from 'react';
 import {FlatList, Text, View} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 
 import {useCenterTotalDonation, useInquiryDonation} from '@/hook/api/useDonation';
 import {DonationInquiry} from '@/types/DonationType';
@@ -8,7 +9,6 @@ import {formatDonationDate, today} from '@/utils/formatDate';
 import Loading from '@/components/Loading';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import AnimatedNumber from '@/components/animation/AnimatedNumber';
-import {useRoute} from '@react-navigation/native';
 
 function Item(item: DonationInquiry) {
     return (

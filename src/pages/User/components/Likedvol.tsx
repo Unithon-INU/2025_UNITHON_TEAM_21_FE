@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector, useDispatch} from 'react-redux';
 import {toggleLike} from '@/store/slice/likedSlice';
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 import {formatDate} from '@/utils/formatDate';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 

@@ -1,12 +1,13 @@
 import React from 'react';
 import {Text, ScrollView} from 'react-native';
 
-import Layout from '../../components/Layout';
+import Layout from '../../../components/Layout';
 
 import {useSelector} from 'react-redux';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
+
 import HeaderBackButton from '@/components/button/HeaderBackButton';
-import CenterItem from '../Center/CenterList/components/CenterItem';
+import CenterItem from '../../Center/CenterList/components/CenterItem';
 
 export default function UserLikedcenter() {
     const centerList = useSelector((state: any) => state.likedCenter?.likedList || []);

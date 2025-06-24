@@ -1,12 +1,12 @@
 import {View, Text, ScrollView} from 'react-native';
 
-import Layout from '../../components/Layout';
-import AnimatedNumber from '@/components/animation/AnimatedNumber';
-import HeaderBackButton from '@/components/button/HeaderBackButton';
+import {formatDonationDate, today} from '@/utils/formatDate';
 import {useUserBill, useUserTotalDonation} from '@/hook/api/useDonation';
 
+import Layout from '@/components/Layout';
+import AnimatedNumber from '@/components/animation/AnimatedNumber';
+import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Loading from '@/components/Loading';
-import {formatDonationDate, today} from '@/utils/formatDate';
 
 export default function UserDonate() {
     const {items, loading: billLoading} = useUserBill();
