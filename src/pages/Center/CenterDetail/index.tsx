@@ -64,12 +64,12 @@ export default function CenterDetail() {
 
             <Layout>
                 {!isRegister && (
-                    <>
-                        <Text className="text-base font-bold text-font-black">아직 기봉사에 등록되지 않은 센터에요</Text>
-                        <Text className="text-base font-bold text-font-black">
-                            <Text className="text-main-color">기부</Text>와 채팅을 할 수 없어요
-                        </Text>
-                    </>
+                    <View className="p-5 bg-gray-100 rounded-lg">
+                        <Text className="mb-4 text-lg font-bold text-main-color">아직 기봉사에 등록되지 않은 센터에요!</Text>
+                        <Text className="mb-1 text-base font-bold text-font-black">아래의 기능을 사용할 수 없어요</Text>
+                        <Text className="text-sm leading-5 text-font-gray">기부하기, 채팅하기를 사용할 수 없어요.</Text>
+                        <Text className="text-sm leading-5 text-font-gray">모인금액을 확인할 수 없어요.</Text>
+                    </View>
                 )}
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
                 <ColWrapper title="오시는 길">
@@ -92,7 +92,9 @@ export default function CenterDetail() {
                     <Text className="text-base font-bold text-center text-white">기부하기</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    className="w-[150px] bg-font-black py-3 rounded-xl flex flex-row items-center justify-center gap-2"
+                    className={`flex flex-row gap-2 justify-center items-center py-3 rounded-xl w-[150px] bg-font-black ${
+                        isRegister ? 'bg-font-black' : 'bg-main-gray'
+                    }`}
                     onPress={() => navigation.goBack()}>
                     <Image className="w-6 h-6" source={require('@/assets/chatIcon.png')} />
                     <Text className="text-base font-bold text-center text-white">채팅하기</Text>

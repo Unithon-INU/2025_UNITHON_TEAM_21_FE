@@ -193,7 +193,7 @@ export function useVolunteerNearBy() {
                 const data = await response.text();
                 const volunteerData = xml2Json(data);
                 const areaItem = volunteerData.body?.items?.item;
-                const detailPromises = areaItem.slice(0, 5).map((item: getVltrAreaListItem) => {
+                const detailPromises = areaItem.map((item: getVltrAreaListItem) => {
                     const volunteerId = item.progrmRegistNo;
                     return fetch(`http://openapi.1365.go.kr/openapi/service/rest/VolunteerPartcptnService/getVltrPartcptnItem?progrmRegistNo=${volunteerId}`)
                         .then(res => {
