@@ -5,9 +5,10 @@ interface TokenProp {
     refreshToken: string;
 }
 interface ProfileProp {
-    id: string; //원래는 number였으나, 서버에서 내려주는 값이 string으로 변경되어 수정
-    nickname: string;
+    id: number;
+    nickname: string; 
     email?: string; // 이메일은 선택 사항으로 변경
+    userRole: 0 | 1;
 }
 
 type UserState = {
@@ -27,7 +28,9 @@ const userSlice = createSlice({
         setUser(state, action: PayloadAction<{token: TokenProp; profile: ProfileProp}>) {
             state.token = action.payload.token;
             state.profile = action.payload.profile;
-
+            if (state.profile.userRole === null) {
+                state.profile.userRole = 0;
+            }
         },
         clearUser(state) {
             state.token = null;

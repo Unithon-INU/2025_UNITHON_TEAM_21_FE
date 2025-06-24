@@ -1,28 +1,3 @@
-export interface getVltrCategoryListItem {
-    gugunCd: number;
-    nanmmbyNm: string;
-    progrmBgnde: number;
-    progrmEndde: number;
-    progrmRegistNo: number;
-    progrmSj: string;
-    progrmSttusSe: number;
-    sidoCd: number;
-}
-export interface getVltrCategoryList {
-    body: {
-        items: {
-            item: getVltrCategoryListItem[];
-        };
-        numOfRows: number;
-        pageNo: number;
-        totalCount: number;
-    };
-    header: {
-        resultCode: number;
-        resultMsg: string;
-    };
-}
-
 export interface getVltrSearchWordListItem {
     actBeginTm: number;
     actEndTm: number;
@@ -78,8 +53,8 @@ export interface getVltrPartcptnItemListItem {
     mnnstNm: string; // 기관명
     nanmmbyNm: string; // 단체명
     nanmmbyNmAdmn: string; // 단체 관리자명
-    noticeBgnde: string; // 공지 시작일 (YYYYMMDD)
-    noticeEndde: string; // 공지 종료일 (YYYYMMDD)
+    noticeBgnde: number; // 공지 시작일 (YYYYMMDD)
+    noticeEndde: number; // 공지 종료일 (YYYYMMDD)
     pbsvntPosblAt: 'Y' | 'N';
     postAdres: string; // 우편주소
     progrmBgnde: string; // 프로그램 시작일

@@ -1,9 +1,12 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-import {RowWrapper} from '@/components/layout/ContentWrapper';
+import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
+
 import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {KakaoMapManyMarkerCenter} from '@/components/KakaoMap';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const navigation = useNavigation() as any;
@@ -27,11 +30,27 @@ function Item({data}: {data: ChildrenCenterList}) {
 }
 
 export default function CenterItem({items}: {items: ChildrenCenterList[] | null}) {
+    const navigation = useNavigation() as any;
+    if (!items) return null;
+
     return (
-        <RowWrapper title="인천 지역아동센터" href="centerList">
-            {items?.map((item, index) => (
-                <Item key={index} data={item} />
-            ))}
-        </RowWrapper>
+        <ColWrapper title="근처 지역아동센터" href="centerList">
+            <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('centerSearchScreen')}>
+                <View className="bg-[#EAEAEA] rounded-xl px-3 py-3 flex flex-row items-center">
+                    <Ionicons name="search-outline" size={20} color="#9A9A9A" />
+                    <Text className="text-base text-[#9A9A9A]" style={{color: '#9A9A9A'}}>
+                        찾는 지역센터가 있으신가요?
+                    </Text>
+                </View>
+            </TouchableOpacity>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View className="flex flex-row gap-3">
+                    {items.slice(0, 10).map((item, index) => (
+                        <Item key={index} data={item} />
+                    ))}
+                </View>
+            </ScrollView>
+            <KakaoMapManyMarkerCenter items={items} className="w-full h-[240px]" />
+        </ColWrapper>
     );
 }

@@ -1,46 +1,81 @@
-import {API_URL} from '@env';
-import {useNavigation} from '@react-navigation/native';
 import {useState} from 'react';
-import {Alert} from 'react-native';
+import {API_URL} from '@env';
 
 export interface SignupForm {
     nickname: string;
     email: string;
     password: string;
 }
+export interface CenterSignupForm {
+    organizationname: string;
+    adminname: string;
+    email: string;
+    password: string;
+}
 
-export function useSignup({nickname, email, password}: SignupForm) {
+interface UseSignupOptions {
+    onSuccess?: () => void;
+    onError?: (errorMessage: string) => void;
+}
+export function useSignup() {
     const [loading, setLoading] = useState(false);
-    const navigation = useNavigation() as any;
 
-    const signup = async () => {
+    const signup = async (form: SignupForm, options?: UseSignupOptions) => {
+        const {nickname, email, password} = form;
         if (!nickname || !email || !password) {
-            Alert.alert('오류', '모든 항목을 입력해주세요.');
+            options?.onError?.('모든 항목을 입력해주세요.');
             return;
         }
+
         setLoading(true);
         try {
             const response = await fetch(`${API_URL}/api/join/email`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({nickname, email, password}),
             });
+
             if (!response.ok) {
                 const errorData = await response.json();
-                Alert.alert('회원가입 실패', errorData.message || '서버 오류가 발생했습니다.');
+                options?.onError?.(errorData.message || '서버 오류가 발생했습니다.');
             } else {
-                Alert.alert('회원가입 성공', '회원가입이 완료되었습니다!');
-                navigation.reset({
-                    index: 0,
-                    routes: [{name: 'main'}],
-                });
-
-                // 필요하다면 폼 초기화 등 추가
+                options?.onSuccess?.();
             }
         } catch (error) {
-            Alert.alert('네트워크 오류', '회원가입 요청 중 문제가 발생했습니다.');
+            options?.onError?.('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return {loading, signup};
+}
+export function useCenterSignup() {
+    const [loading, setLoading] = useState(false);
+
+    const signup = async (form: CenterSignupForm, options?: UseSignupOptions) => {
+        const {organizationname, adminname, email, password} = form;
+        if (!organizationname || !adminname || !email || !password) {
+            options?.onError?.('모든 항목을 입력해주세요.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/org/join`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({organizationname, adminname, email, password}),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                options?.onError?.(errorData.message || '서버 오류가 발생했습니다.');
+            } else {
+                options?.onSuccess?.();
+            }
+        } catch (error) {
+            options?.onError?.('네트워크 오류가 발생했습니다. 인터넷 연결을 확인해주세요.');
         } finally {
             setLoading(false);
         }

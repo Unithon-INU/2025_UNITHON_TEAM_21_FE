@@ -1,7 +1,8 @@
 import {useState, useEffect, useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
-import {ChildrenCenterList} from '@/types/ChildrenCenter';
+import {CenterInquiryType, ChildrenCenterList} from '@/types/ChildrenCenter';
+import {API_URL} from '@env';
 
 function deg2rad(deg: number): number {
     return deg * (Math.PI / 180);
@@ -20,11 +21,11 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 export function useCenter(perPage: number = 10) {
     const {location} = useSelector((state: RootState) => state.location);
 
+    const [loading, setLoading] = useState(true);
     const [rawCenterData, setRawCenterData] = useState<ChildrenCenterList[]>([]);
     const [sortedCenterData, setSortedCenterData] = useState<ChildrenCenterList[]>([]);
     const [centerData, setCenterData] = useState<ChildrenCenterList[]>([]);
 
-    const [loading, setLoading] = useState(true);
     const [isFetchingMore, setIsFetchingMore] = useState(false);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -85,4 +86,60 @@ export function useCenter(perPage: number = 10) {
     }, [isFetchingMore, hasMore, page, perPage, sortedCenterData]);
 
     return {centerData, loading, fetchMore, isFetchingMore, hasMore};
+}
+
+export function useInquiryCenter(id: number): {item: CenterInquiryType | null; loading: boolean} {
+    const [item, setItem] = useState<CenterInquiryType | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchInquiryCenter = async () => {
+            setLoading(true);
+            try {
+                if (!id) {
+                    throw new Error('ID is required to fetch inquiry center data');
+                }
+                const response = await fetch(`${API_URL}/api/org/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch center data');
+                }
+                const data = await response.json();
+                setItem(data);
+            } catch (error) {
+                console.error('Error fetching inquiry center:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchInquiryCenter();
+    }, [id]);
+
+    return {item, loading};
+}
+
+export function useIsRegister(id: number) {
+    const [item, setItem] = useState(false);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const fetchIsRegister = async () => {
+            setLoading(true);
+            try {
+                if (!id) {
+                    throw new Error('ID is required to check registration status');
+                }
+                const response = await fetch(`${API_URL}/api/org-admin/check?id=${id + 1}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch registration status');
+                }
+                const data = await response.json();
+                setItem(data.registered);
+            } catch (error) {
+                console.error('Error fetching registration status:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchIsRegister();
+    }, [id]);
+    return {item, loading};
 }

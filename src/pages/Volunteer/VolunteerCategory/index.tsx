@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Text, FlatList, ActivityIndicator, View} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 
 import {useVolunteerData} from '@/hook/api/useVolunteerData';
 
@@ -10,15 +10,9 @@ import EmptyComponents from './components/EmptyCoponents';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Category from './components/Category';
 
-type VolunterrCategoryParams = {
-    category: string;
-    iconKey: string;
-    keyword: string;
-};
-
 export default function VolunterrCategory() {
-    const route = useRoute<RouteProp<Record<string, VolunterrCategoryParams>, string>>();
-    const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params || {};
+    const route = useRoute();
+    const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params as {category: string; iconKey: string; keyword: string};
 
     const {loading, items, loadMore, isFetchingMore, hasMore} = useVolunteerData(iconKey, keyword);
 
@@ -38,7 +32,7 @@ export default function VolunterrCategory() {
                     className="px-5"
                     contentContainerStyle={{paddingBottom: 60}}
                     data={items}
-                    keyExtractor={(_, idx) => idx.toString()}
+                    keyExtractor={(item, idx) => item.progrmRegistNo || idx.toString()}
                     renderItem={({item}) => <VolunteerItem item={item} />}
                     ListHeaderComponent={
                         <Text className="mb-2 text-xl font-bold text-font-black">
@@ -51,7 +45,6 @@ export default function VolunterrCategory() {
                     ListFooterComponent={isFetchingMore ? <ActivityIndicator size={'large'} className="text-main-color" /> : null}
                 />
             </View>
-
             <Category />
         </View>
     );

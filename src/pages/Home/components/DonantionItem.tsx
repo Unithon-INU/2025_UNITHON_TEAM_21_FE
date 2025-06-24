@@ -5,13 +5,15 @@ import {useNavigation} from '@react-navigation/native';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
+import {useCenterTotalDonation} from '@/hook/api/useDonation';
+import {daysLeft} from '@/utils/formatDate';
 
 function Item({data}: {data: ChildrenCenterList}) {
-    const daysLeft = Math.floor(Math.random() * 12) + 3; // 3~14 days
-    const target = (Math.floor(Math.random() * 21) + 10) * 10000; // 100,000~300,000 KRW
-    const current = (Math.floor(Math.random() * 41) + 10) * 10000; // 100,000~500,000 KRW
-    const percent = Math.floor((current / target) * 100);
+    const {total, loading: TotalLoading} = useCenterTotalDonation(Number(data.id));
+    const target = 100000;
+    const percent = Math.floor((total.totalAmount / target) * 100);
     const navigation = useNavigation() as any;
+    if (TotalLoading) return null;
 
     return (
         <View className="flex flex-col gap-2">
@@ -28,7 +30,7 @@ function Item({data}: {data: ChildrenCenterList}) {
                                 <Text className="text-lg font-semibold text-main-color">{percent}%</Text>
                                 <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()}원</Text>
                             </View>
-                            <Text className="text-sm font-semibold text-font-black">{daysLeft}일 남음</Text>
+                            <Text className="text-sm font-semibold text-font-black">{daysLeft()}일 남음</Text>
                         </View>
                         <View className="overflow-hidden w-full h-1 rounded-full bg-bg-gray">
                             <View className="h-full bg-main-color" style={{width: `${Math.min(percent, 100)}%`}} />
@@ -41,8 +43,9 @@ function Item({data}: {data: ChildrenCenterList}) {
 }
 export default function DonationItem({items}: {items: ChildrenCenterList[]}) {
     if (!items) return null;
+
     return (
-        <ColWrapper title="실시간 기부현황">
+        <ColWrapper title="실시간 기부현황" href="realTimeDonation">
             {items.slice(0, 3)?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}
