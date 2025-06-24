@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useSelector} from 'react-redux';
-import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
-import axios from 'axios';
-import { API_URL } from '@env';
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL} from '@env';
+import type {ChatRoom} from '@/store/slice/chatSlice';
+import {resetUnreadCount, setChatRooms} from '@/store/slice/chatSlice';
 
 type ChatStackParamList = {
     ChatList: undefined;
@@ -13,63 +13,99 @@ type ChatStackParamList = {
     Notification: undefined;
 };
 
-type ChatRoomData = {
-    id: string;
-    name: string;
-    message: string;
-    time: string;
-    unread: number;
-};
-
 export default function ChatListScreen() {
-    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>([]);
-    const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
-    const user = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+    const {token, profile} = useSelector((state: any) => state.user);
+    const chatRooms = useSelector((state: any) => state.chat.chatRooms);
+    const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
 
     useEffect(() => {
-        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.id) return;
-        axios
-            .get(`${API_URL}/api/chatroom`, {
-                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
-            })
-            .then(res => setChatRooms(res.data))
-            .catch(err => console.error(err));
-    }, [user]);
+        const fetchChatRoom = async () => {
+            try {
+                const targetUserIds = ['2', '3']; // 👈 테스트용 타겟 유저 ID 목록
 
-    useEffect(() => {
-        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.id) return;
-        axios
-            .get('/api/chatroom', {
-                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
-            })
-            .then(res => setChatRooms(res.data))
-            .catch(err => console.error(err));
-    }, [user]);
+                if (!token?.accessToken || !profile?.email) return;
 
-    const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
+                const allUserRes = await fetch(`${API_URL}/api/users/all`, {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                });
+                const allUsers = await allUserRes.json();
+
+                const newRooms: ChatRoom[] = [];
+
+                for (const targetUserId of targetUserIds) {
+                    const params = new URLSearchParams({
+                        senderEmail: profile.email,
+                        targetUserId,
+                    });
+
+                    const response = await fetch(`${API_URL}/api/chatroom/get-or-create?${params.toString()}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                    });
+
+                    console.log(`🔍 채팅방 요청: ${API_URL}/api/chatroom/get-or-create?${params.toString()}`);
+
+                    if (!response.ok) {
+                        const errorText = await response.text(); // 👈 에러 내용 가져오기
+                        console.warn(`❗️채팅방 요청 실패 (${response.status}: ${response.statusText}) - ${errorText}`);
+                        continue;
+                    }
+
+                    const chatRoomId = await response.json();
+
+                    const targetUser = allUsers.find((user: any) => user.id === parseInt(targetUserId));
+                    const nickname = targetUser?.nickname || `user${targetUserId}`;
+                    // ✅ 이미 존재하는 채팅방은 추가하지 않음
+                    const alreadyExists = chatRooms.some((room: ChatRoom) => room.id === chatRoomId.toString());
+                    if (!alreadyExists) {
+                        newRooms.push({
+                            id: chatRoomId.toString(),
+                            name: nickname,
+                            message: '',
+                            time: '',
+                            timeText: '',
+                            unread: 0,
+                        });
+                    }
+                }
+
+                if (newRooms.length > 0) {
+                    dispatch(setChatRooms([...chatRooms, ...newRooms]));
+                }
+            } catch (err: any) {
+                console.error('❌ 채팅방 요청 중 에러:', err.message || err);
+            }
+        };
+
+        fetchChatRoom();
+    }, [chatRooms, dispatch, profile?.email, token?.accessToken]); // ✅ chatRooms 제외
+
+    const filteredRooms = chatRooms.filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true));
 
     const handleEnterRoom = (id: string, name: string) => {
-        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
-        navigation.navigate('ChatRoom', {id, name});
-        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
+        dispatch(resetUnreadCount(id));
         navigation.navigate('ChatRoom', {id, name});
     };
 
     return (
-        <View className="flex flex-col gap-3 px-5">
-            {/* Top Bar */}
-            <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
+        <View className="flex-1 bg-white px-5 pt-5">
+            {/* 상단 */}
+            <View className="flex-row justify-between items-center mb-3">
+                <Text className="text-2xl font-bold">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                    <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
+                    <Image source={require('@/assets/ring.png')} className="w-7 h-7" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
 
-            {/* Tabs */}
-            <View className="flex-row gap-[8px] px-[5px] py-[12px] pl-[2px]">
+            {/* 탭 */}
+            <View className="flex-row gap-2 mb-4">
                 <TouchableOpacity
                     onPress={() => setActiveTab('all')}
                     className={`px-3 py-1 rounded-full ${activeTab === 'all' ? 'bg-main-color' : 'border border-[#D5D5D5]'}`}>
@@ -82,20 +118,20 @@ export default function ChatListScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* Chat Room List */}
+            {/* 채팅방 리스트 */}
             <FlatList
                 data={filteredRooms}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.name}
                 renderItem={({item}) => (
-                    <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px]" onPress={() => handleEnterRoom(item.id, item.name)}>
-                        <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
-                        <View className="justify-center flex-1 mb-4">
+                    <TouchableOpacity className="flex-row py-4" onPress={() => handleEnterRoom(item.id, item.name)}>
+                        <View className="w-14 h-14 rounded-full bg-[#ccc] mr-3" />
+                        <View className="flex-1 justify-center">
                             <View className="flex-row justify-between">
-                                <Text className="text-black font-bold text-[16px]">{item.name}</Text>
-                                <Text className="text-[12px] text-[#999]">{item.time}</Text>
+                                <Text className="text-[16px] font-bold">{item.name}</Text>
+                                <Text className="text-[12px] text-gray-500">{item.timeText}</Text>
                             </View>
                             <View className="flex-row justify-between mt-1">
-                                <Text className="text-[12px] text-[#666]" numberOfLines={1}>
+                                <Text className="text-[12px] text-gray-700 flex-1" numberOfLines={1}>
                                     {item.message}
                                 </Text>
                                 {item.unread > 0 && (

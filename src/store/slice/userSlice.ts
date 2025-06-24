@@ -7,6 +7,7 @@ interface TokenProp {
 interface ProfileProp {
     id: string; //원래는 number였으나, 서버에서 내려주는 값이 string으로 변경되어 수정
     nickname: string;
+    email?: string; // 이메일은 선택 사항으로 변경
 }
 
 type UserState = {
@@ -26,6 +27,7 @@ const userSlice = createSlice({
         setUser(state, action: PayloadAction<{token: TokenProp; profile: ProfileProp}>) {
             state.token = action.payload.token;
             state.profile = action.payload.profile;
+
         },
         clearUser(state) {
             state.token = null;
@@ -36,8 +38,14 @@ const userSlice = createSlice({
                 state.profile.nickname = action.payload;
             }
         },
+        setProfileEmail: (state, action) => {
+            if (state.profile) {
+                state.profile.email = action.payload;
+            }
+        },
+
     },
 });
 
-export const {setUser, clearUser, setProfileName} = userSlice.actions;
+export const {setUser, clearUser, setProfileName, setProfileEmail} = userSlice.actions;
 export default userSlice.reducer;

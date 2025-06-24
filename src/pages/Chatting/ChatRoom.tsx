@@ -1,13 +1,14 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, Platform} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ChatInputBar from '@/components/input/ChatInputBar';
-import useChatSocket from '@/hook/useChatSocket';
-import {useSelector} from 'react-redux';
+import {useWebSocketService} from '@/hook/useChatSocket';
+import {useSelector, useDispatch} from 'react-redux';
+import {increaseUnreadCount, resetUnreadCount, updateLastMessage} from '@/store/slice/chatSlice';
 import {RootState} from '@/store/store';
-import axios from 'axios';
 
+// 타입 정의
 type ChatStackParamList = {
     ChatList: undefined;
     ChatRoom: {id: string; name: string};
@@ -37,7 +38,7 @@ function getCurrentDate(): string {
     const year = now.getFullYear();
     const month = (now.getMonth() + 1).toString().padStart(2, '0');
     const day = now.getDate().toString().padStart(2, '0');
-    return `${year}년 ${month}월 ${day}일 `;
+    return `${year}년 ${month}월 ${day}일`;
 }
 
 function getCurrentDay(): string {
@@ -48,25 +49,19 @@ function getCurrentDay(): string {
 
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
-    const {id, name} = route.params;
+    const {id: chatRoomId, name} = route.params;
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
-
-    // Redux에서 유저 정보 가져오기
     const user = useSelector((state: RootState) => state.user);
-    const senderId = user.profile?.id ?? null; // 카카오 id 등 고유값
-    // 상대방 id는 서버에서 내려주는 메시지/채팅방 정보로 받아와야 함
-    const targetUserId = null; // 필요 시 채팅방 정보에서 추출
+    const dispatch = useDispatch();
 
-    const chatRoomId = Number(id);
-
+    const senderId = user.profile?.email ?? null;
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
     const [currentDay, setCurrentDay] = useState(getCurrentDay());
 
-    // 메시지 수신 콜백
     const handleReceive = useCallback(
         (data: any) => {
-            const isMe = data.senderid === senderId;
+            const isMe = data.senderId === senderId;
             const newMessage: Message = {
                 id: Date.now().toString(),
                 text: data.content,
@@ -76,17 +71,39 @@ export default function ChatRoomScreen() {
                 day: getCurrentDay(),
             };
             setMessages(prev => [...prev, newMessage]);
+            if (!isMe) dispatch(increaseUnreadCount(data.chatRoomId));
+            dispatch(updateLastMessage({id: data.chatRoomId, message: data.content, time: getCurrentTime()}));
         },
-        [senderId] // senderId가 변경될 때만 콜백 재생성,
+        [senderId, dispatch],
     );
 
-    // useChatSocket 훅 사용
-    const {sendMessage} = useChatSocket({
-        chatRoomId: String(chatRoomId),
-        onMessage: handleReceive,
-    });
+    console.log('🔗 채팅방 ID:', chatRoomId);
+    console.log('👤 현재 사용자 ID:', senderId);
+    console.log('📨 메시지 수:', messages.length);
+    const {connect, subscribe, send, unsubscribe, disconnect} = useWebSocketService(
+        'http://43.203.198.154:8080/ws-chat',
+        () => console.log('🔌 WebSocket 연결 성공'),
+        err => console.error('❌ WebSocket 에러:', err),
+    );
 
-    // 메시지 전송
+    const flatListRef = useRef<FlatList>(null);
+
+    // 메시지 추가 시
+    useEffect(() => {
+        if (flatListRef.current) {
+            flatListRef.current.scrollToEnd({animated: true});
+        }
+    }, [messages]);
+    useEffect(() => {
+        connect(); // 최초 연결
+    }, []);
+    useEffect(() => {
+        if (!chatRoomId) return;
+        subscribe(`/topic/chatroom/${chatRoomId}`, handleReceive);
+        return () => {
+            unsubscribe(`/topic/chatroom/${chatRoomId}`);
+        };
+    }, [chatRoomId]);
     const handleSend = (message: string) => {
         const newMessage: Message = {
             id: Date.now().toString(),
@@ -98,16 +115,14 @@ export default function ChatRoomScreen() {
         };
         setMessages(prev => [...prev, newMessage]);
 
-        // 메시지 전송 payload 예시
         const payload = {
             chatRoomId,
             senderId,
-            targetUserId,
             content: message,
             fromUser: true,
             sentAt: new Date().toISOString(),
         };
-        sendMessage(payload);
+        send('/app/chat.send', payload);
 
         setCurrentDate(getCurrentDate());
         setCurrentDay(getCurrentDay());
@@ -124,17 +139,13 @@ export default function ChatRoomScreen() {
             {item.isMe && <View className="w-8 h-8 bg-[#eee] rounded-full ml-2" />}
         </View>
     );
+
     useEffect(() => {
-        axios
-            .get(`/api/chatroom/${chatRoomId}/messages`, {
-                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
-            })
-            .then(res => setMessages(res.data));
-    }, [chatRoomId, user.token?.accessToken]);
+        dispatch(resetUnreadCount(chatRoomId));
+    }, [chatRoomId, dispatch]);
 
     return (
         <View className="flex-1 bg-white">
-            {/* 상단 네비게이션 바 */}
             <View className="flex-row items-center justify-between px-4 py-5 pb-7">
                 <View className="flex-row items-center space-x-2">
                     <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -149,20 +160,21 @@ export default function ChatRoomScreen() {
 
             <View className="items-center my-2">
                 <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5 rounded-full">
-                    {currentDate}
-                    {currentDay}요일
+                    {currentDate} {currentDay}요일
                 </Text>
             </View>
+
             <View className="flex-1" style={{paddingBottom: 20}}>
                 <FlatList
-                    data={messages}
+                    data={[...messages].sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     contentContainerStyle={{paddingHorizontal: 16, paddingTop: 8}}
                     showsVerticalScrollIndicator={false}
-                    inverted
+                    inverted={false}
                 />
             </View>
+
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}>
                 <View className="px-4 pb-4 bg-white">
                     <ChatInputBar onSend={handleSend} />

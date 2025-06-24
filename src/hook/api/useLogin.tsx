@@ -51,6 +51,7 @@ export function useLogin({email, password}: LoginForm) {
                         profile: {
                             id: data.id, // 서버에서 내려주는 유저 ID로 변경 필요 원래는 1000으로 하드코딩
                             nickname: data.nickname,
+                            email: data.email,
                         },
                     }),
                 );
