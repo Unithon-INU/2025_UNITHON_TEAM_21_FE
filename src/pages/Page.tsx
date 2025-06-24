@@ -1,12 +1,10 @@
-import {useEffect} from 'react';
-import {fetchLocation} from '@/store/slice/locationSlice';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppDispatch, RootState} from '@/store/store';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
 import usePermission from '@/hook/usePermission';
 import {useUserRestore} from '@/hook/api/useKakaoInfo';
 
@@ -99,14 +97,9 @@ function NavBar() {
 export default function Pages() {
     useUserRestore();
     const Stack = createStackNavigator();
-    const locationLoading = useSelector((state: RootState) => state.location.loading);
-    const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        dispatch(fetchLocation());
-    }, [dispatch]);
     const {loading, initialRouteName} = usePermission();
 
-    if (loading || locationLoading === 'pending') return <Loading />;
+    if (loading) return <Loading />;
 
     return (
         <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{headerShown: false}}>

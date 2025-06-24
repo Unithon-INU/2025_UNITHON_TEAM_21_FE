@@ -13,12 +13,20 @@ import TotalDonationAmount from './components/TotalDonationAmount';
 import MonthlyDonationHeroList from './components/MonthlyDonationHeroList';
 import FollowCenter from './components/FollowCenter';
 import LikeVolunteer from './components/LikeVolunteer';
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '@/store/store';
+import {useEffect} from 'react';
+import {fetchLocation} from '@/store/slice/locationSlice';
 
 export default function Home() {
     const {centerData, loading} = useCenter();
     const {items: recommendItems, loading: recommendLoading} = useVolunteerData('0400');
-
-    if (loading || recommendLoading) {
+    const locationLoading = useSelector((state: RootState) => state.location.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        dispatch(fetchLocation());
+    }, [dispatch]);
+    if (loading || recommendLoading || locationLoading === 'pending') {
         return <Loading />;
     }
 
