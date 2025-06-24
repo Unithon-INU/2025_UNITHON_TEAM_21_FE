@@ -127,12 +127,11 @@ export function useIsRegister(id: number) {
                 if (!id) {
                     throw new Error('ID is required to check registration status');
                 }
-                const response = await fetch(`${API_URL}/api/org-admin/check?id=${id + 2}`);
+                const response = await fetch(`${API_URL}/api/org-admin/check?id=${id + 1}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch registration status');
                 }
                 const data = await response.json();
-                console.log(data);
                 setItem(data.registered);
             } catch (error) {
                 console.error('Error fetching registration status:', error);

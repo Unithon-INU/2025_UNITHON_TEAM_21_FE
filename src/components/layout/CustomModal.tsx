@@ -12,7 +12,7 @@ interface CustomModalProps {
      * - 'add': Shows an add button.
      * - 'none': No action buttons are displayed.
      */
-    action?: 'delete' | 'edit' | 'add' | 'none' | 'cancel' | 'donation';
+    action?: 'delete' | 'edit' | 'add' | 'none' | 'cancel' | 'donation' | 'exit';
     onAction?: () => void;
     restricted?: boolean;
 }
@@ -52,6 +52,11 @@ export default function CustomModal({visible, onClose, children, title, onAction
                                 {action === 'donation' && (
                                     <TouchableOpacity className="flex-1 items-center px-4 py-3 rounded-lg bg-main-color" onPress={onAction}>
                                         <Text className="font-bold text-white">기부</Text>
+                                    </TouchableOpacity>
+                                )}
+                                {action === 'exit' && (
+                                    <TouchableOpacity className="flex-1 items-center px-4 py-3 rounded-lg bg-main-color" onPress={onAction}>
+                                        <Text className="font-bold text-white">종료</Text>
                                     </TouchableOpacity>
                                 )}
                             </View>

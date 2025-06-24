@@ -6,6 +6,7 @@ import {ChildrenCenterList} from '@/types/ChildrenCenter';
 
 import React from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {KakaoMapManyMarkerCenter} from '@/components/KakaoMap';
 
 function Item({data}: {data: ChildrenCenterList}) {
     const navigation = useNavigation() as any;
@@ -44,11 +45,12 @@ export default function CenterItem({items}: {items: ChildrenCenterList[] | null}
             </TouchableOpacity>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex flex-row gap-3">
-                    {items?.map((item, index) => (
+                    {items.slice(0, 10).map((item, index) => (
                         <Item key={index} data={item} />
                     ))}
                 </View>
             </ScrollView>
+            <KakaoMapManyMarkerCenter items={items} className="w-full h-[240px]" />
         </ColWrapper>
     );
 }
