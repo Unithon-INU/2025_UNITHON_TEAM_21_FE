@@ -12,12 +12,13 @@ import Loading from '@/components/Loading';
 import {daysLeft} from '@/utils/formatDate';
 
 function Item({data}: {data: ChildrenCenterList}) {
-    const {total, loading: TotalLoading} = useCenterTotalDonation(Number(data.id));
+    const {total, loading} = useCenterTotalDonation(Number(data.id));
 
     const target = 100000;
     const percent = Math.floor((total.totalAmount / target) * 100);
     const navigation = useNavigation() as any;
-    if (TotalLoading) return <Loading />;
+
+    if (loading) return <Loading />;
 
     return (
         <View className="flex flex-col gap-2 pb-4">
@@ -54,7 +55,7 @@ export default function RealTimeDonation() {
             <FlatList
                 data={centerData}
                 renderItem={({item}) => <Item data={item} />}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
                 onEndReached={() => {
                     if (hasMore && !isFetchingMore) fetchMore();
                 }}

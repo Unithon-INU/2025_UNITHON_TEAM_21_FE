@@ -4,7 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {setProfileName} from '@/store/slice/userSlice';
 
-import Layout from '../../components/Layout';
+import Layout from '@/components/Layout';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import CustomModal from '@/components/layout/CustomModal';
 

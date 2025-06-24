@@ -2,9 +2,14 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
 import {REST_KAKAO_API_KEY} from '@env';
 
-import {AddressCodeType} from '@/types/AddressType';
 import {xml2Json} from '@/utils/xml2json';
 
+export interface AddressCodeType {
+    gugunCd: string;
+    gugunNm: string;
+    sidoCd: string;
+    sidoNm: string;
+}
 interface LocationState {
     location: {
         latitude: number;

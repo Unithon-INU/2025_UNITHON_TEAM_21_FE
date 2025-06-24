@@ -1,8 +1,7 @@
-import {Text, TouchableOpacity, View} from 'react-native';
-
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import {useNavigation} from '@react-navigation/native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 export default function CenterItem({item}: {item: ChildrenCenterList}) {
     const navigate = useNavigation() as any;

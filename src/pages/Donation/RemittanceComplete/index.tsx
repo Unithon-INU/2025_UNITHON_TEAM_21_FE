@@ -1,11 +1,10 @@
 import {useEffect} from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {ActivityIndicator, Image, Text, TouchableOpacity, View} from 'react-native';
 import {CommonActions, useNavigation, useRoute} from '@react-navigation/native';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 import {useDonation} from '@/hook/api/useDonation';
 
-import Loading from './components/Loading';
 import Error from '@/components/Error';
 
 export default function Commit() {
@@ -16,8 +15,7 @@ export default function Commit() {
 
     useEffect(() => {
         const fetchData = async () => {
-            // 추후에 id로 바꿔야함
-            await donation(1, Number(value.replace(/,/g, '')));
+            await donation(id, Number(value.replace(/,/g, '')));
         };
         fetchData();
     }, []);
@@ -31,7 +29,24 @@ export default function Commit() {
         );
     };
     if (error) return <Error text={error} />;
-    if (loading) return <Loading name={name} value={value} />;
+
+    if (loading)
+        return (
+            <View className="flex flex-col gap-3 px-5 h-full">
+                <View className="flex flex-col flex-1 gap-1 justify-center items-center pb-20">
+                    <ActivityIndicator size={60} className="pb-6 text-main-color" />
+                    <Text className="text-3xl font-semibold text-font-black">
+                        <Text className="text-3xl font-semibold text-main-color">{name}</Text>
+                        으로
+                    </Text>
+                    <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
+                    <Text className="text-3xl font-semibold text-font-black">기부할게요</Text>
+                    <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg">
+                        <Text className="text-font-black"> </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
 
     return (
         <View className="flex flex-col gap-3 px-5 h-full">
@@ -48,6 +63,7 @@ export default function Commit() {
                 </Text>
                 <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
                 <Text className="text-3xl font-semibold text-font-black">기부했어요</Text>
+                <Text className="text-lg font-semibold text-font-black">아동센터가 확인할 때까지 시간이 걸릴 수 있어요</Text>
                 <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg bg-bg-gray">
                     <Text className="text-font-black">기부증서 받기</Text>
                 </TouchableOpacity>

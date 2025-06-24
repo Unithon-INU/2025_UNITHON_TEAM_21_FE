@@ -1,9 +1,12 @@
+import {useEffect} from 'react';
+import {fetchLocation} from '@/store/slice/locationSlice';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MatIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '@/store/store';
 import usePermission from '@/hook/usePermission';
 import {useUserRestore} from '@/hook/api/useKakaoInfo';
 
@@ -21,10 +24,10 @@ import Chatbot from './Volunteer/Chatbot';
 import CenterDetail from './Center/CenterDetail';
 
 import UserInfo from './User';
-import UserLikedcenter from './User/Likedcenter';
-import UserLikedvol from './User/Likedvol';
-import UserDonate from './User/Donate';
-import Edituser from './User/Edituser';
+import UserLikedcenter from './User/components/Likedcenter';
+import UserLikedvol from './User/components/Likedvol';
+import UserDonate from './User/components/Donate';
+import Edituser from './User/components/Edituser';
 
 import Remittance from './Donation/Remittance';
 import RemittanceCheck from './Donation/RemittanceCheck';
@@ -42,18 +45,22 @@ import CenterHome from './Center/CenterHome';
 import CenterDonationAll from './Center/CenterHome/CenterDonationAll';
 import RealTimeDonation from './Home/RealTimeDonation';
 
-import CenterSearchScreen from './Home/SearchScreen';
-import CenterSearchResult from './Home/SerachResult';
+import CenterSearchScreen from './Home/CenterSearchScreen';
+import CenterSearchResult from './Home/CenterSerachResult';
+import CenterSignup from './Home/CenterSignup';
+import DonationCheck from './Donation/DonationCheck';
 
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
     chatting: (color: string, size: number) => <Ionicons name="chatbubbles" size={size} color={color} />,
     volunteer: (color: string, size: number) => <MatIcon name="account-group" size={size} color={color} />,
     userInfo: (color: string, size: number) => <Ionicons name="person" size={size} color={color} />,
+    centerHome: (color: string, size: number) => <Ionicons name="person" size={size} color={color} />,
 };
 
 function NavBar() {
     const Tab = createBottomTabNavigator();
+    const {profile} = useSelector((state: RootState) => state.user);
     return (
         <Tab.Navigator
             initialRouteName="home"
@@ -80,8 +87,11 @@ function NavBar() {
             <Tab.Screen name="home" options={{tabBarLabel: '홈'}} component={Home} />
             <Tab.Screen name="chatting" options={{tabBarLabel: '채팅'}} component={ChatListScreen} />
             <Tab.Screen name="volunteer" options={{tabBarLabel: '지역봉사'}} component={Volunteer} />
-            <Tab.Screen name="userInfo" options={{tabBarLabel: '내정보'}} component={UserInfo} />
-            <Tab.Screen name="centerHome" options={{tabBarLabel: '센터'}} component={CenterHome} />
+            {profile?.userRole === 1 ? (
+                <Tab.Screen name="centerHome" options={{tabBarLabel: '센터관리'}} component={CenterHome} />
+            ) : (
+                <Tab.Screen name="userInfo" options={{tabBarLabel: '내정보'}} component={UserInfo} />
+            )}
         </Tab.Navigator>
     );
 }
@@ -89,9 +99,14 @@ function NavBar() {
 export default function Pages() {
     useUserRestore();
     const Stack = createStackNavigator();
-    const {isLoading, initialRouteName} = usePermission();
+    const locationLoading = useSelector((state: RootState) => state.location.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+        dispatch(fetchLocation());
+    }, [dispatch]);
+    const {loading, initialRouteName} = usePermission();
 
-    if (isLoading) return <Loading />;
+    if (loading || locationLoading === 'pending') return <Loading />;
 
     return (
         <Stack.Navigator initialRouteName={initialRouteName} screenOptions={{headerShown: false}}>
@@ -103,6 +118,7 @@ export default function Pages() {
             <Stack.Screen name="login" component={Login} />
             <Stack.Screen name="heroListDetail" component={HeroListDetail} />
             <Stack.Screen name="idSignup" component={IDSignup} />
+            <Stack.Screen name="centerSignup" component={CenterSignup} />
             <Stack.Screen name="realTimeDonation" component={RealTimeDonation} />
             <Stack.Screen name="centerSearchScreen" component={CenterSearchScreen} options={{animation: 'none'}} />
             <Stack.Screen name="centerSerachResult" component={CenterSearchResult} />
@@ -111,6 +127,7 @@ export default function Pages() {
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="centerList" component={CenterList} />
+
             {/* 지역봉사 */}
             <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />
             <Stack.Screen name="volunteerDetail" component={VolunterrDetail} />
@@ -118,15 +135,19 @@ export default function Pages() {
             <Stack.Screen name="centerDetail" component={CenterDetail} />
             <Stack.Screen name="searchScreen" component={SearchScreen} options={{animation: 'none'}} />
             <Stack.Screen name="searchResult" component={SerachResult} />
+
             {/* 내 정보 */}
             <Stack.Screen name="Userlikedcenter" component={UserLikedcenter} />
             <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
             <Stack.Screen name="Userdonate" component={UserDonate} />
             <Stack.Screen name="Edituser" component={Edituser} />
+
             {/* 기부 */}
+            <Stack.Screen name="donationCheck" component={DonationCheck} />
             <Stack.Screen name="remittance" component={Remittance} />
             <Stack.Screen name="remittanceCheck" component={RemittanceCheck} />
             <Stack.Screen name="remittanceComplete" component={RemittanceComplete} />
+
             {/* 아동센터 페이지 */}
             <Stack.Screen name="CenterDonationAll" component={CenterDonationAll} />
         </Stack.Navigator>

@@ -1,13 +1,15 @@
 import React from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
-import {useRoute} from '@react-navigation/native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleCenterLike} from '@/store/slice/likedCenterSlice';
 
-import {ChildrenCenterList} from '@/types/ChildrenCenter';
-import {useCenter} from '@/hook/api/useCenter';
-import {useVolunteerCenterName} from '@/hook/api/useVolunteerData';
 import {RootState} from '@/store/store';
+import {ChildrenCenterList} from '@/types/ChildrenCenter';
+import {useCenter, useIsRegister} from '@/hook/api/useCenter';
+import {useCenterTotalDonation} from '@/hook/api/useDonation';
+import {useVolunteerCenterName} from '@/hook/api/useVolunteerData';
+import {useGetItemDonation} from '@/hook/api/useItemDonation';
 
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
@@ -18,13 +20,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Loading from '@/components/Loading';
 import List from './components/List';
 import Activity from './components/Activity';
-import Button from './components/Button';
 import Error from '@/components/Error';
-import {useCenterTotalDonation} from '@/hook/api/useDonation';
 
 export default function CenterDetail() {
     const route = useRoute();
-    const {id} = route.params as {id: string};
+    const {id} = route.params as {id: number};
+    const navigation = useNavigation() as any;
     const dispatch = useDispatch();
     const likedList = useSelector((state: RootState) => state.likedCenter.likedList);
     const {centerData, loading} = useCenter(180);
@@ -42,8 +43,10 @@ export default function CenterDetail() {
             );
         }
     };
-    const {total, loading: TotalLoading} = useCenterTotalDonation(Number(id));
-    if (loading || activityLoading || TotalLoading) return <Loading />;
+    const {total, loading: TotalLoading} = useCenterTotalDonation(id);
+    const {items: itemDonation, loading: itemsLoading} = useGetItemDonation(id);
+    const {item: isRegister, loading: registerLoading} = useIsRegister(id);
+    if (loading || activityLoading || TotalLoading || itemsLoading || registerLoading) return <Loading />;
 
     if (!data) return <Error text="센터 정보를 찾을 수 없습니다." />;
 
@@ -60,6 +63,14 @@ export default function CenterDetail() {
             </View>
 
             <Layout>
+                {!isRegister && (
+                    <>
+                        <Text className="text-base font-bold text-font-black">아직 기봉사에 등록되지 않은 센터에요</Text>
+                        <Text className="text-base font-bold text-font-black">
+                            <Text className="text-main-color">기부</Text>와 채팅을 할 수 없어요
+                        </Text>
+                    </>
+                )}
                 {data && <KakaoMapAddress className="w-full h-[240px]" location={data.address} name={data.centerName} />}
                 <ColWrapper title="오시는 길">
                     <Text className="text-base font-semibold text-font-black">
@@ -69,12 +80,24 @@ export default function CenterDetail() {
                             : ''}
                     </Text>
                 </ColWrapper>
-
                 <DonationStatus data={total} />
                 <Activity items={items} />
-                <List />
+                <List items={itemDonation} />
             </Layout>
-            <Button data={data} />
+            <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">
+                <TouchableOpacity
+                    className={`w-[150px] py-3 rounded-xl flex flex-row items-center justify-center gap-2 ${isRegister ? 'bg-main-color' : 'bg-main-gray'}`}
+                    onPress={() => navigation.navigate('donationCheck', {name: data.centerName, id: data.id})}>
+                    <Image className="w-6 h-6" source={require('@/assets/getCash.png')} />
+                    <Text className="text-base font-bold text-center text-white">기부하기</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    className="w-[150px] bg-font-black py-3 rounded-xl flex flex-row items-center justify-center gap-2"
+                    onPress={() => navigation.goBack()}>
+                    <Image className="w-6 h-6" source={require('@/assets/chatIcon.png')} />
+                    <Text className="text-base font-bold text-center text-white">채팅하기</Text>
+                </TouchableOpacity>
+            </View>
         </>
     );
 }

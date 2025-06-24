@@ -7,8 +7,8 @@ import {useDebounce} from '@/hook/useDebounce';
 import {useDispatch} from 'react-redux';
 import {addKeyword} from '@/store/slice/recentSearch';
 
-import Recent from './components/Recent';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Recent from '@/pages/Volunteer/SearchScreen/components/Recent';
 
 export default function SearchScreen() {
     const dispatch = useDispatch();
@@ -57,7 +57,7 @@ export default function SearchScreen() {
             {debouncedText.length > 0 && (
                 <ScrollView keyboardShouldPersistTaps="handled">
                     {items.slice(0, 10).map(item => (
-                        <TouchableOpacity key={item.id} onPress={() => handleSearch(item.centerName)} className="p-4 ">
+                        <TouchableOpacity key={item.id} onPress={() => handleSearch(item.centerName)} className="p-4">
                             <Text className="text-base text-font-black" numberOfLines={1}>
                                 {item.centerName}
                             </Text>

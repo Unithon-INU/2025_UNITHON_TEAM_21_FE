@@ -1,14 +1,16 @@
-import HeaderBackButton from '@/components/button/HeaderBackButton';
-import Layout from '@/components/Layout';
-import CustomModal from '@/components/layout/CustomModal';
-import {useSignup} from '@/hook/api/useSignup';
 import React, {useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
-export default function IDSignup() {
+import {useCenterSignup} from '@/hook/api/useSignup';
+
+import HeaderBackButton from '@/components/button/HeaderBackButton';
+import Layout from '@/components/Layout';
+import CustomModal from '@/components/layout/CustomModal';
+
+export default function CenterSignup() {
     const navigation = useNavigation() as any;
-    const [form, setForm] = useState({nickname: '', email: '', password: ''});
+    const [form, setForm] = useState({organizationname: '', adminname: '', email: '', password: ''});
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const removeKorean = (text: string) => text.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
     const handleChange = (key: string, value: string) => {
@@ -20,7 +22,7 @@ export default function IDSignup() {
     const [isResultModalVisible, setResultModalVisible] = useState(false);
     const [resultModalInfo, setResultModalInfo] = useState({title: '', message: ''});
 
-    const {signup, loading} = useSignup();
+    const {signup, loading} = useCenterSignup();
 
     const handleSignup = () => {
         if (form.password !== passwordConfirm) {
@@ -59,13 +61,22 @@ export default function IDSignup() {
                 <Text className="text-2xl font-semibold tracking-[-2px]">나눔의 일상을 만나다</Text>
             </View>
             <View className="p-5">
-                <TextInput
-                    className="p-3 mb-4 text-base rounded-lg border border-gray-300"
-                    placeholder="닉네임"
-                    value={form.nickname}
-                    onChangeText={text => handleChange('nickname', text)}
-                    editable={!loading}
-                />
+                <View className="flex-row gap-4 mb-4">
+                    <TextInput
+                        className="flex-1 p-3 text-base rounded-lg border border-gray-300"
+                        placeholder="지역아동센터 이름"
+                        value={form.organizationname}
+                        onChangeText={text => handleChange('organizationname', text)}
+                        editable={!loading}
+                    />
+                    <TextInput
+                        className="flex-1 p-3 text-base rounded-lg border border-gray-300"
+                        placeholder="관리자 명"
+                        value={form.adminname}
+                        onChangeText={text => handleChange('adminname', text)}
+                        editable={!loading}
+                    />
+                </View>
                 <TextInput
                     className="p-3 mb-4 text-base rounded-lg border border-gray-300"
                     placeholder="이메일을 입력해 주세요"

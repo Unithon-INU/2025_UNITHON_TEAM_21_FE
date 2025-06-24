@@ -1,28 +1,3 @@
-export interface getVltrCategoryListItem {
-    gugunCd: number;
-    nanmmbyNm: string;
-    progrmBgnde: number;
-    progrmEndde: number;
-    progrmRegistNo: number;
-    progrmSj: string;
-    progrmSttusSe: number;
-    sidoCd: number;
-}
-export interface getVltrCategoryList {
-    body: {
-        items: {
-            item: getVltrCategoryListItem[];
-        };
-        numOfRows: number;
-        pageNo: number;
-        totalCount: number;
-    };
-    header: {
-        resultCode: number;
-        resultMsg: string;
-    };
-}
-
 export interface getVltrSearchWordListItem {
     actBeginTm: number;
     actEndTm: number;

@@ -3,7 +3,6 @@ import {View, Text, TouchableOpacity, TextInput} from 'react-native';
 
 import AnimatedNumber from '@/components/animation/AnimatedNumber';
 import CustomModal from '@/components/layout/CustomModal';
-import {CenterTotalDonation} from '@/types/DonationType';
 
 interface EditTargetAmountModalProps {
     visible: boolean;
@@ -45,11 +44,11 @@ function EditTargetAmountModal({visible, initialValue, onClose, onSave}: EditTar
     );
 }
 
-export default function DonationStatus({total}: {total: CenterTotalDonation}) {
+export default function DonationStatus({total}: {total: number}) {
     const [targetAmount, setTargetAmount] = useState<number>(100000);
     const [isModalVisible, setModalVisible] = useState<boolean>(false);
 
-    const progressPercent = targetAmount > 0 ? Math.floor((total.totalAmount / targetAmount) * 100) : 0;
+    const progressPercent = targetAmount > 0 ? Math.floor((total / targetAmount) * 100) : 0;
 
     const handleSaveTargetAmount = (newAmount: number) => {
         setTargetAmount(newAmount);
@@ -66,7 +65,7 @@ export default function DonationStatus({total}: {total: CenterTotalDonation}) {
                 <View className="flex flex-col gap-1">
                     <Text className="font-semibold text-font-gray">모인금액</Text>
                     <View className="flex flex-row justify-between">
-                        <Text className="text-base font-semibold text-font-black">{total.totalAmount.toLocaleString()}원</Text>
+                        <Text className="text-base font-semibold text-font-black">{total.toLocaleString()}원</Text>
                         <Text className="text-base font-semibold text-main-color">{progressPercent}%</Text>
                     </View>
                     <View className="w-full h-1.5 overflow-hidden rounded-full bg-bg-gray">

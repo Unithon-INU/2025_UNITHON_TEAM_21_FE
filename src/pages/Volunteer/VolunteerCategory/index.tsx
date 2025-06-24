@@ -1,6 +1,6 @@
 import React, {useCallback} from 'react';
 import {Text, FlatList, ActivityIndicator, View} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 
 import {useVolunteerData} from '@/hook/api/useVolunteerData';
 
@@ -10,14 +10,9 @@ import EmptyComponents from './components/EmptyCoponents';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import Category from './components/Category';
 
-type VolunterrCategoryParams = {
-    category: string;
-    iconKey: string;
-    keyword: string;
-};
 export default function VolunterrCategory() {
-    const route = useRoute<RouteProp<Record<string, VolunterrCategoryParams>, string>>();
-    const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params || {};
+    const route = useRoute();
+    const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params as {category: string; iconKey: string; keyword: string};
 
     const {loading, items, loadMore, isFetchingMore, hasMore} = useVolunteerData(iconKey, keyword);
 

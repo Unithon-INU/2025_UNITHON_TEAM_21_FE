@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {DonationInquiry} from '@/types/DonationType';
 
@@ -32,13 +32,16 @@ function ConfirmationModal({visible, item, actionType, onClose, onAction, loadin
     const isApprove = actionType === 'cancel';
     const title = isApprove ? '기부 승인 확인' : '기부 거부 확인';
     const message = `${item.donorNickName}님의 기부를 정말로 ${isApprove ? '승인' : '거부'}하시겠습니까?`;
-    if (loading)
-        <CustomModal visible={visible} onClose={onClose} title={title} action="none">
-            <Loading />
-        </CustomModal>;
     return (
-        <CustomModal visible={visible} onClose={onClose} title={title} onAction={onAction} action={actionType}>
-            <Text className="text-center text-font-gray">{message}</Text>
+        <CustomModal visible={visible} onClose={onClose} title={title} onAction={onAction} action={loading ? 'none' : actionType} restricted={loading}>
+            {loading ? (
+                <View className="justify-center items-center h-20">
+                    <Text className="text-center text-font-gray">승인중이에요...</Text>
+                    <Loading />
+                </View>
+            ) : (
+                <Text className="text-center text-font-gray">{message}</Text>
+            )}
         </CustomModal>
     );
 }
@@ -47,6 +50,9 @@ export default function Waiting({items, onRefresh}: {items: DonationInquiry[]; o
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<DonationInquiry | null>(null);
     const [actionType, setActionType] = useState<'cancel' | 'delete' | null>(null);
+    const [isResultModalVisible, setResultModalVisible] = useState(false);
+    const [resultModalInfo, setResultModalInfo] = useState({title: '', message: ''});
+
     const [loading, setLoading] = useState(false);
     const pendingItems = items.filter(item => item.status === 'PENDING');
     const {confirm} = useConfirmDonation();
@@ -55,6 +61,10 @@ export default function Waiting({items, onRefresh}: {items: DonationInquiry[]; o
         setModalVisible(false);
         setSelectedItem(null);
         setActionType(null);
+    };
+    const handleCloseResultModal = () => {
+        setResultModalVisible(false);
+        onRefresh();
     };
 
     const handlePressApprove = (item: DonationInquiry) => {
@@ -74,13 +84,21 @@ export default function Waiting({items, onRefresh}: {items: DonationInquiry[]; o
         setLoading(true);
         try {
             await confirm(selectedItem.donationId);
-            Alert.alert('성공', `${selectedItem.donorNickName}님의 기부를 승인했습니다.`);
+            handleCloseModal();
+            setResultModalInfo({
+                title: '성공',
+                message: `${selectedItem.donorNickName}님의 기부를 승인했습니다.`,
+            });
+            setResultModalVisible(true);
         } catch (error) {
-            Alert.alert('오류', '처리 중 문제가 발생했습니다.');
+            handleCloseModal();
+            setResultModalInfo({
+                title: '오류',
+                message: '처리 중 문제가 발생했습니다.',
+            });
+            setResultModalVisible(true);
         } finally {
             setLoading(false);
-            handleCloseModal();
-            onRefresh();
         }
     };
 
@@ -130,6 +148,14 @@ export default function Waiting({items, onRefresh}: {items: DonationInquiry[]; o
                 onAction={handleConfirmAction}
                 loading={loading}
             />
+            <CustomModal visible={isResultModalVisible} onClose={handleCloseResultModal} title={resultModalInfo.title} action="none">
+                <View className="items-center w-full">
+                    <Text className="my-4 text-center text-font-gray">{resultModalInfo.message}</Text>
+                    <TouchableOpacity className="justify-center items-center py-3 mt-2 w-full rounded-lg bg-main-color" onPress={handleCloseResultModal}>
+                        <Text className="font-bold text-white">확인</Text>
+                    </TouchableOpacity>
+                </View>
+            </CustomModal>
         </ColWrapper>
     );
 }

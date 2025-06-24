@@ -2,43 +2,34 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, TouchableOpacity, TextInput, Image} from 'react-native';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 
-import CustomModal from '@/components/layout/CustomModal';
+import {ItemDonationType} from '@/types/ItemDonationType';
+import {useEditItemDonation} from '@/hook/api/useItemDonation';
 
-interface DonationItem {
-    id: string;
-    name: string;
-    current: number;
-    required: number;
-}
-const initialDonationItems: DonationItem[] = [
-    {id: '1', name: '두루마리 휴지', current: 30, required: 50},
-    {id: '2', name: '스케치북', current: 8, required: 20},
-    {id: '3', name: '유아용 기저귀 (L)', current: 15, required: 40},
-];
+import CustomModal from '@/components/layout/CustomModal';
 
 interface EditModalProps {
     visible: boolean;
-    item: DonationItem | null;
+    item: ItemDonationType | null;
     onClose: () => void;
-    onSave: (itemId: string, newCurrentValue: number) => void;
+    onSave: (newCurrentValue: number) => void;
 }
 function EditDonationModal({visible, item, onClose, onSave}: EditModalProps) {
     const [currentValue, setCurrentValue] = useState<string>('');
     useEffect(() => {
-        if (item) setCurrentValue(String(item.required));
+        if (item) setCurrentValue(String(item.requiredQuantity));
     }, [item]);
 
     const handleSave = () => {
         const newValue = parseInt(currentValue, 10);
         if (item && !isNaN(newValue)) {
-            onSave(item.id, newValue);
+            onSave(newValue);
         }
     };
 
     if (!item) return null;
     return (
         <CustomModal visible={visible} onClose={onClose} title="기부 물품 수정" onAction={handleSave} action="edit">
-            <Text className="mb-2 text-font-gray">{item.name}</Text>
+            <Text className="mb-2 text-font-gray">{item.itemName}</Text>
             <TextInput
                 className="px-4 py-3 w-full text-base text-center text-black rounded-xl border border-gray-300"
                 keyboardType="number-pad"
@@ -51,7 +42,7 @@ function EditDonationModal({visible, item, onClose, onSave}: EditModalProps) {
 }
 interface DeleteModalProps {
     visible: boolean;
-    item: DonationItem | null;
+    item: ItemDonationType | null;
     onClose: () => void;
     onConfirm: () => void;
 }
@@ -59,11 +50,16 @@ function DeleteConfirmModal({visible, item, onClose, onConfirm}: DeleteModalProp
     if (!item) return null;
     return (
         <CustomModal visible={visible} onClose={onClose} title="삭제 확인" onAction={onConfirm} action="delete">
-            <Text className="mb-4 text-center text-font-gray">{`'${item.name}' 항목을 정말 삭제하시겠습니까?`}</Text>
+            <Text className="mb-4 text-center text-font-gray">{`'${item.itemName}' 항목을 정말 삭제하시겠습니까?`}</Text>
         </CustomModal>
     );
 }
-function AddDonationModal({visible, onClose, onSave}: {visible: boolean; onClose: () => void; onSave: (name: string, required: number) => void}) {
+interface AddModalProps {
+    visible: boolean;
+    onClose: () => void;
+    onSave: (name: string, required: number) => void;
+}
+function AddDonationModal({visible, onClose, onSave}: AddModalProps) {
     const [name, setName] = useState('');
     const [required, setRequired] = useState('');
 
@@ -96,18 +92,18 @@ function AddDonationModal({visible, onClose, onSave}: {visible: boolean; onClose
 }
 
 interface DonationItemCardProps {
-    item: DonationItem;
+    item: ItemDonationType;
     isLast: boolean;
-    onEditPress: (item: DonationItem) => void;
-    onDeletePress: (item: DonationItem) => void;
+    onEditPress: (item: ItemDonationType) => void;
+    onDeletePress: (item: ItemDonationType) => void;
 }
 function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationItemCardProps) {
-    const progress = item.required > 0 ? Math.floor((item.current / item.required) * 100) : 0;
+    const progress = item.requiredQuantity > 0 ? Math.floor((item.currentQuantity / item.requiredQuantity) * 100) : 0;
     const containerClassName = `p-4 ${isLast ? '' : 'border-b border-main-gray'}`;
     return (
         <View className={containerClassName}>
             <View className="flex-row justify-between mb-2">
-                <Text className="text-base font-semibold text-font-black">{item.name}</Text>
+                <Text className="text-base font-semibold text-font-black">{item.itemName}</Text>
                 <Text className="text-base font-semibold text-main-color">{progress}%</Text>
             </View>
             <View className="h-1.5 overflow-hidden rounded-full bg-bg-gray">
@@ -115,7 +111,7 @@ function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationIt
             </View>
             <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-font-gray">
-                    현재 {item.current}개 / 필요 {item.required}개
+                    현재 {item.currentQuantity}개 / 필요 {item.requiredQuantity}개
                 </Text>
                 <View className="flex-row gap-2">
                     <TouchableOpacity className="px-3 py-1.5 rounded-full bg-main-color" onPress={() => onEditPress(item)}>
@@ -130,20 +126,21 @@ function DonationItemCard({item, isLast, onEditPress, onDeletePress}: DonationIt
     );
 }
 
-export default function List() {
-    const [items, setItems] = useState<DonationItem[]>(initialDonationItems);
-    const [selectedItem, setSelectedItem] = useState<DonationItem | null>(null);
+export default function List({items, centerId, onRefresh}: {items: ItemDonationType[]; centerId: number; onRefresh: () => void}) {
+    const [selectedItem, setSelectedItem] = useState<ItemDonationType | null>(null);
 
     const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
     const [isAddModalVisible, setAddModalVisible] = useState<boolean>(false);
 
-    const handleEditPress = (item: DonationItem) => {
+    const {addItem, editItem, deleteItem} = useEditItemDonation();
+
+    const handleEditPress = (item: ItemDonationType) => {
         setSelectedItem(item);
         setEditModalVisible(true);
     };
 
-    const handleDeletePress = (item: DonationItem) => {
+    const handleDeletePress = (item: ItemDonationType) => {
         setSelectedItem(item);
         setDeleteModalVisible(true);
     };
@@ -159,26 +156,24 @@ export default function List() {
         setSelectedItem(null);
     };
 
-    const handleSaveItem = (itemId: string, newCurrentValue: number) => {
-        setItems(prev => prev.map(item => (item.id === itemId ? {...item, required: newCurrentValue} : item)));
-        handleCloseModals();
-    };
-
-    const handleConfirmDelete = () => {
+    const handleEdit = async (newrequiredQuantity: number) => {
         if (!selectedItem) return;
-        setItems(prev => prev.filter(item => item.id !== selectedItem.id));
+        await editItem(selectedItem.id, selectedItem.itemName, newrequiredQuantity, selectedItem.currentQuantity);
         handleCloseModals();
+        onRefresh();
     };
 
-    const handleAddItem = (name: string, required: number) => {
-        const newItem: DonationItem = {
-            id: Date.now().toString(),
-            name,
-            required,
-            current: 0,
-        };
-        setItems(prev => [...prev, newItem]);
+    const handleDelete = async () => {
+        if (!selectedItem) return;
+        await deleteItem(selectedItem.id);
         handleCloseModals();
+        onRefresh();
+    };
+
+    const handleAdd = async (name: string, required: number) => {
+        await addItem(centerId, name, required);
+        handleCloseModals();
+        onRefresh();
     };
 
     return (
@@ -203,9 +198,9 @@ export default function List() {
                 <Text className="font-bold text-font-gray">기부 물품 추가하기</Text>
             </TouchableOpacity>
 
-            <EditDonationModal visible={isEditModalVisible} item={selectedItem} onClose={handleCloseModals} onSave={handleSaveItem} />
-            <DeleteConfirmModal visible={isDeleteModalVisible} item={selectedItem} onClose={handleCloseModals} onConfirm={handleConfirmDelete} />
-            <AddDonationModal visible={isAddModalVisible} onClose={handleCloseModals} onSave={handleAddItem} />
+            <EditDonationModal visible={isEditModalVisible} item={selectedItem} onClose={handleCloseModals} onSave={handleEdit} />
+            <DeleteConfirmModal visible={isDeleteModalVisible} item={selectedItem} onClose={handleCloseModals} onConfirm={handleDelete} />
+            <AddDonationModal visible={isAddModalVisible} onClose={handleCloseModals} onSave={handleAdd} />
         </ColWrapper>
     );
 }

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useSelector} from 'react-redux';
 
-import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
+import {useUnlink} from '@/hook/api/useKakaoInfo';
+import {useSelector} from 'react-redux';
+import {RootState} from '@/store/store';
 import {useUserTotalDonation} from '@/hook/api/useDonation';
 
 import {today} from '@/utils/formatDate';
@@ -11,13 +12,28 @@ import {today} from '@/utils/formatDate';
 import Layout from '../../components/Layout';
 import AnimatedNumber from '@/components/animation/AnimatedNumber';
 import Loading from '@/components/Loading';
+import CustomModal from '@/components/layout/CustomModal';
 
 export default function UserInfo() {
-    const navigation = useNavigation<StackNavigationProp<any>>();
-    const {profile} = useSelector((state: any) => state.user);
+    const navigation = useNavigation() as any;
+    const {profile} = useSelector((state: RootState) => state.user);
+
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [modalInfo, setModalInfo] = useState({title: '', message: ''});
+
     const {item: totalDonation, loading} = useUserTotalDonation();
+    const {kakaoUnlink} = useUnlink();
+
+    const showUnlinkResultModal = () => {
+        setModalInfo({title: '확인', message: '정말로 회원을 탈퇴하시겠습니까?'});
+        setModalVisible(true);
+    };
+    const handleCloseModal = () => {
+        setModalVisible(false);
+    };
 
     if (loading) return <Loading />;
+
     return (
         <Layout>
             <View className="flex flex-col justify-between py-4">
@@ -57,11 +73,9 @@ export default function UserInfo() {
                 </View>
             )}
 
-            {/* 나의 정보 섹션 */}
             <View className="h-auto pt-[10px] pb-[10px] px-[5px]">
                 <Text className="font-inter font-semibold text-[20px] leading-[24px] mb-2 text-font-black">나의 정보</Text>
 
-                {/* 관심 지역아동센터 */}
                 <TouchableOpacity onPress={() => navigation.navigate('Userlikedcenter')} className="flex-row justify-between items-center mt-5 mb-3">
                     <View className="flex-row items-center">
                         <Image source={require('@/assets/likedcenter.png')} className="mr-2 w-6 h-6" resizeMode="contain" />
@@ -70,7 +84,6 @@ export default function UserInfo() {
                     <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                 </TouchableOpacity>
 
-                {/* 관심 봉사활동 */}
                 <TouchableOpacity onPress={() => navigation.navigate('Userlikedvol')} className="flex-row justify-between items-center mt-5 mb-3">
                     <View className="flex-row items-center">
                         <Image source={require('@/assets/likedvol.png')} className="mr-2 w-6 h-6" resizeMode="contain" />
@@ -79,7 +92,6 @@ export default function UserInfo() {
                     <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                 </TouchableOpacity>
 
-                {/* 기부내역 */}
                 <TouchableOpacity onPress={() => navigation.navigate('Userdonate')} className="flex-row justify-between items-center mt-5 mb-3">
                     <View className="flex-row items-center">
                         <Image source={require('@/assets/likedcenter.png')} className="mr-2 w-6 h-6" resizeMode="contain" />
@@ -88,6 +100,18 @@ export default function UserInfo() {
                     <Image source={require('@/assets/rightnavi.png')} className="w-[18px] h-[18px]" />
                 </TouchableOpacity>
             </View>
+            {profile && (
+                <View className="px-4 mt-8">
+                    <TouchableOpacity onPress={() => showUnlinkResultModal()} className="w-full">
+                        <Text className="text-sm text-right text-main-gray">회원탈퇴</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+            <CustomModal visible={isModalVisible} onClose={handleCloseModal} title={modalInfo.title} action="cancel" onAction={() => kakaoUnlink()}>
+                <View className="items-center w-full">
+                    <Text className="my-4 text-center text-font-gray">{modalInfo.message}</Text>
+                </View>
+            </CustomModal>
         </Layout>
     );
 }
