@@ -14,12 +14,11 @@ import Loading from '@/components/Loading';
 import AllDonation from './components/AllDonation';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-export default function UserInfo() {
+export default function CenterHome() {
     const {profile} = useSelector((state: RootState) => state.user);
     const {item: centerItem, loading: centerLoading} = useInquiryCenter(profile?.id ?? -1);
     const {items, loading: InquiryLoading, fetchDonations} = useInquiryDonation(profile?.id ?? -1);
     const {items: donationItem, loading: itemsLoading, refetch} = useGetItemDonation(profile?.id ?? -1);
-    // const {total, loading: TotalLoading} = useCenterTotalDonation(profile?.id ?? 0);
 
     const handleRefresh = () => fetchDonations();
     const handleRefetch = () => refetch();
@@ -40,10 +39,10 @@ export default function UserInfo() {
                 <Text className="text-xl font-bold text-font-black">{centerItem.name}</Text>
             </View>
 
-            <DonationStatus total={centerItem.totalReceivedAmount} />
+            <DonationStatus data={centerItem} />
             <List centerId={centerItem.id} items={donationItem} onRefresh={handleRefetch} />
             <Waiting items={items} onRefresh={handleRefresh} />
-            <AllDonation items={items} />
+            <AllDonation items={items} id={centerItem.id} />
         </Layout>
     );
 }

@@ -22,6 +22,7 @@ import CustomModal from '@/components/layout/CustomModal';
 
 export default function Home() {
     const [isExitModalVisible, setExitModalVisible] = useState(false);
+
     const {centerData, loading} = useCenter(180);
     const {items: recommendItems, loading: recommendLoading} = useVolunteerData('0400');
     const locationLoading = useSelector((state: RootState) => state.location.loading);
@@ -36,12 +37,11 @@ export default function Home() {
                 setExitModalVisible(true);
                 return true;
             };
-
             const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
             return () => subscription.remove();
         }, []),
     );
+
     if (loading || recommendLoading || locationLoading === 'pending') {
         return <Loading />;
     }

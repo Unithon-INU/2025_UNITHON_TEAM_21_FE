@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.gibongsa">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -26,20 +26,19 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
-      <!-- 카카오 로그인 -->
-      <activity
-          android:name="com.kakao.sdk.auth.AppsHandlerActivity"
-          android:exported="true">
-          <intent-filter>
-              <action android:name="android.intent.action.VIEW" />
-
-              <category android:name="android.intent.category.DEFAULT" />
-              <category android:name="android.intent.category.BROWSABLE" />
-
-              <data android:scheme="kakao15b439ca3ac0e6a362274cbc9f0031fc" />
-              <data android:host="address" />
-          </intent-filter>
-      </activity>
+      <activity 
+        android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            
+            <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+            <data android:host="oauth"
+                    android:scheme="kakao15b439ca3ac0e6a362274cbc9f0031fc" />
+        </intent-filter>
+    </activity>
       <service
         android:name="com.reactnativeandroidwidget.RNWidgetCollectionService"
         android:permission="android.permission.BIND_REMOTEVIEWS" />

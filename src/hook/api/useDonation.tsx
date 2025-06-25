@@ -64,6 +64,7 @@ export function useCenterTotalDonation(id: number) {
                     throw new Error('Network response was not ok');
                 }
                 const item = await response.json();
+                console.log(`Fetching total donation for orgId ${id}:`, item);
                 setTotal(item);
             } catch (e) {
                 setError('목록 가져오기를 실패했습니다.');
@@ -121,6 +122,7 @@ export function useDonation() {
                 },
                 body: JSON.stringify({organizationId, amount}),
             });
+            console.log(response);
             if (!response.ok) {
                 setError('기부 처리 중 오류가 발생했습니다.');
                 throw new Error('기부 처리 중 오류가 발생했습니다.');
