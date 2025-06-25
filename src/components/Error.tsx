@@ -7,9 +7,9 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 export default function Error({text}: {text: string}) {
     const navigation = useNavigation() as any;
     return (
-        <View className="flex flex-col items-center justify-center h-full gap-3">
+        <View className="flex flex-col gap-3 justify-center items-center h-full">
             <MaterialIcons name="error" color={'#FFB257'} size={100} />
-            <Text className="text-xl font-semibold text-font-black">{text}</Text>
+            <Text className="text-xl font-semibold text-center text-font-black">{text}</Text>
             <TouchableOpacity className="px-4 py-3 rounded-lg bg-bg-gray" onPress={() => navigation.goBack()}>
                 <Text className="font-semibold text-font-black">닫기</Text>
             </TouchableOpacity>

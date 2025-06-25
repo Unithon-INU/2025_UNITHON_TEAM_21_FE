@@ -1,5 +1,5 @@
 export interface ChildrenCenterList {
-    id: string;
+    id: number;
     city: string;
     centerName: string;
     address: string;
@@ -10,4 +10,14 @@ export interface ChildrenCenterList {
     x: number;
     y: number;
     distance: number;
+}
+export interface CenterInquiryType {
+    id: number;
+    name: string;
+    address: string;
+    contactEmail: string;
+    accountnumber: string;
+    phoneNumber: string;
+    donationGoalAmount: number;
+    totalReceivedAmount: number;
 }

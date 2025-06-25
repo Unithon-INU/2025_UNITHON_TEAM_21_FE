@@ -18,13 +18,13 @@ export default function SearchScreen() {
 
     const debouncedText = useDebounce(text, 200);
     const {items} = useVolunteerData('', debouncedText);
-    const {loading, volunteerData} = useVolunteerData('');
+    const {loading, items: popularVolunteer} = useVolunteerData('0400');
 
     const handleSearch = (searchWord?: string) => {
         const keyword = (searchWord ?? text).trim();
         if (keyword.length === 0) return;
         dispatch(addKeyword(keyword));
-        navigation.replace('centerSearchResult', {keyword});
+        navigation.replace('searchResult', {keyword});
         setText('');
         Keyboard.dismiss();
     };
@@ -54,13 +54,13 @@ export default function SearchScreen() {
             {debouncedText.length === 0 && (
                 <View className="px-5">
                     <Recent onPress={handleSearch} />
-                    <Popular data={volunteerData} onPress={handleSearch} />
+                    <Popular items={popularVolunteer} onPress={handleSearch} />
                 </View>
             )}
             {debouncedText.length > 0 && (
                 <ScrollView keyboardShouldPersistTaps="handled">
                     {items.slice(0, 10).map(item => (
-                        <TouchableOpacity key={item.progrmRegistNo} onPress={() => handleSearch(item.progrmSj)} className="p-4 ">
+                        <TouchableOpacity key={item.progrmRegistNo} onPress={() => handleSearch(item.progrmSj)} className="p-4">
                             <Text className="text-base text-font-black" numberOfLines={1}>
                                 {item.progrmSj}
                             </Text>

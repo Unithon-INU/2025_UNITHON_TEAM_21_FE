@@ -1,5 +1,3 @@
-// src/data/donationStatusDummy.ts
-
 export const donationStatusDummy = [
     {
         id: '1',

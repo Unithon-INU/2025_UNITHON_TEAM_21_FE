@@ -52,21 +52,17 @@ export default function ChatRoomScreen() {
             if (flatListRef.current) {
                 flatListRef.current.scrollToEnd({animated: true});
             }
-        }, 100); // 초기 메시지 로드 후 스크롤을 아래로 이동
+        }, 100);
     }, [messages.length]);
-    // --- 새로운 "편법" 로직 ---
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
             if (flatListRef.current) {
-                // KeyboardAvoidingView가 레이아웃을 조정한 후 스크롤하기 위해
-                // 아주 짧은 지연을 줄 수 있습니다. (선택 사항 및 값 조절 필요)
                 setTimeout(() => {
                     flatListRef.current?.scrollToEnd({animated: true});
-                }, 50); // 50ms 지연, 필요에 따라 조절하거나 제거
+                }, 50);
             }
         });
 
-        // 컴포넌트 언마운트 시 리스너 제거 (메모리 누수 방지)
         return () => {
             keyboardDidShowListener.remove();
         };

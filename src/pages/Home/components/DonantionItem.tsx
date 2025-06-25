@@ -5,13 +5,14 @@ import {useNavigation} from '@react-navigation/native';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
+import {daysLeft} from '@/utils/formatDate';
+import {useInquiryCenter} from '@/hook/api/useCenter';
 
 function Item({data}: {data: ChildrenCenterList}) {
-    const daysLeft = Math.floor(Math.random() * 12) + 3; // 3~14 days
-    const target = (Math.floor(Math.random() * 21) + 10) * 10000; // 100,000~300,000 KRW
-    const current = (Math.floor(Math.random() * 41) + 10) * 10000; // 100,000~500,000 KRW
-    const percent = Math.floor((current / target) * 100);
+    const {item, loading: TotalLoading} = useInquiryCenter(Number(data.id));
+    const percent = Math.floor((item.totalReceivedAmount / item.donationGoalAmount) * 100);
     const navigation = useNavigation() as any;
+    if (TotalLoading) return null;
 
     return (
         <View className="flex flex-col gap-2">
@@ -26,9 +27,9 @@ function Item({data}: {data: ChildrenCenterList}) {
                         <View className="flex flex-row gap-1 justify-between items-baseline">
                             <View className="flex flex-row gap-1 items-baseline">
                                 <Text className="text-lg font-semibold text-main-color">{percent}%</Text>
-                                <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()}원</Text>
+                                <Text className="text-sm font-semibold text-font-gray">{item.donationGoalAmount.toLocaleString()}원</Text>
                             </View>
-                            <Text className="text-sm font-semibold text-font-black">{daysLeft}일 남음</Text>
+                            <Text className="text-sm font-semibold text-font-black">{daysLeft()}일 남음</Text>
                         </View>
                         <View className="overflow-hidden w-full h-1 rounded-full bg-bg-gray">
                             <View className="h-full bg-main-color" style={{width: `${Math.min(percent, 100)}%`}} />
@@ -41,8 +42,9 @@ function Item({data}: {data: ChildrenCenterList}) {
 }
 export default function DonationItem({items}: {items: ChildrenCenterList[]}) {
     if (!items) return null;
+
     return (
-        <ColWrapper title="실시간 기부현황">
+        <ColWrapper title="실시간 기부현황" href="realTimeDonation">
             {items.slice(0, 3)?.map((item, index) => (
                 <Item key={index} data={item} />
             ))}
