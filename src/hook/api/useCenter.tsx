@@ -12,7 +12,10 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     const R = 6371;
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c * 1000;
 }
@@ -36,7 +39,6 @@ export function useCenter(perPage: number = 10) {
                 const response = await fetch('https://chatbot-server-cyan.vercel.app/api/childrenCenter/data?perPage=180');
                 const results = await response.json();
                 if (results.data && results.data.length > 0) {
-                    console.log(results.data[0]); //임의추가
                     setRawCenterData(results.data);
                 }
             } catch (e) {
@@ -50,7 +52,9 @@ export function useCenter(perPage: number = 10) {
         if (rawCenterData.length === 0) return;
 
         const dataWithDistance = rawCenterData.map(center => {
-            const distance = location ? calculateDistance(location.latitude, location.longitude, center.y, center.x) : Infinity;
+            const distance = location
+                ? calculateDistance(location.latitude, location.longitude, center.y, center.x)
+                : Infinity;
 
             return {
                 ...center,

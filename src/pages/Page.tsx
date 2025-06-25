@@ -44,6 +44,10 @@ import {fetchLocation} from '@/store/slice/locationSlice';
 import CenterSearchScreen from './Home/SearchScreen';
 import CenterSearchResult from './Home/SerachResult';
 
+import {setUser} from '@/store/slice/userSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
 const TAB_ICONS = {
     home: (color: string, size: number) => <Foundation name="home" size={size} color={color} />,
     chatting: (color: string, size: number) => <Ionicons name="chatbubbles" size={size} color={color} />,
@@ -116,6 +120,34 @@ export default function Pages() {
         };
         checkPermissions();
     }, []);
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const token = await AsyncStorage.getItem('accessToken');
+                if (!token) return;
+
+                const res = await axios.get('https://your-api-url.com/users/me', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                dispatch(setUser({
+                    token: {
+                        accessToken: token,
+                        refreshToken: '', 
+                    },
+                    profile: res.data, 
+                }));
+            } catch (error) {
+                console.error('유저 프로필 불러오기 실패:', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, [dispatch]);
+
     if (isLoading || locationLoading === 'pending') {
         return <Loading />;
     }
@@ -152,6 +184,7 @@ export default function Pages() {
             <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
             <Stack.Screen name="Userdonate" component={UserDonate} />
             <Stack.Screen name="Edituser" component={Edituser} />
+            <Stack.Screen name="UserInfo" component={UserInfo} />
 
             {/* 기부 */}
             <Stack.Screen name="remittance" component={Remittance} />

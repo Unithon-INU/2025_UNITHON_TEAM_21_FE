@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Alert} from 'react-native';
 import {useDispatch} from 'react-redux';
 
@@ -20,6 +20,15 @@ export function useLogin({email, password}: LoginForm) {
     const navigation = useNavigation() as any;
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
+
+      useEffect(() => {
+    const fetchToken = async () => {
+      const token = await AsyncStorage.getItem(tokenName);
+      console.log('🪙 저장된 토큰:', token);
+    };
+    fetchToken();
+  }, []);
+
 
     const login = async () => {
         if (!email || !password) {
