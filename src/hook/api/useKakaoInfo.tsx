@@ -5,6 +5,7 @@ import {login, getProfile, unlink} from '@react-native-seoul/kakao-login';
 
 import {useDispatch} from 'react-redux';
 import {clearUser, setUser} from '@/store/slice/userSlice';
+import {API_URL} from '@env';
 
 const tokenName = 'token';
 const profileName = 'profile';
@@ -30,13 +31,35 @@ export function useLogin() {
 
     const kakaoLogin = useCallback(async () => {
         try {
-            const token = await login();
+            await login();
             const profile = await getProfile();
-            await AsyncStorage.setItem(tokenName, JSON.stringify(token));
-            await AsyncStorage.setItem(profileName, JSON.stringify(profile));
+
+            const response = await fetch(`${API_URL}/api/login/kakao`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: profile.email,
+                    nickname: profile.nickname,
+                }),
+            });
+            const data = await response.json();
+            const tokens = {
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+            };
+            const profileData = {
+                id: data.id,
+                nickname: data.nickname,
+                userRole: data.userRole,
+            };
+            console.log('Login response:', tokens, profileData);
+            await AsyncStorage.setItem(tokenName, JSON.stringify(tokens));
+            await AsyncStorage.setItem(profileName, JSON.stringify(profileData));
             dispatch(
                 setUser({
-                    token,
+                    token: tokens,
                     profile: {
                         id: profile.id,
                         nickname: profile.nickname,

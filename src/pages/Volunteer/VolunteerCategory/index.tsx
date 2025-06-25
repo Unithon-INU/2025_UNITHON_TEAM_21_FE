@@ -14,7 +14,7 @@ export default function VolunterrCategory() {
     const route = useRoute();
     const {category = '추천 봉사활동', iconKey = '', keyword = ''} = route.params as {category: string; iconKey: string; keyword: string};
 
-    const {loading, items, loadMore, isFetchingMore, hasMore} = useVolunteerData(iconKey, keyword);
+    const {loading, items, loadMore, isFetchingMore, volunteerData, hasMore} = useVolunteerData(iconKey, keyword);
 
     const handleEndReached = useCallback(() => {
         if (hasMore && !isFetchingMore && !loading) {
@@ -36,7 +36,7 @@ export default function VolunterrCategory() {
                     renderItem={({item}) => <VolunteerItem item={item} />}
                     ListHeaderComponent={
                         <Text className="mb-2 text-xl font-bold text-font-black">
-                            총 <Text className="text-main-color">{items.length}</Text>건
+                            총 <Text className="text-main-color">{volunteerData?.body.totalCount}</Text>건
                         </Text>
                     }
                     ListEmptyComponent={<EmptyComponents category={keyword ? keyword : category} />}

@@ -333,7 +333,7 @@ export function KakaoMapManyMarkerCenter({items, className = ''}: {items: Childr
                 var mapContainer = document.getElementById("map");
                 var mapOption = {
                     center: new kakao.maps.LatLng(${location.location?.latitude}, ${location.location?.longitude}),
-                    level: 7
+                    level: 8
                 };
                 var map = new kakao.maps.Map(mapContainer, mapOption);
 

@@ -32,48 +32,60 @@ const getCurrentPosition = (): Promise<GeoPosition> => {
         Geolocation.getCurrentPosition(
             position => resolve(position),
             error => reject(error),
-            {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+            {enableHighAccuracy: false, timeout: 5000, maximumAge: 10000},
         );
     });
 };
 
-export const fetchLocation = createAsyncThunk('location/fetchLocation', async (_, {rejectWithValue}) => {
-    try {
-        const position = await getCurrentPosition();
-        const {latitude, longitude} = position.coords;
+export const fetchLocation = createAsyncThunk(
+    'location/fetchLocation',
+    async (_, {rejectWithValue}) => {
+        try {
+            const position = await getCurrentPosition();
+            const {latitude, longitude} = position.coords;
 
-        const response = await fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`, {
-            headers: {
-                Authorization: `KakaoAK ${REST_KAKAO_API_KEY}`,
-            },
-        });
+            const response = await fetch(`https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x=${longitude}&y=${latitude}`, {
+                headers: {
+                    Authorization: `KakaoAK ${REST_KAKAO_API_KEY}`,
+                },
+            });
 
-        if (!response.ok) {
-            throw new Error('주소 정보를 가져오는 데 실패했습니다.');
+            if (!response.ok) {
+                throw new Error('주소 정보를 가져오는 데 실패했습니다.');
+            }
+            const data = await response.json();
+            if (!data.documents || data.documents.length === 0) {
+                throw new Error('해당 좌표에 대한 주소 정보가 없습니다.');
+            }
+            const gugunData = await fetch(
+                `http://openapi.1365.go.kr/openapi/service/rest/CodeInquiryService/getAreaCodeInquiryList?schSido=${data.documents[0].region_1depth_name}&schGugun=${data.documents[0].region_2depth_name}`,
+                {
+                    method: 'GET',
+                },
+            );
+            const xmlData = await gugunData.text();
+            const gugunCode = xml2Json(xmlData);
+            if (!gugunCode.body || gugunCode.body.pageNo === 0) {
+                throw new Error('해당 지역의 코드 정보를 가져오는 데 실패했습니다.');
+            }
+            return {
+                location: {latitude, longitude},
+                address: gugunCode.body.items.item,
+            };
+        } catch (error: any) {
+            return rejectWithValue(error.message || '알 수 없는 오류가 발생했습니다.');
         }
-        const data = await response.json();
-        if (!data.documents || data.documents.length === 0) {
-            throw new Error('해당 좌표에 대한 주소 정보가 없습니다.');
-        }
-        const gugunData = await fetch(
-            `http://openapi.1365.go.kr/openapi/service/rest/CodeInquiryService/getAreaCodeInquiryList?schSido=${data.documents[0].region_1depth_name}&schGugun=${data.documents[0].region_2depth_name}`,
-            {
-                method: 'GET',
-            },
-        );
-        const xmlData = await gugunData.text();
-        const gugunCode = xml2Json(xmlData);
-        if (!gugunCode.body || gugunCode.body.pageNo === 0) {
-            throw new Error('해당 지역의 코드 정보를 가져오는 데 실패했습니다.');
-        }
-        return {
-            location: {latitude, longitude},
-            address: gugunCode.body.items.item,
-        };
-    } catch (error: any) {
-        return rejectWithValue(error.message || '알 수 없는 오류가 발생했습니다.');
-    }
-});
+    },
+    {
+        condition: (_, {getState}) => {
+            const {location} = getState() as {location: LocationState};
+            if (location.loading === 'pending' || location.loading === 'succeeded') {
+                return false;
+            }
+            return true;
+        },
+    },
+);
 
 const locationSlice = createSlice({
     name: 'location',

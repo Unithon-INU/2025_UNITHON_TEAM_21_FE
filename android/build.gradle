@@ -10,6 +10,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }             // 이부분에 추가
     }
     dependencies {
         classpath("com.android.tools.build:gradle")
