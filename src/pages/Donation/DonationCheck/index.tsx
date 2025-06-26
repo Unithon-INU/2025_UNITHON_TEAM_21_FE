@@ -12,6 +12,7 @@ export default function DonationCheck() {
     const {profile} = useSelector((state: any) => state.user);
     const {id, name} = route.params as {id: number; name: string};
     if (!profile) return <Error text="로그인 후 이용해주세요." />;
+
     return (
         <Layout>
             <HeaderBackButton />
@@ -36,7 +37,7 @@ export default function DonationCheck() {
             <View className="flex flex-col mb-16">
                 <TouchableOpacity
                     className="flex flex-row justify-center items-center py-4 mt-6 w-full rounded-xl bg-main-color"
-                    onPress={() => navigation.navigate('remittance', {name: name, id: id})}>
+                    onPress={() => navigation.navigate('remittance', {name, id})}>
                     <Text className="text-lg font-semibold text-white">계좌 확인하고 기부 내역 전달하기</Text>
                 </TouchableOpacity>
             </View>

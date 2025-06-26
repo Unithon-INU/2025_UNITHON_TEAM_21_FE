@@ -6,8 +6,8 @@ import {toggleCenterLike} from '@/store/slice/likedCenterSlice';
 
 import {RootState} from '@/store/store';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
-import {useCenter, useIsRegister} from '@/hook/api/useCenter';
-import {useCenterTotalDonation} from '@/hook/api/useDonation';
+import {useCenter, useInquiryCenter, useIsRegister} from '@/hook/api/useCenter';
+
 import {useVolunteerCenterName} from '@/hook/api/useVolunteerData';
 import {useGetItemDonation} from '@/hook/api/useItemDonation';
 
@@ -43,11 +43,11 @@ export default function CenterDetail() {
             );
         }
     };
-    const {total, loading: TotalLoading} = useCenterTotalDonation(id);
+    const {item: centerItem, loading: centerLoading} = useInquiryCenter(id);
     const {items: itemDonation, loading: itemsLoading} = useGetItemDonation(id);
     const {item: isRegister, loading: registerLoading} = useIsRegister(id);
-    if (loading || activityLoading || TotalLoading || itemsLoading || registerLoading) return <Loading />;
 
+    if (loading || activityLoading || itemsLoading || registerLoading || centerLoading) return <Loading />;
     if (!data) return <Error text="센터 정보를 찾을 수 없습니다." />;
 
     return (
@@ -80,14 +80,14 @@ export default function CenterDetail() {
                             : ''}
                     </Text>
                 </ColWrapper>
-                <DonationStatus data={total} />
+                <DonationStatus data={centerItem} />
                 <Activity items={items} />
                 <List items={itemDonation} />
             </Layout>
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">
                 <TouchableOpacity
                     className={`w-[150px] py-3 rounded-xl flex flex-row items-center justify-center gap-2 ${isRegister ? 'bg-main-color' : 'bg-main-gray'}`}
-                    onPress={() => navigation.navigate('donationCheck', {name: data.centerName, id: data.id})}>
+                    onPress={() => navigation.navigate('donationCheck', {name: data.centerName, id})}>
                     <Image className="w-6 h-6" source={require('@/assets/getCash.png')} />
                     <Text className="text-base font-bold text-center text-white">기부하기</Text>
                 </TouchableOpacity>

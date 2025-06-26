@@ -4,7 +4,7 @@ import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {DonationInquiry} from '@/types/DonationType';
 import {formatDonationDate} from '@/utils/formatDate';
 
-export default function Waiting({items}: {items: DonationInquiry[]}) {
+export default function Waiting({items, id}: {items: DonationInquiry[]; id: number}) {
     if (!items || items.length === 0) {
         return (
             <ColWrapper title="전체 기부목록">
@@ -16,7 +16,7 @@ export default function Waiting({items}: {items: DonationInquiry[]}) {
     }
 
     return (
-        <ColWrapper title="전체 기부목록" href="CenterDonationAll" param={{id: 1}}>
+        <ColWrapper title="전체 기부목록" href="CenterDonationAll" param={{id}}>
             {items.slice(0, 3).map((item, idx) => (
                 <View className={`py-4 bg-white ${idx === 2 ? '' : 'border-b border-main-gray'}`} key={item.donationId}>
                     <View className="flex-row items-center">

@@ -43,6 +43,7 @@ export default function CenterItem({items}: {items: ChildrenCenterList[] | null}
                     </Text>
                 </View>
             </TouchableOpacity>
+            <KakaoMapManyMarkerCenter items={items} className="w-full h-[240px]" />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View className="flex flex-row gap-3">
                     {items.slice(0, 10).map((item, index) => (
@@ -50,7 +51,6 @@ export default function CenterItem({items}: {items: ChildrenCenterList[] | null}
                     ))}
                 </View>
             </ScrollView>
-            <KakaoMapManyMarkerCenter items={items} className="w-full h-[240px]" />
         </ColWrapper>
     );
 }
