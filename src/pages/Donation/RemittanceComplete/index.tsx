@@ -63,7 +63,7 @@ export default function Commit() {
                 </Text>
                 <Text className="text-3xl font-semibold text-font-black">{Number(value).toLocaleString()}원을</Text>
                 <Text className="text-3xl font-semibold text-font-black">기부했어요</Text>
-                <Text className="text-lg font-semibold text-font-black">아동센터가 확인할 때까지 시간이 걸릴 수 있어요</Text>
+                <Text className="mt-2 text-lg font-semibold text-font-gray">아동센터가 확인할 때까지 시간이 걸릴 수 있어요</Text>
                 <TouchableOpacity className="px-3 py-2 mt-4 rounded-lg bg-bg-gray">
                     <Text className="text-font-black">기부증서 받기</Text>
                 </TouchableOpacity>

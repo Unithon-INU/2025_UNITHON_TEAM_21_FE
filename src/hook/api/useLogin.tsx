@@ -98,13 +98,12 @@ export function useCenterLogin({email, password}: LoginForm) {
                 showAlert('로그인 실패', errorData.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
             } else {
                 const data = await response.json();
-                console.log(data);
                 await AsyncStorage.setItem(tokenName, JSON.stringify({accessToken: data.accessToken, refreshToken: data.refreshToken}));
                 await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole, id: data.id}));
                 dispatch(
                     setUser({
                         token: {accessToken: data.accessToken, refreshToken: data.refreshToken},
-                        profile: {id: data.id, nickname: data.nickname, userRole: data.userRole},
+                        profile: {id: data.org_id, nickname: data.nickname, userRole: data.userRole},
                     }),
                 );
                 navigation.reset({

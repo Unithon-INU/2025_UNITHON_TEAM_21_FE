@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">기봉사</string>
+    <string name="kakao_app_key">15b439ca3ac0e6a362274cbc9f0031fc</string>
 </resources>

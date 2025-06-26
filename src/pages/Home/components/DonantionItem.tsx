@@ -5,13 +5,12 @@ import {useNavigation} from '@react-navigation/native';
 import {ColWrapper} from '@/components/layout/ContentWrapper';
 import {KakaoMapAddress} from '@/components/KakaoMap';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
-import {useCenterTotalDonation} from '@/hook/api/useDonation';
 import {daysLeft} from '@/utils/formatDate';
+import {useInquiryCenter} from '@/hook/api/useCenter';
 
 function Item({data}: {data: ChildrenCenterList}) {
-    const {total, loading: TotalLoading} = useCenterTotalDonation(Number(data.id));
-    const target = 100000;
-    const percent = Math.floor((total.totalAmount / target) * 100);
+    const {item, loading: TotalLoading} = useInquiryCenter(Number(data.id));
+    const percent = Math.floor((item.totalReceivedAmount / item.donationGoalAmount) * 100);
     const navigation = useNavigation() as any;
     if (TotalLoading) return null;
 
@@ -28,7 +27,7 @@ function Item({data}: {data: ChildrenCenterList}) {
                         <View className="flex flex-row gap-1 justify-between items-baseline">
                             <View className="flex flex-row gap-1 items-baseline">
                                 <Text className="text-lg font-semibold text-main-color">{percent}%</Text>
-                                <Text className="text-sm font-semibold text-font-gray">{target.toLocaleString()}원</Text>
+                                <Text className="text-sm font-semibold text-font-gray">{item.donationGoalAmount.toLocaleString()}원</Text>
                             </View>
                             <Text className="text-sm font-semibold text-font-black">{daysLeft()}일 남음</Text>
                         </View>
