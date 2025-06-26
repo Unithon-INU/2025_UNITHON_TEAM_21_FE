@@ -1,14 +1,14 @@
-import React, {useState, useCallback, useEffect, useRef} from 'react';
+// File: src/pages/Chatting/ChatRoom.tsx
+import React, { useEffect, useRef, useState } from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, Platform} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ChatInputBar from '@/components/input/ChatInputBar';
-import {useWebSocketService} from '@/hook/useChatSocket';
+import {useChatSocket} from '@/hook/useChatSocket';
 import {useSelector, useDispatch} from 'react-redux';
-import {increaseUnreadCount, resetUnreadCount, updateLastMessage} from '@/store/slice/chatSlice';
 import {RootState} from '@/store/store';
+import {increaseUnreadCount, resetUnreadCount, updateLastMessage} from '@/store/slice/chatSlice';
 
-// 타입 정의
 type ChatStackParamList = {
     ChatList: undefined;
     ChatRoom: {id: string; name: string};
@@ -54,79 +54,113 @@ export default function ChatRoomScreen() {
     const user = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
 
+    const socket = useChatSocket();
     const senderId = user.profile?.email ?? null;
+    const token = user.token?.accessToken ?? null;
+
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
     const [currentDay, setCurrentDay] = useState(getCurrentDay());
 
-    const handleReceive = useCallback(
-        (data: any) => {
+    const flatListRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+        if (!socket || !token || !chatRoomId) return;
+
+        const requestChatList = () => {
+            socket.emit('chat-list', {
+                token,
+                chatRoomId,
+            });
+        };
+
+        const handleChatList = (data: any) => {
+            const chatList = data?.data?.chatList ?? [];
+            const formatted = chatList.map((msg: any) => ({
+                id: msg.id || Date.now().toString(),
+                text: msg.content,
+                isMe: msg.senderId === senderId,
+                time: msg.timestamp || getCurrentTime(),
+            }));
+            setMessages(formatted);
+        };
+
+        const handleMessage = (data: any) => {
             const isMe = data.senderId === senderId;
+            const now = new Date(); // 지금 시각을 한 번만 생성
             const newMessage: Message = {
-                id: Date.now().toString(),
-                text: data.content,
-                isMe,
-                time: getCurrentTime(),
-                date: getCurrentDate(),
-                day: getCurrentDay(),
+              id: Date.now().toString(),
+              text: data.message,
+              isMe,
+              time: getCurrentTime(),
+              date: getCurrentDate(),
+              day: getCurrentDay(),
             };
             setMessages(prev => [...prev, newMessage]);
             if (!isMe) dispatch(increaseUnreadCount(data.chatRoomId));
-            dispatch(updateLastMessage({id: data.chatRoomId, message: data.content, time: getCurrentTime()}));
-        },
-        [senderId, dispatch],
-    );
-
-    console.log('🔗 채팅방 ID:', chatRoomId);
-    console.log('👤 현재 사용자 ID:', senderId);
-    console.log('📨 메시지 수:', messages.length);
-    const {connect, subscribe, send, unsubscribe, disconnect} = useWebSocketService(
-        'http://43.203.198.154:8080/ws-chat',
-        () => console.log('🔌 WebSocket 연결 성공'),
-        err => console.error('❌ WebSocket 에러:', err),
-    );
-
-    const flatListRef = useRef<FlatList>(null);
-
-    // 메시지 추가 시
-    useEffect(() => {
-        if (flatListRef.current) {
-            flatListRef.current.scrollToEnd({animated: true});
-        }
-    }, [messages]);
-    useEffect(() => {
-        connect(); // 최초 연결
-    }, []);
-    useEffect(() => {
-        if (!chatRoomId) return;
-        subscribe(`/topic/chatroom/${chatRoomId}`, handleReceive);
-        return () => {
-            unsubscribe(`/topic/chatroom/${chatRoomId}`);
+            dispatch(
+              updateLastMessage({
+                  id: data.chatRoomId,
+                  message: data.message,
+                  time: now.toISOString(),
+                  timeText: getCurrentTime(), // 표시용 문자열
+              })
+            );
         };
-    }, [chatRoomId]);
+
+        // 소켓 이벤트 핸들러 등록
+        socket.on('connect', requestChatList);
+        socket.on('reconnect', requestChatList);
+        socket.off('chat-list').on('chat-list', handleChatList);
+        socket.off('message').on('message', handleMessage);
+
+        return () => {
+            socket.off('connect', requestChatList);
+            socket.off('reconnect', requestChatList);
+            socket.off('chat-list', handleChatList);
+            socket.off('message', handleMessage);
+        };
+    }, [socket, token, chatRoomId, senderId]);
+
     const handleSend = (message: string) => {
+        if (!socket || !token) return;
+        const now = new Date(); // 한 번만 계산
+        const timeText = getCurrentTime(); // 표시용 문자열
         const newMessage: Message = {
-            id: Date.now().toString(),
-            text: message,
-            isMe: true,
-            time: getCurrentTime(),
-            date: getCurrentDate(),
-            day: getCurrentDay(),
+          id: Date.now().toString(),
+          text: message,
+          isMe: true,
+          time: timeText,
+          date: getCurrentDate(),
+          day: getCurrentDay(),
         };
         setMessages(prev => [...prev, newMessage]);
-
-        const payload = {
-            chatRoomId,
-            senderId,
-            content: message,
-            fromUser: true,
-            sentAt: new Date().toISOString(),
-        };
-        send('/app/chat.send', payload);
+        socket.emit('message', {
+          token,
+          chatRoomId,
+          message,
+        });
+        // 채팅 리스트용 업데이트
+        dispatch(
+          updateLastMessage({
+            id: chatRoomId,
+            message,
+            time: now.toISOString(), // 정렬용
+            timeText,                 // 표시용
+          })
+        );
 
         setCurrentDate(getCurrentDate());
         setCurrentDay(getCurrentDay());
-    };
+      };
+
+    useEffect(() => {
+        flatListRef.current?.scrollToEnd({animated: true});
+    }, [messages]);
+
+    useEffect(() => {
+        dispatch(resetUnreadCount(chatRoomId));
+    }, [chatRoomId, dispatch]);
 
     const renderItem = ({item}: {item: Message}) => (
         <View className={`flex-row items-end px-4 mb-3 ${item.isMe ? 'justify-end' : ''}`}>
@@ -140,11 +174,12 @@ export default function ChatRoomScreen() {
         </View>
     );
 
-    useEffect(() => {
-        dispatch(resetUnreadCount(chatRoomId));
-    }, [chatRoomId, dispatch]);
-
     return (
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+        style={{ flex: 1 }}
+      >
         <View className="flex-1 bg-white">
             <View className="flex-row items-center justify-between px-4 py-5 pb-7">
                 <View className="flex-row items-center space-x-2">
@@ -160,26 +195,26 @@ export default function ChatRoomScreen() {
 
             <View className="items-center my-2">
                 <Text className="text-[12px] text-gray-500 bg-gray-100 px-3 py-1 mb-5 rounded-full">
-                    {currentDate} {currentDay}요일
+                    {getCurrentDate()} {getCurrentDay()}요일
                 </Text>
             </View>
 
             <View className="flex-1" style={{paddingBottom: 20}}>
                 <FlatList
-                    data={[...messages].sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())}
+                     className="flex-1"
+                    ref={flatListRef}
+                    data={messages}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     contentContainerStyle={{paddingHorizontal: 16, paddingTop: 8}}
                     showsVerticalScrollIndicator={false}
-                    inverted={false}
                 />
             </View>
-
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}>
                 <View className="px-4 pb-4 bg-white">
                     <ChatInputBar onSend={handleSend} />
                 </View>
-            </KeyboardAvoidingView>
-        </View>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
+

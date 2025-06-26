@@ -1,3 +1,4 @@
+// src/pages/Chatting/ChatList.tsx
 import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
@@ -6,7 +7,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {API_URL} from '@env';
 import type {ChatRoom} from '@/store/slice/chatSlice';
 import {resetUnreadCount, setChatRooms} from '@/store/slice/chatSlice';
-
 type ChatStackParamList = {
     ChatList: undefined;
     ChatRoom: {id: string; name: string};
@@ -23,14 +23,12 @@ export default function ChatListScreen() {
     useEffect(() => {
         const fetchChatRoom = async () => {
             try {
-                const targetUserIds = ['2', '3']; // 👈 테스트용 타겟 유저 ID 목록
+                const targetUserIds = ['2', '3']; // 테스트용
 
                 if (!token?.accessToken || !profile?.email) return;
 
                 const allUserRes = await fetch(`${API_URL}/api/users/all`, {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
+                    headers: {Authorization: `Bearer ${token.accessToken}`},
                 });
                 const allUsers = await allUserRes.json();
 
@@ -42,7 +40,7 @@ export default function ChatListScreen() {
                         targetUserId,
                     });
 
-                    const response = await fetch(`${API_URL}/api/chatroom/get-or-create?${params.toString()}`, {
+                    const response = await fetch(`${API_URL}/api/chatroom/get-or-create?${params}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -50,20 +48,13 @@ export default function ChatListScreen() {
                         },
                     });
 
-                    console.log(`🔍 채팅방 요청: ${API_URL}/api/chatroom/get-or-create?${params.toString()}`);
-
-                    if (!response.ok) {
-                        const errorText = await response.text(); // 👈 에러 내용 가져오기
-                        console.warn(`❗️채팅방 요청 실패 (${response.status}: ${response.statusText}) - ${errorText}`);
-                        continue;
-                    }
+                    if (!response.ok) continue;
 
                     const chatRoomId = await response.json();
-
-                    const targetUser = allUsers.find((user: any) => user.id === parseInt(targetUserId));
+                    const targetUser = allUsers.find((u: any) => u.id === parseInt(targetUserId));
                     const nickname = targetUser?.nickname || `user${targetUserId}`;
-                    // ✅ 이미 존재하는 채팅방은 추가하지 않음
-                    const alreadyExists = chatRooms.some((room: ChatRoom) => room.id === chatRoomId.toString());
+
+                    const alreadyExists = chatRooms.some((r: ChatRoom) => r.id === chatRoomId.toString());
                     if (!alreadyExists) {
                         newRooms.push({
                             id: chatRoomId.toString(),
@@ -80,14 +71,16 @@ export default function ChatListScreen() {
                     dispatch(setChatRooms([...chatRooms, ...newRooms]));
                 }
             } catch (err: any) {
-                console.error('❌ 채팅방 요청 중 에러:', err.message || err);
+                console.error('❌ 채팅방 요청 에러:', err.message || err);
             }
         };
 
         fetchChatRoom();
-    }, [chatRooms, dispatch, profile?.email, token?.accessToken]); // ✅ chatRooms 제외
+    }, [chatRooms, dispatch, profile?.email, token?.accessToken]);
 
-    const filteredRooms = chatRooms.filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true));
+    const filteredRooms = chatRooms
+        .filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true))
+        .sort((a: ChatRoom, b: ChatRoom) => new Date(b.time).getTime() - new Date(a.time).getTime()); // 최신순 정렬
 
     const handleEnterRoom = (id: string, name: string) => {
         dispatch(resetUnreadCount(id));
@@ -96,7 +89,6 @@ export default function ChatListScreen() {
 
     return (
         <View className="flex-1 bg-white px-5 pt-5">
-            {/* 상단 */}
             <View className="flex-row justify-between items-center mb-3">
                 <Text className="text-2xl font-bold">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
@@ -104,7 +96,6 @@ export default function ChatListScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* 탭 */}
             <View className="flex-row gap-2 mb-4">
                 <TouchableOpacity
                     onPress={() => setActiveTab('all')}
@@ -118,10 +109,9 @@ export default function ChatListScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* 채팅방 리스트 */}
             <FlatList
                 data={filteredRooms}
-                keyExtractor={item => item.name}
+                keyExtractor={item => item.id}
                 renderItem={({item}) => (
                     <TouchableOpacity className="flex-row py-4" onPress={() => handleEnterRoom(item.id, item.name)}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-3" />
@@ -130,6 +120,7 @@ export default function ChatListScreen() {
                                 <Text className="text-[16px] font-bold">{item.name}</Text>
                                 <Text className="text-[12px] text-gray-500">{item.timeText}</Text>
                             </View>
+
                             <View className="flex-row justify-between mt-1">
                                 <Text className="text-[12px] text-gray-700 flex-1" numberOfLines={1}>
                                     {item.message}

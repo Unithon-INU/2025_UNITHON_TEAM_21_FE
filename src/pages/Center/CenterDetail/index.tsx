@@ -95,7 +95,7 @@ export default function CenterDetail() {
                     className={`flex flex-row gap-2 justify-center items-center py-3 rounded-xl w-[150px] bg-font-black ${
                         isRegister ? 'bg-font-black' : 'bg-main-gray'
                     }`}
-                    onPress={() => navigation.goBack()}>
+                    onPress={() => navigation.navigate('ChatRoom', {id: data.id, name: data.centerName})}>
                     <Image className="w-6 h-6" source={require('@/assets/chatIcon.png')} />
                     <Text className="text-base font-bold text-center text-white">채팅하기</Text>
                 </TouchableOpacity>
