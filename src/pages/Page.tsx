@@ -134,6 +134,7 @@ export default function Pages() {
             <Stack.Screen name="Userlikedvol" component={UserLikedvol} />
             <Stack.Screen name="Userdonate" component={UserDonate} />
             <Stack.Screen name="Edituser" component={Edituser} />
+            <Stack.Screen name="UserInfo" component={UserInfo} />
 
             {/* 기부 */}
             <Stack.Screen name="donationCheck" component={DonationCheck} />
