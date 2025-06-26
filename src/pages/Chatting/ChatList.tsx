@@ -9,7 +9,7 @@ import type {ChatRoom} from '@/store/slice/chatSlice';
 import {resetUnreadCount, setChatRooms} from '@/store/slice/chatSlice';
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {id: string; name: string};
+    ChatRoom: {CenterID: string; name: string};
     Notification: undefined;
 };
 
@@ -84,7 +84,7 @@ export default function ChatListScreen() {
 
     const handleEnterRoom = (id: string, name: string) => {
         dispatch(resetUnreadCount(id));
-        navigation.navigate('ChatRoom', {id, name});
+        navigation.navigate('ChatRoom', {CenterID: id, name});
     };
 
     return (

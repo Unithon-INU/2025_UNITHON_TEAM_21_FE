@@ -8,7 +8,7 @@ interface ProfileProp {
     id: number;
     nickname: string; 
     email?: string; // 이메일은 선택 사항으로 변경
-    userRole: 0 | 1;
+    userRole: 0 | 1; // 0: 일반 사용자, 1: 센터 관리자
 }
 
 type UserState = {

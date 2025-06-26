@@ -7,7 +7,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
 import usePermission from '@/hook/usePermission';
 import {useUserRestore} from '@/hook/api/useKakaoInfo';
-
 import Home from './Home';
 import Signup from './Home/Signup';
 

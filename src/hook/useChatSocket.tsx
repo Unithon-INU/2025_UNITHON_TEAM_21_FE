@@ -19,10 +19,13 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const token = user.token?.accessToken;
     if (!token) return;
 
-    const newSocket = io('http://43.203.198.154:8080/chat', {
+    const newSocket = io('http://3.35.24.114:3000/chat', {
       transports: ['websocket'],
       auth: { token },
     });
+
+    //console.log('🔗 Connecting to WebSocket with token:', token);
+    //console.log('🔗 WebSocket URL:', newSocket);
 
     newSocket.on('connect', () => {
       console.log('✅ WebSocket connected');
