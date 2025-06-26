@@ -141,7 +141,6 @@ export function useIsRegister(id: number) {
                     throw new Error('Failed to fetch registration status');
                 }
                 const data = await response.json();
-                console.log(data);
                 setItem(data.registered);
             } catch (error) {
                 console.error('Error fetching registration status:', error);
