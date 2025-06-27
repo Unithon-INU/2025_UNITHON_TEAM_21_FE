@@ -10,18 +10,18 @@ import {WebSocketProvider} from '@/hook/useChatSocket';
 export default function App() {
     return (
         <Provider store={store}>
-            <GestureHandlerRootView style={{flex: 1}}>
-                <NavigationContainer theme={MyTheme}>
-                    <BottomSheetModalProvider>
-                        <WebSocketProvider>
+            <WebSocketProvider>
+                <GestureHandlerRootView style={{flex: 1}}>
+                    <NavigationContainer theme={MyTheme}>
+                        <BottomSheetModalProvider>
                             <SafeAreaView style={styles.safeArea}>
                                 <StatusBar barStyle="dark-content" backgroundColor="white" animated />
                                 <Pages />
                             </SafeAreaView>
-                        </WebSocketProvider>
-                    </BottomSheetModalProvider>
-                </NavigationContainer>
-            </GestureHandlerRootView>
+                        </BottomSheetModalProvider>
+                    </NavigationContainer>
+                </GestureHandlerRootView>
+            </WebSocketProvider>
         </Provider>
     );
 }
