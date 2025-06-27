@@ -37,6 +37,7 @@ function ConfirmationModal({visible, item, actionType, onClose, onAction, loadin
             {loading ? (
                 <View className="justify-center items-center h-20">
                     <Text className="text-center text-font-gray">승인중이에요...</Text>
+                    <Text className="text-center text-font-gray">최대 2분 걸릴 수 있어요..</Text>
                     <Loading />
                 </View>
             ) : (

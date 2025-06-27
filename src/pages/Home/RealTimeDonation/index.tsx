@@ -17,7 +17,7 @@ function Item({data}: {data: ChildrenCenterList}) {
     if (TotalLoading) return null;
 
     return (
-        <View className="flex flex-col gap-2 mb-2">
+        <View className="flex flex-col gap-2 pb-4 mb-4 border-b border-gray-200">
             <View className="flex flex-row gap-2">
                 <KakaoMapAddress className="relative w-[120px] h-[120px] bg-bg-gray rounded-xl" location={data.address} name={data.centerName} />
                 <TouchableOpacity className="flex flex-1 justify-between" onPress={() => navigation.navigate('centerDetail', {id: data.id})}>

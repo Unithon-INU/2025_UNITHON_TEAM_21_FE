@@ -66,7 +66,7 @@ export function useEditItemDonation() {
                 method: 'DELETE',
             });
             if (!response.ok) {
-                throw new e('Failed to delete item');
+                throw new Error('Failed to delete item');
             }
             return await response.json();
         } catch (e) {

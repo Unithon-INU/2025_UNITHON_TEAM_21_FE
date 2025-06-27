@@ -88,7 +88,7 @@ export function useCenter(perPage: number = 10) {
     return {centerData, loading, fetchMore, isFetchingMore, hasMore};
 }
 
-export function useInquiryCenter(id: number): {item: CenterInquiryType; loading: boolean} {
+export function useInquiryCenter(id: number) {
     const [item, setItem] = useState<CenterInquiryType>({
         id: 0,
         name: '',
@@ -100,30 +100,29 @@ export function useInquiryCenter(id: number): {item: CenterInquiryType; loading:
         totalReceivedAmount: 0,
     });
     const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchInquiryCenter = async () => {
-            setLoading(true);
-            try {
-                if (!id) {
-                    throw new Error('ID is required to fetch inquiry center data');
-                }
-                const response = await fetch(`${API_URL}/api/org/${id}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch center data');
-                }
-                const data = await response.json();
-                setItem(data);
-            } catch (error) {
-                console.error('Error fetching inquiry center:', error);
-            } finally {
-                setLoading(false);
+    const fetchInquiryCenter = async () => {
+        setLoading(true);
+        try {
+            if (!id) {
+                throw new Error('ID is required to fetch inquiry center data');
             }
-        };
+            const response = await fetch(`${API_URL}/api/org/${id}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch center data');
+            }
+            const data = await response.json();
+            setItem(data);
+        } catch (error) {
+            console.error('Error fetching inquiry center:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
         fetchInquiryCenter();
     }, [id]);
 
-    return {item, loading};
+    return {item, loading, refecth: fetchInquiryCenter};
 }
 
 export function useIsRegister(id: number) {
@@ -141,7 +140,6 @@ export function useIsRegister(id: number) {
                     throw new Error('Failed to fetch registration status');
                 }
                 const data = await response.json();
-                console.log(data);
                 setItem(data.registered);
             } catch (error) {
                 console.error('Error fetching registration status:', error);

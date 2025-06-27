@@ -16,11 +16,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export default function CenterHome() {
     const {profile} = useSelector((state: RootState) => state.user);
-    const {item: centerItem, loading: centerLoading} = useInquiryCenter(profile?.id ?? -1);
+    const {item: centerItem, loading: centerLoading, refecth: refetchCenter} = useInquiryCenter(profile?.id ?? -1);
     const {items, loading: InquiryLoading, fetchDonations} = useInquiryDonation(profile?.id ?? -1);
     const {items: donationItem, loading: itemsLoading, refetch} = useGetItemDonation(profile?.id ?? -1);
 
-    const handleRefresh = () => fetchDonations();
+    const handleRefresh = () => {
+        fetchDonations();
+        refetchCenter();
+    };
     const handleRefetch = () => refetch();
 
     if (InquiryLoading || itemsLoading || centerLoading) return <Loading />;

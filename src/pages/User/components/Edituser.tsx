@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity, Image} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useDispatch} from 'react-redux';
+import {CommonActions, useNavigation} from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
 import {setProfileName} from '@/store/slice/userSlice';
 
 import Layout from '@/components/Layout';
 import HeaderBackButton from '@/components/button/HeaderBackButton';
 import CustomModal from '@/components/layout/CustomModal';
+import {API_URL} from '@env';
+import {RootState} from '@/store/store';
 
 export default function EditUser() {
     const navigation = useNavigation() as any;
@@ -14,9 +16,24 @@ export default function EditUser() {
 
     const [nickname, setNickname] = useState('');
     const [showCancelModal, setShowCancelModal] = useState(false);
-
     const [showSaveConfirmModal, setShowSaveConfirmModal] = useState(false);
-
+    const {token} = useSelector((state: RootState) => state.user);
+    const handleNicknameChange = async () => {
+        try {
+            if (token) {
+                await fetch(`${API_URL}/api/users/nickname`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                    body: JSON.stringify({nickname}),
+                });
+            }
+        } catch (error) {
+            console.error('Error updating nickname:', error);
+        }
+    };
     const handleCompletePress = () => {
         if (nickname) {
             setShowSaveConfirmModal(true);
@@ -26,12 +43,24 @@ export default function EditUser() {
     };
 
     const handleConfirmSave = () => {
+        handleNicknameChange();
         dispatch(setProfileName(nickname));
         setShowSaveConfirmModal(false);
-        navigation.reset({
-            index: 0,
-            routes: [{name: 'UserInfo'}],
-        });
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [
+                    {
+                        name: 'main', // StackNavigator가 아는 화면 이름
+                        state: {
+                            routes: [
+                                {name: 'userInfo'}, // NavBar가 아는 화면 이름
+                            ],
+                        },
+                    },
+                ],
+            }),
+        );
     };
 
     return (
@@ -81,13 +110,9 @@ export default function EditUser() {
                 <Text className="mb-2 text-font-gray">변경사항이 없습니다</Text>
             </CustomModal>
 
-            <CustomModal
-                title="변경사항을 수정하시겠습니까?"
-                visible={showSaveConfirmModal}
-                action="edit"
-                onClose={() => setShowSaveConfirmModal(false)}
-                onAction={handleConfirmSave}
-            />
+            <CustomModal title="확인" visible={showSaveConfirmModal} action="edit" onClose={() => setShowSaveConfirmModal(false)} onAction={handleConfirmSave}>
+                <Text className="text-font-gray">변경사항을 수정하시겠습니까?</Text>
+            </CustomModal>
         </Layout>
     );
 }
