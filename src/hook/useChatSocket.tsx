@@ -1,47 +1,56 @@
-import {useEffect, useRef} from 'react';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
-import { API_URL } from '@env';
+// 파일명: useChatSocket.tsx
 
+import { createContext, useContext, useEffect, useState } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/store/store';
+import { setProfileEmail } from '@/store/slice/userSlice';
 
-export default function useChatSocket({chatRoomId, onMessage}: {chatRoomId: string; onMessage: (msg: any) => void}) {
-    const clientRef = useRef<Client | null>(null);
+export const WebSocketContext = createContext<Socket | null>(null);
 
-    useEffect(() => {
-        // 서버 주소는 실제 서버 주소로 변경
-        const socket = new SockJS(`${API_URL}/ws-chat`);
-        const client = new Client({
-            webSocketFactory: () => socket as any,
-            debug: str => console.log(str),
-            onConnect: () => {
-                // 구독
-                client.subscribe(`/topic/chatroom/${chatRoomId}`, message => {
-                    if (message.body) {
-                        onMessage(JSON.parse(message.body));
-                    }
-                });
-            },
-            onStompError: frame => {
-                console.error('Broker reported error: ' + frame.headers.message);
-                console.error('Additional details: ' + frame.body);
-            },
-        });
+export const useChatSocket = () => useContext(WebSocketContext);
 
-        client.activate();
-        clientRef.current = client;
+export const WebSocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const user = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const [socket, setSocket] = useState<Socket | null>(null);
 
-        return () => {
-            client.deactivate();
-        };
-    }, [chatRoomId, onMessage]);
+  useEffect(() => {
+    const token = user.token?.accessToken;
+    if (!token) return;
 
-    // 메시지 전송 함수 반환
-    const sendMessage = (msg: any) => {
-        clientRef.current?.publish({
-            destination: '/app/chat.send',
-            body: JSON.stringify(msg),
-        });
+    const newSocket = io('http://3.35.24.114:3000/chat', {
+      transports: ['websocket'],
+      auth: { token },
+    });
+
+    //console.log('🔗 Connecting to WebSocket with token:', token);
+    //console.log('🔗 WebSocket URL:', newSocket);
+
+    newSocket.on('connect', () => {
+      console.log('✅ WebSocket connected');
+    });
+
+    newSocket.on('error', (object) => {
+      const { data, url, accessToken: newToken } = object;
+      dispatch(setProfileEmail(newToken)); // ❗ 실제로는 setUser 등 전체 토큰 갱신이 더 적절할 수도 있음
+      newSocket.emit(url, { ...data, token: newToken });
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('🛑 WebSocket disconnected');
+    });
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
     };
+  }, [user.token?.accessToken]);
 
-    return { sendMessage };
-}
+  return (
+    <WebSocketContext.Provider value={socket}>
+      {children}
+    </WebSocketContext.Provider>
+  );
+};

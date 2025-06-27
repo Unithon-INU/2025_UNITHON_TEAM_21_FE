@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {clearUser} from '@/store/slice/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setChatRooms } from '@/store/slice/chatSlice';
 
 const tokenName = 'token';
 const profileName = 'profile';
@@ -16,6 +17,7 @@ export function useLogout() {
             await AsyncStorage.removeItem(tokenName);
             await AsyncStorage.removeItem(profileName);
             dispatch(clearUser());
+            dispatch(setChatRooms([]));
             navigation.reset({
                 index: 0,
                 routes: [{name: 'main'}],
@@ -26,3 +28,4 @@ export function useLogout() {
     }, [dispatch, navigation]);
     return {logout};
 }
+

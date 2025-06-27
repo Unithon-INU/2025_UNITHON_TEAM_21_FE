@@ -35,11 +35,11 @@ export function useLogin({email, password}: LoginForm) {
             } else {
                 const data = await response.json();
                 await AsyncStorage.setItem(tokenName, JSON.stringify({accessToken: data.accessToken, refreshToken: data.refreshToken}));
-                await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole, id: data.id}));
+                await AsyncStorage.setItem(profileName, JSON.stringify({ id: data.id, email: data.email, nickname: data.nickname, userRole: data.userRole }));
                 dispatch(
                     setUser({
                         token: {accessToken: data.accessToken, refreshToken: data.refreshToken},
-                        profile: {id: data.id, nickname: data.nickname, userRole: data.userRole},
+                        profile: { id: data.id, nickname: data.nickname, email: data.email, userRole: data.userRole },
                     }),
                 );
                 navigation.reset({

@@ -7,7 +7,6 @@ import {useSelector} from 'react-redux';
 import {RootState} from '@/store/store';
 import usePermission from '@/hook/usePermission';
 import {useUserRestore} from '@/hook/api/useKakaoInfo';
-
 import Home from './Home';
 import Signup from './Home/Signup';
 
@@ -120,6 +119,7 @@ export default function Pages() {
             <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
             <Stack.Screen name="Notification" component={NotificationScreen} />
             <Stack.Screen name="centerList" component={CenterList} />
+            <Stack.Screen name="ChatList" component={ChatListScreen} />
 
             {/* 지역봉사 */}
             <Stack.Screen name="volunteerCategory" component={VolunteerCategory} />

@@ -1,75 +1,118 @@
+// src/pages/Chatting/ChatList.tsx
 import React, {useEffect, useState} from 'react';
 import {View, Text, FlatList, TouchableOpacity, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {useSelector} from 'react-redux';
-import {RootState} from '@/store/store'; // store 타입 경로에 맞게 수정
-import axios from 'axios';
-import { API_URL } from '@env';
-
+import {useDispatch, useSelector} from 'react-redux';
+import {API_URL} from '@env';
+import type {ChatRoom} from '@/store/slice/chatSlice';
+import {resetUnreadCount, setChatRooms} from '@/store/slice/chatSlice';
+import {RootState} from '@/store/store';
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {id: string; name: string};
+    ChatRoom: {chatRoomId: string; targetName: string};
     Notification: undefined;
 };
-
-type ChatRoomData = {
-    id: string;
-    name: string;
-    message: string;
-    time: string;
-    unread: number;
-};
+function formatTime(isoString: string): string {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    const koreaTime = new Date(date.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+    const hours = koreaTime.getHours();
+    const minutes = koreaTime.getMinutes().toString().padStart(2, '0');
+    const isPM = hours >= 12;
+    const hour12 = hours % 12 || 12;
+    return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
+}
 
 export default function ChatListScreen() {
-    const [chatRooms, setChatRooms] = useState<ChatRoomData[]>([]);
-    const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
-    const user = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+    const {token,profile} = useSelector((state: RootState) => state.user);
+    const chatRooms = useSelector((state: RootState) => state.chat.chatRooms);
+    //console.log('chat', chatRooms);
+    const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
 
     useEffect(() => {
-        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.id) return;
-        axios
-            .get(`${API_URL}/api/chatroom`, {
-                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
-            })
-            .then(res => setChatRooms(res.data))
-            .catch(err => console.error(err));
-    }, [user]);
+        const fetchChatRoom = async () => {
+            try {
+                if (!token?.accessToken) return;
 
-    useEffect(() => {
-        // 실제 API 주소와 토큰 헤더는 프로젝트에 맞게 수정
-        if (!user.profile?.id) return;
-        axios
-            .get('/api/chatroom', {
-                headers: {Authorization: `Bearer ${user.token?.accessToken}`},
-            })
-            .then(res => setChatRooms(res.data))
-            .catch(err => console.error(err));
-    }, [user]);
+                if (profile?.userRole === 0) {
 
-    const filteredRooms = chatRooms.filter(room => (activeTab === 'unread' ? room.unread > 0 : true));
+                    const response = await fetch(`${API_URL}/api/chatroom`, {
+                        method: 'GET',
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (!response.ok) throw new Error('채팅방 목록 가져오기 실패');
 
-    const handleEnterRoom = (id: string, name: string) => {
-        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
-        navigation.navigate('ChatRoom', {id, name});
-        setChatRooms(prev => prev.map(room => (room.id === id ? {...room, unread: 0} : room)));
-        navigation.navigate('ChatRoom', {id, name});
-    };
+                    const rooms = await response.json(); // [{ chatRoomId, orgName, lastMessage, updatedAt }]
+                    console.log('room', rooms);
+
+                    const mappedRooms: ChatRoom[] = rooms.map((room: any) => ({
+                        id: String(room.id),
+                        name: room.targetName ?? '기관 이름 없음',
+                        message: room.lastMessage ?? '',
+                        time: room.updatedAt ?? '',
+                        timeText: formatTime(room.updatedAt),
+                        unread: 1,
+                    }));
+
+                    dispatch(setChatRooms(mappedRooms));
+                }
+                else {
+                    const response = await fetch(`${API_URL}/api/chatroom/org?organizationId=${profile?.id}`, {
+                        method: 'GET',
+                        headers: {
+                            //Authorization: `Bearer ${token.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+
+
+                    if (!response.ok) throw new Error('채팅방 목록 가져오기 실패');
+
+                    const rooms = await response.json(); // [{ chatRoomId, orgName, lastMessage, updatedAt }]
+                    console.log('room', rooms);
+
+                    const mappedRooms: ChatRoom[] = rooms.map((room: any) => ({
+                        id: String(room.id),
+                        name: room.targetName ?? '유저 이름 없음',
+                        message: room.lastMessage ?? '',
+                        time: room.updatedAt ?? '',
+                        timeText: formatTime(room.updatedAt),
+                        unread: 0,
+                    }));
+
+                    dispatch(setChatRooms(mappedRooms));
+                }
+            }
+
+             catch (err: any) {
+                console.error('❌ 채팅방 요청 에러:', err.message || err);
+            }
+        };
+
+        fetchChatRoom();
+    }, [token?.accessToken, dispatch]);
+
+     const filteredRooms = chatRooms
+         .filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true))
+         .sort((a: ChatRoom, b: ChatRoom) => new Date(b.time).getTime() - new Date(a.time).getTime()); // 최신순 정렬
+
 
     return (
-        <View className="flex flex-col gap-3 px-5">
-            {/* Top Bar */}
-            <View className="flex-row justify-between h-[60px] py-5 pb-[10px] pl-[2px] px-[5px]">
-                <Text className="font-inter font-bold text-[24px] leading-[24px]">채팅</Text>
+        <View className="flex-1 bg-white px-5 pt-5">
+            <View className="flex-row justify-between items-center mb-3">
+                <Text className="text-2xl font-bold">채팅</Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-                    <Image source={require('@/assets/ring.png')} className="w-8 h-8" resizeMode="contain" />
+                    <Image source={require('@/assets/ring.png')} className="w-7 h-7" resizeMode="contain" />
                 </TouchableOpacity>
             </View>
 
-            {/* Tabs */}
-            <View className="flex-row gap-[8px] px-[5px] py-[12px] pl-[2px]">
+            <View className="flex-row gap-2 mb-4">
                 <TouchableOpacity
                     onPress={() => setActiveTab('all')}
                     className={`px-3 py-1 rounded-full ${activeTab === 'all' ? 'bg-main-color' : 'border border-[#D5D5D5]'}`}>
@@ -81,22 +124,21 @@ export default function ChatListScreen() {
                     <Text className={`${activeTab === 'unread' ? 'text-white' : 'text-black'} font-bold`}>읽지 않은 채팅방</Text>
                 </TouchableOpacity>
             </View>
-
-            {/* Chat Room List */}
             <FlatList
                 data={filteredRooms}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => `${item.id}-${index}`} // ← 중복 방지
                 renderItem={({item}) => (
-                    <TouchableOpacity className="flex-row pt-2 pb-4 px-[1px]" onPress={() => handleEnterRoom(item.id, item.name)}>
-                        <View className="w-14 h-14 rounded-full bg-[#ccc] mr-2" />
-                        <View className="justify-center flex-1 mb-4">
+                    <TouchableOpacity className="flex-row py-4" onPress={() => navigation.navigate('ChatRoom',{ chatRoomId:item.id, targetName:item.name})}>
+                        <View className="w-14 h-14 rounded-full bg-[#ccc] mr-3" />
+                        <View className="flex-1 justify-center">
                             <View className="flex-row justify-between">
-                                <Text className="text-black font-bold text-[16px]">{item.name}</Text>
-                                <Text className="text-[12px] text-[#999]">{item.time}</Text>
+                                <Text className="text-[16px] font-bold">{item.name}</Text>
+                                <Text className="text-[12px] text-gray-500">{item.timeText}</Text>
                             </View>
+
                             <View className="flex-row justify-between mt-1">
-                                <Text className="text-[12px] text-[#666]" numberOfLines={1}>
-                                    {item.message}
+                                <Text className="text-[12px] text-gray-700 flex-1" numberOfLines={1}>
+                                    {item.name} 에서 보낸 메시지입니다.
                                 </Text>
                                 {item.unread > 0 && (
                                     <View className="bg-[#FFB257] rounded-full px-2 ml-2 items-center justify-center">

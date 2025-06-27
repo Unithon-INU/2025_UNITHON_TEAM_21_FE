@@ -6,8 +6,9 @@ interface TokenProp {
 }
 interface ProfileProp {
     id: number;
-    nickname: string;
-    userRole: 0 | 1;
+    nickname: string; 
+    email?: string; // 이메일은 선택 사항으로 변경
+    userRole: 0 | 1; // 0: 일반 사용자, 1: 센터 관리자
 }
 
 type UserState = {
@@ -40,8 +41,14 @@ const userSlice = createSlice({
                 state.profile.nickname = action.payload;
             }
         },
+        setProfileEmail: (state, action) => {
+            if (state.profile) {
+                state.profile.email = action.payload;
+            }
+        },
+
     },
 });
 
-export const {setUser, clearUser, setProfileName} = userSlice.actions;
+export const {setUser, clearUser, setProfileName, setProfileEmail} = userSlice.actions;
 export default userSlice.reducer;
