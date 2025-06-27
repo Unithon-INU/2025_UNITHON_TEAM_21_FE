@@ -90,6 +90,7 @@ export function useConfirmDonation() {
                     'Content-Type': 'application/json',
                 },
             });
+            console.log(response);
             if (!response.ok) {
                 throw new Error('요청 처리 중 오류가 발생했습니다.');
             }

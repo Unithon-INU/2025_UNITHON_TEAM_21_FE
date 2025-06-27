@@ -17,6 +17,7 @@ export function useUserRestore() {
         const restore = async () => {
             const t = await AsyncStorage.getItem(tokenName);
             const p = await AsyncStorage.getItem(profileName);
+            console.log('Restoring user data:', t, p);
             if (t && p) {
                 dispatch(setUser({token: JSON.parse(t), profile: JSON.parse(p)}));
             }
