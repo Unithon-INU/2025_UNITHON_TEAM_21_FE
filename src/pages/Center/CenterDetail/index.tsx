@@ -44,7 +44,7 @@ export default function CenterDetail() {
         }
     };
     const {item: centerItem, loading: centerLoading} = useInquiryCenter(id);
-    const {items: itemDonation, loading: itemsLoading} = useGetItemDonation(id);
+    const {items: itemDonation, loading: itemsLoading, refetch} = useGetItemDonation(id);
     const {item: isRegister, loading: registerLoading} = useIsRegister(id);
 
     if (loading || activityLoading || itemsLoading || registerLoading || centerLoading) return <Loading />;
@@ -82,7 +82,7 @@ export default function CenterDetail() {
                 </ColWrapper>
                 <DonationStatus data={centerItem} />
                 <Activity items={items} />
-                <List items={itemDonation} />
+                <List items={itemDonation} onRefresh={refetch} />
             </Layout>
             <View className="flex flex-row justify-between px-8 py-6 border-t border-bg-gray">
                 <TouchableOpacity

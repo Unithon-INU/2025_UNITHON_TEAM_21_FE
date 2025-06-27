@@ -34,8 +34,3 @@ git commit -m "[Docs] /src/asset/charater.svg 추가"
 -   `Style` : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우
 -   `Refactor` : 코드 리펙토링할 시
 -   `Etc` : 기타
-
-# Branch
-
--   main
--   test

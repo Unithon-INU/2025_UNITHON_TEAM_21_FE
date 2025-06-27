@@ -31,12 +31,11 @@ export function useLogin({email, password}: LoginForm) {
                 body: JSON.stringify({email, password}),
             });
             if (!response.ok) {
-                const errorData = await response.json();
-                showAlert('로그인 실패', errorData.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
+                showAlert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다.');
             } else {
                 const data = await response.json();
                 await AsyncStorage.setItem(tokenName, JSON.stringify({accessToken: data.accessToken, refreshToken: data.refreshToken}));
-                await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole}));
+                await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole, id: data.id}));
                 dispatch(
                     setUser({
                         token: {accessToken: data.accessToken, refreshToken: data.refreshToken},
@@ -98,8 +97,9 @@ export function useCenterLogin({email, password}: LoginForm) {
                 showAlert('로그인 실패', errorData.message || '이메일 또는 비밀번호가 올바르지 않습니다.');
             } else {
                 const data = await response.json();
+                console.log(data);
                 await AsyncStorage.setItem(tokenName, JSON.stringify({accessToken: data.accessToken, refreshToken: data.refreshToken}));
-                await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole, id: data.id}));
+                await AsyncStorage.setItem(profileName, JSON.stringify({email: data.email, nickname: data.nickname, userRole: data.userRole, id: data.org_id}));
                 dispatch(
                     setUser({
                         token: {accessToken: data.accessToken, refreshToken: data.refreshToken},

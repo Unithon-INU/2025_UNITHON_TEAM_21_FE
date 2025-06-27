@@ -2,27 +2,31 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, TextInput, Alert} from 'react-native';
 
 import {ColWrapper} from '@/components/layout/ContentWrapper';
-import CustomModal from '@/components/layout/CustomModal';
+import CustomModal from '@/components/layout/CustomModal'; // 위에서 만든 CustomModal을 import 합니다.
 import {ItemDonationType} from '@/types/ItemDonationType';
 import {useEditItemDonation} from '@/hook/api/useItemDonation';
 
+// =================================================================
+// DonationItemCard Component
+// =================================================================
 interface DonationItemCardProps {
     item: ItemDonationType;
     isLast: boolean;
     onDonatePress: (item: ItemDonationType) => void;
 }
+
 function DonationItemCard({item, isLast, onDonatePress}: DonationItemCardProps) {
-    const progress = item.requiredQuantity > 0 ? (item.currentQuantity / item.requiredQuantity) * 100 : 0;
+    const progress = item.requiredQuantity > 0 ? Math.floor((item.currentQuantity / item.requiredQuantity) * 100) : 0;
     const containerClassName = `p-2 ${isLast ? '' : 'border-b-2 border-bg-gray'}`;
 
     return (
         <View className={containerClassName}>
             <View className="flex-row justify-between mb-2">
                 <Text className="text-base font-semibold text-font-black">{item.itemName}</Text>
-                <Text className="text-base font-semibold text-main-color">{progress}%</Text>
+                <Text className="text-base font-semibold text-main-color">{progress > 100 ? '100+' : progress}%</Text>
             </View>
             <View className="overflow-hidden h-1 rounded-full bg-bg-gray">
-                <View className="h-full bg-main-color" style={[{width: `${progress}%`}]} />
+                <View className="h-full bg-main-color" style={[{width: `${Math.min(progress, 100)}%`}]} />
             </View>
             <View className="flex-row justify-between items-center mt-2">
                 <Text className="text-font-gray">
@@ -36,13 +40,17 @@ function DonationItemCard({item, isLast, onDonatePress}: DonationItemCardProps) 
     );
 }
 
-export default function List({items}: {items: ItemDonationType[]}) {
+export default function List({items, onRefresh}: {items: ItemDonationType[]; onRefresh: () => void}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState<ItemDonationType | null>(null);
     const [quantity, setQuantity] = useState('');
     const {editItem} = useEditItemDonation();
 
     const handleOpenModal = (item: ItemDonationType) => {
+        if (item.currentQuantity >= item.requiredQuantity) {
+            Alert.alert('알림', '이미 목표 수량을 모두 달성한 물품입니다.');
+            return;
+        }
         setSelectedItem(item);
         setModalVisible(true);
     };
@@ -54,19 +62,31 @@ export default function List({items}: {items: ItemDonationType[]}) {
     };
 
     const handleDonate = () => {
-        if (!selectedItem || !quantity || Number(quantity) <= 0) {
-            Alert.alert('알림', '올바른 수량을 입력해주세요.');
+        if (!selectedItem) return;
+
+        const donationAmount = Number(quantity);
+        const neededQuantity = selectedItem.requiredQuantity - selectedItem.currentQuantity;
+
+        if (!quantity || donationAmount <= 0) {
+            Alert.alert('알림', '기부할 수량을 정확히 입력해주세요.');
             return;
         }
 
-        const donationAmount = Number(quantity);
+        if (donationAmount > neededQuantity) {
+            Alert.alert('알림', `최대 ${neededQuantity}개까지 기부할 수 있습니다.`);
+            return;
+        }
+
         Alert.alert('기부 확인', `${selectedItem.itemName} ${donationAmount}개를 기부하시겠습니까?`, [
             {text: '취소', style: 'cancel'},
             {
                 text: '확인',
-                onPress: () => {
-                    editItem(selectedItem.id, selectedItem.itemName, selectedItem.requiredQuantity, selectedItem.currentQuantity + donationAmount);
+                onPress: async () => {
+                    const newTotalQuantity = selectedItem.currentQuantity + donationAmount;
+                    await editItem(selectedItem.id, selectedItem.itemName, selectedItem.requiredQuantity, newTotalQuantity);
+                    Alert.alert('감사합니다!', '기부가 성공적으로 완료되었습니다.');
                     handleCloseModal();
+                    onRefresh();
                 },
             },
         ]);
@@ -91,7 +111,8 @@ export default function List({items}: {items: ItemDonationType[]}) {
                         <Text className="mb-3 text-font-gray">기부할 수량을 입력해주세요.</Text>
                         <TextInput
                             className="p-3 w-full text-base text-center rounded-lg border border-bg-gray"
-                            placeholder="예: 5"
+                            // ✨ 개선 사항: placeholder에 최대 기부 가능 수량을 동적으로 표시
+                            placeholder={`예: 5 (최대 ${selectedItem.requiredQuantity - selectedItem.currentQuantity}개)`}
                             keyboardType="number-pad"
                             value={quantity}
                             onChangeText={setQuantity}

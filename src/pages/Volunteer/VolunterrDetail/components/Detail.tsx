@@ -48,29 +48,29 @@ export default function Detail({item}: {item: getVltrPartcptnItemListItem}) {
         <View className="flex gap-2 py-3">
             <StateIcon state={item.progrmSttusSe} />
             <Text className="text-lg font-semibold">{item.progrmSj}</Text>
-            <View className="flex flex-row items-center gap-1">
+            <View className="flex flex-row gap-1 items-center">
                 <Ionicons size={24} name="location-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">봉사장소 {item.nanmmbyNm}</Text>
             </View>
-            <View className="flex flex-row items-center gap-1">
+            <View className="flex flex-row gap-1 items-center">
                 <MaterialCommunityIcons size={24} name="calendar-clock-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">
                     모집기간 {formatDate(item.noticeBgnde)} ~ {formatDate(item.noticeEndde)}
                 </Text>
             </View>
-            <View className="flex flex-row items-center gap-1">
+            <View className="flex flex-row gap-1 items-center">
                 <MaterialCommunityIcons size={24} name="calendar" color="#484848" />
                 <Text className="font-semibold text-font-black">
                     봉사일시 {formatDate(item.progrmBgnde)} ~ {formatDate(item.progrmEndde)}
                 </Text>
             </View>
-            <View className="flex flex-row items-center gap-1">
+            <View className="flex flex-row gap-1 items-center">
                 <MaterialCommunityIcons size={24} name="clock-time-five-outline" color="#484848" />
                 <Text className="font-semibold text-font-black">
                     소요시간 {item.actBeginTm}:00 ~ {item.actEndTm}:00 ({item.actEndTm - item.actBeginTm}시간)
                 </Text>
             </View>
-            <View className="flex flex-row items-center gap-1">
+            <View className="flex flex-row gap-1 items-center">
                 <Ionicons size={24} name="person-outline" color="#484848" />
                 <Text className="font-semibold text-font-black items-cent">모집인원 {item.rcritNmpr}명</Text>
             </View>
