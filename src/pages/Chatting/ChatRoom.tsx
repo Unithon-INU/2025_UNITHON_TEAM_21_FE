@@ -1,6 +1,6 @@
 // File: src/pages/Chatting/ChatRoom.tsx
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, Platform} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, Image, KeyboardAvoidingView, Platform, Keyboard} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import ChatInputBar from '@/components/input/ChatInputBar';
@@ -77,6 +77,26 @@ export default function ChatRoomScreen() {
     // 채팅방 ID를 상태로 관리
     const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(chatRoomId) || null;
 
+     useEffect(() => {
+        setTimeout(() => {
+            if (flatListRef.current) {
+                flatListRef.current.scrollToEnd({animated: true});
+            }
+        }, 100);
+    }, [messages.length]);
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+            if (flatListRef.current) {
+                setTimeout(() => {
+                    flatListRef.current?.scrollToEnd({animated: true});
+                }, 50);
+            }
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+        };
+    }, []);
 
     useEffect(() => {
         if (chatRoomId) {
@@ -92,7 +112,7 @@ export default function ChatRoomScreen() {
             console.error('❌ WebSocket 연결 실패: 소켓이 없습니다.');
             return;
         }
-        if (!socket || !currentChatRoomId) return;
+        if (!socket || !currentChatRoomId || !token) return;
         socket.emit('join', {chatRoomId: currentChatRoomId});
         console.log('✅ 채팅방 참여 완료:', currentChatRoomId);
 
@@ -104,7 +124,7 @@ export default function ChatRoomScreen() {
     }, [socket, currentChatRoomId, token]);
 
     useEffect(() => {
-        if (!socket || !token || !currentChatRoomId)
+        if (!socket || !token  || !currentChatRoomId)
             return;
 
 
@@ -163,8 +183,8 @@ export default function ChatRoomScreen() {
         console.log('🔗 WebSocket 연결 준비됨');
 
         // 소켓 이벤트 핸들러 등록
-        // socket.on('connect', requestChatList);
-        // socket.on('reconnect', requestChatList);
+        socket.on('connect', requestChatList);
+        socket.on('reconnect', requestChatList);
         socket.off('chat-list').on('chat-list', handleChatList);
         socket.off('message').on('message', handleMessage);
 

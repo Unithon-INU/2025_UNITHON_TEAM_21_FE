@@ -83,7 +83,7 @@ export default function ChatListScreen() {
                         message: room.lastMessage ?? '',
                         time: room.updatedAt ?? '',
                         timeText: formatTime(room.updatedAt),
-                        unread: 0,
+                        unread:1 ,
                     }));
 
                     dispatch(setChatRooms(mappedRooms));
