@@ -10,7 +10,7 @@ import {RootState} from '@/store/store';
 import {increaseUnreadCount, resetUnreadCount, updateLastMessage} from '@/store/slice/chatSlice';
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {centerID: string; name: string}; // ✅ id → centerID);
+    ChatRoom: { chatRoomId: string; targetName: string }; // ✅ 통일
     Notification: undefined;
 };
 
@@ -25,10 +25,23 @@ type Message = {
 
 function getCurrentTime(): string {
     const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+
+    const hours = koreaTime.getHours();
+    const minutes = koreaTime.getMinutes().toString().padStart(2, '0');
     const isPM = hours >= 12;
     const hour12 = hours % 12 || 12;
+    return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
+}
+function formatAMPM(isoString: string): string {
+    const date = new Date(isoString);
+    const koreaTime = new Date(date.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+
+    const hours = koreaTime.getHours();
+    const minutes = koreaTime.getMinutes().toString().padStart(2, '0');
+    const isPM = hours >= 12;
+    const hour12 = hours % 12 || 12;
+
     return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
 }
 
@@ -48,77 +61,79 @@ function getCurrentDay(): string {
 
 export default function ChatRoomScreen() {
     const route = useRoute<RouteProp<ChatStackParamList, 'ChatRoom'>>();
-    const {centerID, name} = route.params;
-    // console.log('📌 ChatRoomScreen route params:', route.params);
-    // console.log('📌 ChatRoomScreen params:', centerID, name);
+    const { chatRoomId, targetName } = route.params;
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
     const user = useSelector((state: RootState) => state.user);
     const dispatch = useDispatch();
-    // console.log('user.profile:', user.profile);
     const socket = useChatSocket();
-    //const senderId = profile?.email ?? null;
     const userId = user.profile?.id; // 사용자 ID
-    // console.log(' userId:', userId);
     const token = user.token?.accessToken ?? null;
     const userRole = user.profile?.userRole ?? 0; // 기본값은 일반 사용자
     const senderUserId = userRole === 0 ? userId : null; // 일반 사용자의 경우 userId, 센터 관리자의 경우 null
-    // 센터 관리자의 경우 senderOrgId를 사용
     const senderOrgId = userRole === 1 ? userId : null;
     const [messages, setMessages] = useState<Message[]>([]);
     const [currentDate, setCurrentDate] = useState(getCurrentDate());
     const [currentDay, setCurrentDay] = useState(getCurrentDay());
     // 채팅방 ID를 상태로 관리
-    const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(centerID) || null;
+    const [currentChatRoomId, setCurrentChatRoomId] = useState<string | null>(chatRoomId) || null;
+
 
     useEffect(() => {
-        if (centerID) {
-            setCurrentChatRoomId(centerID); // 또는 String(centerID);)
-            console.log('✅ 채팅방 ID 세팅 완료:', centerID);
+        if (chatRoomId) {
+            setCurrentChatRoomId(chatRoomId); // 또는 String(chatRoomId);)
         }
-    }, [centerID]);
+    }, [chatRoomId]);
 
     const flatListRef = useRef<FlatList>(null);
 
     useEffect(() => {
         // 채팅방에 입장
-        console.log('🔗 WebSocket 연결 시도 중...');
         if (!socket) {
             console.error('❌ WebSocket 연결 실패: 소켓이 없습니다.');
             return;
         }
+        if (!socket || !currentChatRoomId) return;
         socket.emit('join', {chatRoomId: currentChatRoomId});
-    }, [socket, currentChatRoomId]);
+        console.log('✅ 채팅방 참여 완료:', currentChatRoomId);
+
+          //✅ join 후 chat-list 요청 직접 호출
+          socket.emit('chat-list', {
+              token,
+              chatRoomId: currentChatRoomId,
+          });
+    }, [socket, currentChatRoomId, token]);
 
     useEffect(() => {
-        if (!socket || !token || !currentChatRoomId) return;
+        if (!socket || !token || !currentChatRoomId)
+            return;
+
 
         const requestChatList = () => {
             console.log('🔗 채팅 리스트 요청');
             // 채팅 리스트 요청
-            socket.emit('chat-list', {
-                token,
-                chatRoomId: currentChatRoomId,
-            });
+             socket.emit('chat-list', {
+                 token,
+                 chatRoomId: currentChatRoomId,
+             });
         };
-
         const handleChatList = (data: any) => {
-            // 채팅 리스트를 받아서 상태 업데이트
-            console.log('📩 수신: chat-list', data);
-            // 채팅 리스트를 받아서 메시지 형식으로 변환
             const chatList = data?.data?.chatList ?? [];
 
+            if (!Array.isArray(chatList)) {
+                console.error('❌ chatList가 배열이 아닙니다:', chatList);
+                return;
+            }
             const formatted = chatList.map((msg: any) => ({
                 id: msg.id || Date.now().toString(),
                 text: msg.content,
                 isMe: (userRole === 0 && msg.senderUserId === userId) || (userRole === 1 && msg.senderOrgId === userId),
-                time: msg.timestamp || getCurrentTime(),
+                time:  formatAMPM(msg.timestamp),
             }));
             setMessages(formatted);
         };
 
         const handleMessage = (data: any) => {
-            // 메시지 수신 핸들러
-            console.log('💬 수신: message', data);
+            // 메시지 받고 상태 업데이트
             const isMe = (user.profile?.userRole === 0 && data.senderUserId === userId) || (user.profile?.userRole === 1 && data.senderOrgId === userId);
             const now = new Date(); // 지금 시각을 한 번만 생성
             const newMessage: Message = {
@@ -129,7 +144,7 @@ export default function ChatRoomScreen() {
                 date: getCurrentDate(),
                 day: getCurrentDay(),
             };
-            setMessages(prev => [...prev, newMessage]);
+            setMessages(prev => [...prev, newMessage]);//
             if (!isMe) {
                 console.log('🔔 unread 증가', data.chatRoomId);
                 dispatch(increaseUnreadCount(data.chatRoomId));
@@ -148,8 +163,8 @@ export default function ChatRoomScreen() {
         console.log('🔗 WebSocket 연결 준비됨');
 
         // 소켓 이벤트 핸들러 등록
-        socket.on('connect', requestChatList);
-        socket.on('reconnect', requestChatList);
+        // socket.on('connect', requestChatList);
+        // socket.on('reconnect', requestChatList);
         socket.off('chat-list').on('chat-list', handleChatList);
         socket.off('message').on('message', handleMessage);
 
@@ -166,11 +181,6 @@ export default function ChatRoomScreen() {
         if (!socket || !token || !currentChatRoomId) return;
         const now = new Date();
         const timeText = getCurrentTime();
-        //console.log('📤 메시지 전송 시도:', { message, senderOrgId, senderUserId, userRole, currentChatRoomId });
-        // if (!userId || userRole === undefined) {
-        //     console.error('❌ 사용자 정보 없음');
-        //     return;
-        // }
         const newMessage: Message = {
             id: Date.now().toString(),
             text: message,
@@ -179,7 +189,6 @@ export default function ChatRoomScreen() {
             date: getCurrentDate(),
             day: getCurrentDay(),
         };
-        setMessages(prev => [...prev, newMessage]);
         socket.emit('message', {
             chatRoomId: currentChatRoomId,
             message,
@@ -231,7 +240,7 @@ export default function ChatRoomScreen() {
                         <TouchableOpacity onPress={() => navigation.goBack()}>
                             <Image source={require('@/assets/navi.png')} className="w-8 h-8" />
                         </TouchableOpacity>
-                        <Text className="text-black font-bold text-[16px]">{name}</Text>
+                        <Text className="text-black font-bold text-[16px]">{targetName}</Text>
                     </View>
                     <TouchableOpacity>
                         <Image source={require('@/assets/chatmenu.png')} className="w-8 h-8" resizeMode="contain" />

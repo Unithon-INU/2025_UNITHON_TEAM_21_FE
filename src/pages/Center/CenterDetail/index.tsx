@@ -3,7 +3,6 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {toggleCenterLike} from '@/store/slice/likedCenterSlice';
-
 import {RootState} from '@/store/store';
 import {ChildrenCenterList} from '@/types/ChildrenCenter';
 import {useCenter, useInquiryCenter, useIsRegister} from '@/hook/api/useCenter';
@@ -21,6 +20,7 @@ import Loading from '@/components/Loading';
 import List from './components/List';
 import Activity from './components/Activity';
 import Error from '@/components/Error';
+import {API_URL} from '@env';
 
 export default function CenterDetail() {
     const route = useRoute();
@@ -29,6 +29,9 @@ export default function CenterDetail() {
     const dispatch = useDispatch();
     const likedList = useSelector((state: RootState) => state.likedCenter.likedList);
     const {centerData, loading} = useCenter(180);
+
+    // Retrieve user from Redux store (adjust selector as needed)
+    const user = useSelector((state: RootState) => state.user);
 
     const data = centerData.find((item: ChildrenCenterList) => item.id === id);
     const {items, loading: activityLoading} = useVolunteerCenterName(data?.centerName);
@@ -43,6 +46,7 @@ export default function CenterDetail() {
             );
         }
     };
+
     const {item: centerItem, loading: centerLoading} = useInquiryCenter(id);
     const {items: itemDonation, loading: itemsLoading} = useGetItemDonation(id);
     const {item: isRegister, loading: registerLoading} = useIsRegister(id);
@@ -50,6 +54,30 @@ export default function CenterDetail() {
     if (loading || activityLoading || itemsLoading || registerLoading || centerLoading) return <Loading />;
     if (!data) return <Error text="센터 정보를 찾을 수 없습니다." />;
 
+    const handleChatStart = async () => {
+        const senderId = user.profile?.id;
+        const targetId = data.id; // 센터의 id
+        // console.log(senderId, targetId);
+        try {
+            const res = await fetch(`${API_URL}/api/chatroom/get-or-create?userId=${senderId}&organizationId=${targetId}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${user.token?.accessToken}`,
+                },
+            });
+            console.log(res);
+            console.log('📥 status:', res.status);
+            const { chatRoomId } = await res.json();
+            console.log(chatRoomId);
+            navigation.navigate('ChatRoom', {
+                chatRoomId,
+                targetName: data.centerName,
+            });
+            console.log(chatRoomId);
+        } catch (error) {
+            console.error('❌ 채팅방 생성 실패:', error);
+        }
+    };
     return (
         <>
             <View className="flex flex-row justify-between items-center px-4">
@@ -95,7 +123,8 @@ export default function CenterDetail() {
                     className={`flex flex-row gap-2 justify-center items-center py-3 rounded-xl w-[150px] bg-font-black ${
                         isRegister ? 'bg-font-black' : 'bg-main-gray'
                     }`}
-                    onPress={() => navigation.navigate('ChatRoom', { centerID: data.id, name: data.centerName })}>
+                    onPress={handleChatStart}
+                >
                     <Image className="w-6 h-6" source={require('@/assets/chatIcon.png')} />
                     <Text className="text-base font-bold text-center text-white">채팅하기</Text>
                 </TouchableOpacity>

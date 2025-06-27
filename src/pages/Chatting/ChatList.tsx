@@ -7,85 +7,101 @@ import {useDispatch, useSelector} from 'react-redux';
 import {API_URL} from '@env';
 import type {ChatRoom} from '@/store/slice/chatSlice';
 import {resetUnreadCount, setChatRooms} from '@/store/slice/chatSlice';
+import {RootState} from '@/store/store';
 type ChatStackParamList = {
     ChatList: undefined;
-    ChatRoom: {CenterID: string; name: string};
+    ChatRoom: {chatRoomId: string; targetName: string};
     Notification: undefined;
 };
+function formatTime(isoString: string): string {
+    if (!isoString) return '';
+    const date = new Date(isoString);
+    const koreaTime = new Date(date.getTime() + 9 * 60 * 60 * 1000); // UTC+9
+    const hours = koreaTime.getHours();
+    const minutes = koreaTime.getMinutes().toString().padStart(2, '0');
+    const isPM = hours >= 12;
+    const hour12 = hours % 12 || 12;
+    return `${isPM ? '오후' : '오전'} ${hour12}:${minutes}`;
+}
 
 export default function ChatListScreen() {
     const navigation = useNavigation<StackNavigationProp<ChatStackParamList>>();
     const dispatch = useDispatch();
-    const {token, profile} = useSelector((state: any) => state.user);
-    const chatRooms = useSelector((state: any) => state.chat.chatRooms);
+    const {token,profile} = useSelector((state: RootState) => state.user);
+    const chatRooms = useSelector((state: RootState) => state.chat.chatRooms);
+    //console.log('chat', chatRooms);
     const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all');
 
     useEffect(() => {
         const fetchChatRoom = async () => {
             try {
-                const targetUserIds = ['2', '3']; // 테스트용
+                if (!token?.accessToken) return;
 
-                if (!token?.accessToken || !profile?.email) return;
+                if (profile?.userRole === 0) {
 
-                const allUserRes = await fetch(`${API_URL}/api/users/all`, {
-                    headers: {Authorization: `Bearer ${token.accessToken}`},
-                });
-                const allUsers = await allUserRes.json();
-
-                const newRooms: ChatRoom[] = [];
-
-                for (const targetUserId of targetUserIds) {
-                    const params = new URLSearchParams({
-                        senderEmail: profile.email,
-                        targetUserId,
-                    });
-
-                    const response = await fetch(`${API_URL}/api/chatroom/get-or-create?${params}`, {
+                    const response = await fetch(`${API_URL}/api/chatroom`, {
                         method: 'GET',
                         headers: {
-                            'Content-Type': 'application/json',
                             Authorization: `Bearer ${token.accessToken}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if (!response.ok) throw new Error('채팅방 목록 가져오기 실패');
+
+                    const rooms = await response.json(); // [{ chatRoomId, orgName, lastMessage, updatedAt }]
+                    console.log('room', rooms);
+
+                    const mappedRooms: ChatRoom[] = rooms.map((room: any) => ({
+                        id: String(room.id),
+                        name: room.targetName ?? '기관 이름 없음',
+                        message: room.lastMessage ?? '',
+                        time: room.updatedAt ?? '',
+                        timeText: formatTime(room.updatedAt),
+                        unread: 1,
+                    }));
+
+                    dispatch(setChatRooms(mappedRooms));
+                }
+                else {
+                    const response = await fetch(`${API_URL}/api/chatroom/org?organizationId=${profile?.id}`, {
+                        method: 'GET',
+                        headers: {
+                            //Authorization: `Bearer ${token.accessToken}`,
+                            'Content-Type': 'application/json',
                         },
                     });
 
-                    if (!response.ok) continue;
 
-                    const chatRoomId = await response.json();
-                    const targetUser = allUsers.find((u: any) => u.id === parseInt(targetUserId));
-                    const nickname = targetUser?.nickname || `user${targetUserId}`;
+                    if (!response.ok) throw new Error('채팅방 목록 가져오기 실패');
 
-                    const alreadyExists = chatRooms.some((r: ChatRoom) => r.id === chatRoomId.toString());
-                    if (!alreadyExists) {
-                        newRooms.push({
-                            id: chatRoomId.toString(),
-                            name: nickname,
-                            message: '',
-                            time: '',
-                            timeText: '',
-                            unread: 0,
-                        });
-                    }
+                    const rooms = await response.json(); // [{ chatRoomId, orgName, lastMessage, updatedAt }]
+                    console.log('room', rooms);
+
+                    const mappedRooms: ChatRoom[] = rooms.map((room: any) => ({
+                        id: String(room.id),
+                        name: room.targetName ?? '유저 이름 없음',
+                        message: room.lastMessage ?? '',
+                        time: room.updatedAt ?? '',
+                        timeText: formatTime(room.updatedAt),
+                        unread: 0,
+                    }));
+
+                    dispatch(setChatRooms(mappedRooms));
                 }
+            }
 
-                if (newRooms.length > 0) {
-                    dispatch(setChatRooms([...chatRooms, ...newRooms]));
-                }
-            } catch (err: any) {
+             catch (err: any) {
                 console.error('❌ 채팅방 요청 에러:', err.message || err);
             }
         };
 
         fetchChatRoom();
-    }, [chatRooms, dispatch, profile?.email, token?.accessToken]);
+    }, [token?.accessToken, dispatch]);
 
-    const filteredRooms = chatRooms
-        .filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true))
-        .sort((a: ChatRoom, b: ChatRoom) => new Date(b.time).getTime() - new Date(a.time).getTime()); // 최신순 정렬
+     const filteredRooms = chatRooms
+         .filter((room: {unread: number}) => (activeTab === 'unread' ? room.unread > 0 : true))
+         .sort((a: ChatRoom, b: ChatRoom) => new Date(b.time).getTime() - new Date(a.time).getTime()); // 최신순 정렬
 
-    const handleEnterRoom = (id: string, name: string) => {
-        dispatch(resetUnreadCount(id));
-        navigation.navigate('ChatRoom', {CenterID: id, name});
-    };
 
     return (
         <View className="flex-1 bg-white px-5 pt-5">
@@ -108,12 +124,11 @@ export default function ChatListScreen() {
                     <Text className={`${activeTab === 'unread' ? 'text-white' : 'text-black'} font-bold`}>읽지 않은 채팅방</Text>
                 </TouchableOpacity>
             </View>
-
             <FlatList
                 data={filteredRooms}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => `${item.id}-${index}`} // ← 중복 방지
                 renderItem={({item}) => (
-                    <TouchableOpacity className="flex-row py-4" onPress={() => handleEnterRoom(item.id, item.name)}>
+                    <TouchableOpacity className="flex-row py-4" onPress={() => navigation.navigate('ChatRoom',{ chatRoomId:item.id, targetName:item.name})}>
                         <View className="w-14 h-14 rounded-full bg-[#ccc] mr-3" />
                         <View className="flex-1 justify-center">
                             <View className="flex-row justify-between">
@@ -123,7 +138,7 @@ export default function ChatListScreen() {
 
                             <View className="flex-row justify-between mt-1">
                                 <Text className="text-[12px] text-gray-700 flex-1" numberOfLines={1}>
-                                    {item.message}
+                                    {item.name} 에서 보낸 메시지입니다.
                                 </Text>
                                 {item.unread > 0 && (
                                     <View className="bg-[#FFB257] rounded-full px-2 ml-2 items-center justify-center">
